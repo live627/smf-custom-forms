@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>LHVWB:CustomFormMod</id>
+	<version>1.1</version>
+	<file name="$themedir/languages/Modifications.english.php">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+//	**Start Custom Form Mod Text**
+//	Header and General text for the Custom Form Mod settings area.
+$txt['CustomForm_generalsettings_heading'] = 'Custom Form Mod Settings';
+$txt['CustomForm_tabheader'] = 'Custom Forms';
+$txt['CustomForm_form'] = 'Form';
+$txt['CustomForm_field'] = 'Field';
+$txt['CustomForm_view_title'] = 'View Forms Title';
+$txt['CustomForm_view_text'] = 'View Forms Text';
+$txt['CustomForm_view_perms'] = 'Form View Page Permissions';
+
+//	Stuff for the forms action
+$txt['CustomForm_submit'] = 'Submit Form';
+$txt['CustomForm_required'] = 'Required Fields';
+
+//	Junk for the list areas.
+$txt['CustomForm_listheading_fields'] = 'Form Fields';
+$txt['CustomForm_add_form'] = 'Add New Form';
+$txt['CustomForm_add_field'] = 'Add New Field';
+$txt['CustomForm_edit'] = 'Edit';
+$txt['CustomForm_delete_warning'] = 'Are you sure you want to delete this?';
+$txt['CustomForm_list_noelements'] = 'This list is currently empty.';
+$txt['CustomForm_moveup'] = 'Move Up';
+$txt['CustomForm_movedown'] = 'Move Down';
+
+//	Text for the settings pages.
+$txt['CustomForm_text'] = 'Text';
+$txt['CustomForm_type'] = 'Type';
+$txt['CustomForm_type_vars'] = 'Extra Type Parameters';
+$txt['CustomForm_output'] = 'Form Output';
+$txt['CustomForm_board_id'] = 'Board ID';
+$txt['CustomForm_template_function'] = 'Custom Template Function';
+
+//	Options for the selectboxe on the field edit page.
+$txt['CustomForm_checkbox'] = 'Check Box';
+$txt['CustomForm_selectionbox'] = 'Selection Box';
+$txt['CustomForm_textbox'] = 'Text Box (String)';
+$txt['CustomForm_large_textbox'] = 'Large (Multiline) Text Box';
+$txt['CustomForm_int'] = 'Text Box (Integer)';
+$txt['CustomForm_float'] = 'Text Box (Float)';
+//	**End Custom Form Mod Text**
+]]></add>
+		</operation>
+	</file>
+	<file name="$themedir/languages/Help.english.php">
+		<operation>
+			<search position="before"><![CDATA[
+$helptxt = array();
+]]></search>
+			<add><![CDATA[
+//	**Start Custom Form Mod Help Text**
+//	Help text for the general settings page.
+$helptxt['CustomForm_view_perms'] = 'This setting allows you to restrict the membergroups that can see the list of the forms which they can access (At "index.php?action=form"). Note that even if they can see they list, they cannot see or use any forms which they do not have the permissions for.';
+$helptxt['CustomForm_view_title'] = 'This setting allows you to chose the title for the action/page that shows the list of forms to a user (at "index.php?action=forms").  By default \'Custom Forms\' will be the title.';
+$helptxt['CustomForm_view_text'] = 'This setting allows you to chose the explanation text shown for the action/page that shows the list of forms to a user (at "index.php?action=forms"). By default nothing will be shown.';
+//	Help text for the edit form page.
+$helptxt['CustomForm_form_title'] = 'This is the title of the current form, it will be displayed when a user is filling out the form and when they are viewing the list of forms.';
+$helptxt['CustomForm_board_id'] = 'This is the ID of the board which this form will submit the output post/thread into. You can find this id by having a look at the "board=" get variable, which is set to the board ID when you are viewing a particular board.';
+$helptxt['CustomForm_permissions'] = 'This is the permissions setting for this form, to be able to view or submit a form, a user must be in one of the usergroups specified below.';
+$helptxt['CustomForm_subject'] = 'This is the subject/title of the post which will be outputed, like the output area, it can contain values from the form itself.';
+$helptxt['CustomForm_output'] = 'This is the actual output setting of the current form. When a user submits their data, the post/thread which is created will follow the exact format of this settings value, except that all variables like this {variable}, will be replace by the values that were entered by the user.<br /><br />This means that you have to access the values given by the user in the form, using the format of {variable title}. For example if the field was called \'name\' then {name} would be replace with the user entered value for the name field.';
+$helptxt['CustomForm_template_function'] = 'Attention! You only need to use this setting if you want to customize the templates of your form submit pages.<br /><br /> This setting allows you to chose which template function from the "/themes/{current_theme}/CustomForm.template.php" file will be used for this particular form when a user is submitting it. This allows you to define your own templates to display the "Submit Form" page. Please note that the template function which will be used, has to be named with the format "form_template_{value for this setting}", otherwise the default "form_template_submit_form()" template function will be used.<br /><br /> If you are trying to create a new template then I recommend that you make a copy of the "form_template_submit_form()" function from the beginning of the "CustomForm.template.php" file and rename it, you can then alter your new function to get the desired effects.';
+//	Help text for the edit field page.
+$helptxt['CustomForm_field_title'] = 'This is the title that will be used to access the user input from this field, in the output post for this form. Refer to the help for the \'Output\' setting for a better explanation. Please note that this setting may not contain any special characters such as space, because they are not valid with the $_REQUEST[] variable.';
+$helptxt['CustomForm_text'] = 'This setting allows you to change the actual text which a user will see when they are submitting one of these forms.';
+$helptxt['CustomForm_type'] = 'This setting allows you to set the type of field that this is. Thus restricting the input that a user can submit.';
+$helptxt['CustomForm_type_vars'] = 'This allows you to set any necessary extra paramaters. It has different behaviors depending on the type of the current field.<br /><br />For a Select Box, it will allow you to put a series of options (separated by commas \'), for the user to select.<br /><br />For any checkbox, it will allow you to put two strings, separated by a comma, the first string will be shown if the checkbox is true while the second will be shown if the checkbox is false.<br /><br />For every Text Box, you can put the string \'parse_bbc\' if you want it to parse any BBC codes in the textbox, otherwise it will be removed.<br /><br /> You can also put in "size=(int)" (eg "size=12"), this will restrict the size of the data which the user can input. You can also put in \'required\' which will force the user to enter valid data for this field before the form will submit, as well as \'default=(str)\' which will be used as a default value if there is no valid user input for this field.<br /><br />Remember to separate all data/parameters in this setting with commas!';
+//	**End Custom Form Mod Help Text**
+]]></add>
+		</operation>
+	</file>
+	<file name="$themedir/languages/Modifications.english-utf8.php" error="skip">
+		<operation error="skip">
+			<search position="end" />
+			<add><![CDATA[
+//	**Start Custom Form Mod Text**
+//	Header and General text for the Custom Form Mod settings area.
+$txt['CustomForm_generalsettings_heading'] = 'Custom Form Mod Settings';
+$txt['CustomForm_tabheader'] = 'Custom Forms';
+$txt['CustomForm_form'] = 'Form';
+$txt['CustomForm_field'] = 'Field';
+$txt['CustomForm_view_title'] = 'View Forms Title';
+$txt['CustomForm_view_text'] = 'View Forms Text';
+$txt['CustomForm_view_perms'] = 'Form View Page Permissions';
+
+//	Stuff for the forms action
+$txt['CustomForm_submit'] = 'Submit Form';
+$txt['CustomForm_required'] = 'Required Fields';
+
+//	Junk for the list areas.
+$txt['CustomForm_listheading_fields'] = 'Form Fields';
+$txt['CustomForm_add_form'] = 'Add New Form';
+$txt['CustomForm_add_field'] = 'Add New Field';
+$txt['CustomForm_edit'] = 'Edit';
+$txt['CustomForm_delete_warning'] = 'Are you sure you want to delete this?';
+$txt['CustomForm_list_noelements'] = 'This list is currently empty.';
+$txt['CustomForm_moveup'] = 'Move Up';
+$txt['CustomForm_movedown'] = 'Move Down';
+
+//	Text for the settings pages.
+$txt['CustomForm_text'] = 'Text';
+$txt['CustomForm_type'] = 'Type';
+$txt['CustomForm_type_vars'] = 'Extra Type Parameters';
+$txt['CustomForm_output'] = 'Form Output';
+$txt['CustomForm_board_id'] = 'Board ID';
+$txt['CustomForm_template_function'] = 'Custom Template Function';
+
+//	Options for the selectboxe on the field edit page.
+$txt['CustomForm_checkbox'] = 'Check Box';
+$txt['CustomForm_selectionbox'] = 'Selection Box';
+$txt['CustomForm_textbox'] = 'Text Box (String)';
+$txt['CustomForm_large_textbox'] = 'Large (Multiline) Text Box';
+$txt['CustomForm_int'] = 'Text Box (Integer)';
+$txt['CustomForm_float'] = 'Text Box (Float)';
+//	**End Custom Form Mod Text**
+]]></add>
+		</operation>
+	</file>
+	<file name="$themedir/languages/Help.english-utf8.php" error="skip">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+$helptxt = array();
+]]></search>
+			<add><![CDATA[
+//	**Start Custom Form Mod Help Text**
+//	Help text for the general settings page.
+$helptxt['CustomForm_view_perms'] = 'This setting allows you to restrict the membergroups that can see the list of the forms which they can access (At "index.php?action=form"). Note that even if they can see they list, they cannot see or use any forms which they do not have the permissions for.';
+$helptxt['CustomForm_view_title'] = 'This setting allows you to chose the title for the action/page that shows the list of forms to a user (at "index.php?action=forms").  By default \'Custom Forms\' will be the title.';
+$helptxt['CustomForm_view_text'] = 'This setting allows you to chose the explanation text shown for the action/page that shows the list of forms to a user (at "index.php?action=forms"). By default nothing will be shown.';
+//	Help text for the edit form page.
+$helptxt['CustomForm_form_title'] = 'This is the title of the current form, it will be displayed when a user is filling out the form and when they are viewing the list of forms.';
+$helptxt['CustomForm_board_id'] = 'This is the ID of the board which this form will submit the output post/thread into. You can find this id by having a look at the "board=" get variable, which is set to the board ID when you are viewing a particular board.';
+$helptxt['CustomForm_permissions'] = 'This is the permissions setting for this form, to be able to view or submit a form, a user must be in one of the usergroups specified below.';
+$helptxt['CustomForm_subject'] = 'This is the subject/title of the post which will be outputed, like the output area, it can contain values from the form itself.';
+$helptxt['CustomForm_output'] = 'This is the actual output setting of the current form. When a user submits their data, the post/thread which is created will follow the exact format of this settings value, except that all variables like this {variable}, will be replace by the values that were entered by the user.<br /><br />This means that you have to access the values given by the user in the form, using the format of {variable title}. For example if the field was called \'name\' then {name} would be replace with the user entered value for the name field.';
+$helptxt['CustomForm_template_function'] = 'Attention! You only need to use this setting if you want to customize the templates of your form submit pages.<br /><br /> This setting allows you to chose which template function from the "/themes/{current_theme}/CustomForm.template.php" file will be used for this particular form when a user is submitting it. This allows you to define your own templates to display the "Submit Form" page. Please note that the template function which will be used, has to be named with the format "form_template_{value for this setting}", otherwise the default "form_template_submit_form()" template function will be used.<br /><br /> If you are trying to create a new template then I recommend that you make a copy of the "form_template_submit_form()" function from the beginning of the "CustomForm.template.php" file and rename it, you can then alter your new function to get the desired effects.';
+//	Help text for the edit field page.
+$helptxt['CustomForm_field_title'] = 'This is the title that will be used to access the user input from this field, in the output post for this form. Refer to the help for the \'Output\' setting for a better explanation. Please note that this setting may not contain any special characters such as space, because they are not valid with the $_REQUEST[] variable.';
+$helptxt['CustomForm_text'] = 'This setting allows you to change the actual text which a user will see when they are submitting one of these forms.';
+$helptxt['CustomForm_type'] = 'This setting allows you to set the type of field that this is. Thus restricting the input that a user can submit.';
+$helptxt['CustomForm_type_vars'] = 'This allows you to set any necessary extra paramaters. It has different behaviors depending on the type of the current field.<br /><br />For a Select Box, it will allow you to put a series of options (separated by commas \'), for the user to select.<br /><br />For any checkbox, it will allow you to put two strings, separated by a comma, the first string will be shown if the checkbox is true while the second will be shown if the checkbox is false.<br /><br />For every Text Box, you can put the string \'parse_bbc\' if you want it to parse any BBC codes in the textbox, otherwise it will be removed.<br /><br /> You can also put in "size=(int)" (eg "size=12"), this will restrict the size of the data which the user can input. You can also put in \'required\' which will force the user to enter valid data for this field before the form will submit, as well as \'default=(str)\' which will be used as a default value if there is no valid user input for this field.<br /><br />Remember to separate all data/parameters in this setting with commas!';
+//	**End Custom Form Mod Help Text*
+]]></add>
+		</operation>
+	</file>
+</modification>

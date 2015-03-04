@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<name>Custom Form Mod</name>
+	<id>LHVWB:CustomFormMod</id>
+	<type>modification</type>
+	<version>1.1</version>
+	<install for="2.0 - 2.99.99">
+		<readme type="inline">This will Install the Custom Form Mod by LHVWB.
+This is the install process for SMF 2 Beta. If you are not using SMF 2 Beta then the install process will not work.
+
+This Mod allows you to create forms for users to submit posts to certain boards in a structured manner.
+Its uses could include, Structured Support Forms, Staff Application Forms, Error Reporting Forms and etc.
+
+I hope that you find this Mod useful.
+LHVWB</readme>
+		<database>install.php</database>
+		<modification type="file">modifications_smfv2.xml</modification>
+		<require-file name="CustomForm.php" destination="$sourcedir" />
+		<require-file name="CustomForm.template.php" destination="$themedir" />
+		<modification type="file">english.xml</modification>
+	</install>
+	<uninstall for="2.0 - 2.99.99">
+		<readme type="inline">This will Uninstall the Custom Form Mod by LHVWB</readme>
+		<modification type="file" reverse="true">modifications_smfv2.xml</modification>
+		<remove-file name="$sourcedir/CustomForm.php" />
+		<remove-file name="$themedir/CustomForm.template.php" />
+		<modification type="file" reverse="true">english.xml</modification>
+	</uninstall>
+</package-info>
