@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>LHVWB:CustomFormMod</id>
-	<version>1.1</version>
+	<version>1.7</version>
 		<file name="$boarddir/index.php">
 		<operation>
 			<search position="before"><![CDATA[
@@ -25,7 +25,7 @@
 			<search position="before"><![CDATA[
 	// Load the language and templates....
 	loadLanguage('Admin');
-	loadTemplate('Admin');
+	loadTemplate('Admin', 'admin');
 ]]></search>
 			<add><![CDATA[
 	loadLanguage('Modifications');
@@ -58,12 +58,12 @@ function CustomFormSettings($return_config = false)
 	if(isset($_GET['field_id']))
 		$field_id = (int) $_GET['field_id'];
 	
-	//	Do we need to deal with showing form settings?
+		//	Do we need to deal with showing form settings?
 	if(isset($form_id))
 	{
 		//	Get some information about this form.
 		$request = $smcFunc['db_query']('','
-			SELECT title, id_board, output, subject, template_function
+			SELECT title, id_board, icon, output, subject, form_exit, template_function
 			FROM {db_prefix}cf_forms
 			WHERE id_form = {int:id_form}',
 			array(
@@ -73,7 +73,7 @@ function CustomFormSettings($return_config = false)
 		
 		$data = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
-		
+
 		//	No data? Well, show the default settings page then.
 		if(empty($data))
 			redirectexit("action=admin;area=modsettings;sa=customform;");
@@ -112,6 +112,7 @@ function CustomFormSettings($return_config = false)
 			);
 			redirectexit("action=admin;area=modsettings;sa=customform;");
 		}
+
 		//	Do we need to update the form?
 		elseif(isset($_GET['update']))
 		{
@@ -129,15 +130,20 @@ function CustomFormSettings($return_config = false)
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}cf_forms
 				SET id_board = {int:id_board},
+				icon = {string:icon},
 				title = {string:title}, output = {string:output},
-				subject = {string:subject}, template_function = {string:template_function}
+				subject = {string:subject}, 
+				form_exit = {string:form_exit},
+				template_function = {string:template_function}
 				WHERE id_form = {int:id_form}',
 				array(
 					'id_form' => $form_id,
 					'id_board' => intval($_REQUEST['form_board_id']),
+					'icon' => $_REQUEST['icon'],
 					'title' => $_REQUEST['form_title'],
 					'output' => $_REQUEST['output'],
 					'subject' => $_REQUEST['subject'],
+					'form_exit' => $_REQUEST['form_exit'],
 					'template_function' => $_REQUEST['template_function'],
 				)
 			);
@@ -158,7 +164,7 @@ function CustomFormSettings($return_config = false)
 				array($form_id),
 				array('id_field')
 			);
-			
+
 			//	Get the field id.
 			$field_id = $smcFunc['db_insert_id']('{db_prefix}cf_fields', 'id_field');
 			
@@ -170,8 +176,10 @@ function CustomFormSettings($return_config = false)
 		$context['custom_form_settings'] = array(
 			'permissions' => 'custom_forms_'.$form_id,
 			'form_board_id' => $data['id_board'],
+			'icon' => $data['icon'],
 			'form_title' => $data['title'],
 			'subject' => $data['subject'],
+			'form_exit' => $data['form_exit'],
 			'output' => $data['output'],
 			'template_function' => $data['template_function'],
 		);
@@ -252,6 +260,64 @@ function CustomFormSettings($return_config = false)
 		$context['page_title'] = $txt['CustomForm_tabheader'];
 		$context['sub_template'] = 'CustomForm_FormSettings';
 		
+      // Load the boards and categories for adding or editing a Form.
+      $request = $smcFunc['db_query']('', '
+         SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
+         FROM {db_prefix}boards AS b
+            LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)',
+         array()
+      );
+      $context['categories'] = array();
+      while ($row = $smcFunc['db_fetch_assoc']($request))
+      {
+         if (!isset($context['categories'][$row['id_cat']]))
+            $context['categories'][$row['id_cat']] = array (
+               'name' => strip_tags($row['cat_name']),
+               'boards' => array(),
+            );
+
+         $context['categories'][$row['id_cat']]['boards'][] = array(
+            'id' => $row['id_board'],
+            'name' => strip_tags($row['name']),
+            'category' => strip_tags($row['cat_name']),
+            'child_level' => $row['child_level'],
+            'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board'] && $row['id_board'] != $board,
+         );
+      }
+      $smcFunc['db_free_result']($request);
+
+      if (empty($context['categories']))
+         fatal_lang_error('Invalid Board', false);
+
+		
+		$context['icon'] = !empty($context['cf_forms']['icon']) ? $context['cf_forms']['icon'] : 'xx';
+		
+		require_once($sourcedir . '/Subs-Editor.php');
+		// Message icons - customized icons are off?
+		$context['icons'] = getMessageIcons(!empty($context['cf_forms']['id_board']) ? $context['cf_forms']['id_board'] : 0);
+
+		if (!empty($context['icons']))
+			$context['icons'][count($context['icons']) - 1]['is_last'] = true;
+
+		$context['icon_url'] = '';
+		for ($i = 0, $n = count($context['icons']); $i < $n; $i++)
+		{
+			$context['icons'][$i]['selected'] = $context['custom_form_settings']['icon'] == $context['icons'][$i]['value'];
+			if ($context['icons'][$i]['selected'])
+				$context['icon_url'] = $context['icons'][$i]['url'];
+		}
+		if (empty($context['icon_url']))
+		{
+			$context['icon_url'] = $settings[file_exists($settings['theme_dir'] . '/images/post/' . $context['icon'] . '.gif') ? 'images_url' : 'default_images_url'] . '/post/' . $context['icon'] . '.gif';
+			array_unshift($context['icons'], array(
+				'value' => $context['icon'],
+				'name' => $txt['current_icon'],
+				'url' => $context['icon_url'],
+				'is_last' => empty($context['icons']),
+				'selected' => true,
+			));
+		}
+
 		//	Load all of the templates that we need.
 		loadTemplate('CustomForm');
 		loadTemplate('GenericControls');
@@ -408,6 +474,8 @@ function CustomFormSettings($return_config = false)
 					'selectbox' => $txt['CustomForm_selectionbox'],
 					'float' => $txt['CustomForm_float'],
 					'int' => $txt['CustomForm_int'],
+					'radiobox' => $txt['CustomForm_radiobox'],
+					'infobox' => $txt['CustomForm_infoboxa'],
 				)
 			),			
 			array('text', 'field_type_vars', 'value' => $data['type_vars'], 'text_label' => $txt['CustomForm_type_vars'], 'help' => 'CustomForm_type_vars'),	
@@ -634,9 +702,9 @@ function list_CustomForm_fields($nul, $nul, $nul, $id)
 		//	Convert the field type into the proper text strings.
 		$type = str_replace(
 			//	Search array.
-			array('largetextbox', 'textbox', 'checkbox', 'selectbox', 'float', 'int'),
+			array('largetextbox', 'textbox', 'checkbox', 'selectbox', 'float', 'int', 'radiobox', 'infobox'),
 			//	Replace array.
-			array( $txt['CustomForm_large_textbox'], $txt['CustomForm_textbox'], $txt['CustomForm_checkbox'], $txt['CustomForm_selectionbox'], $txt['CustomForm_float'], $txt['CustomForm_int']), 
+			array( $txt['CustomForm_large_textbox'], $txt['CustomForm_textbox'], $txt['CustomForm_checkbox'], $txt['CustomForm_selectionbox'], $txt['CustomForm_float'], $txt['CustomForm_int'], $txt['CustomForm_radiobox'], $txt['CustomForm_infoboxa']), 
 			$field['type']
 		);
 		
@@ -691,7 +759,7 @@ function get_CustomForm_permissions()
 		WHERE permission 
 		LIKE \'custom_forms_%\''
 	);
-		
+
 	//	Store the data in a way that is easy to use. Permission => array (id_groups)
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$permissions[$row['permission']][] = $row['id_group'];

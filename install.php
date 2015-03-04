@@ -1,5 +1,5 @@
 <?php
-
+// Data Base Functions for the Custom Form Mod version 1.7
 //	File to create the Custom Form tables.
 
 //	Set up the correct columns for the table.
@@ -24,6 +24,14 @@ $columns = array(
 		'type' => 'tinytext',
 	),
 	array(
+		'name' => 'icon',
+		'type' => 'tinytext',
+	),
+	array(
+		'name' => 'form_exit',
+		'type' => 'tinytext',
+	),
+	array(
 		'name' => 'template_function',
 		'type' => 'tinytext',
 	),
@@ -42,7 +50,7 @@ $indexes = array(
 );
 
 //	Perform the table creation.
-$smcFunc['db_create_table']('cf_forms', $columns, $indexes, array(), 'update_remove');
+$smcFunc['db_create_table']('{db_prefix}cf_forms', $columns, $indexes, array(), 'update_remove');
 
 //	Set up the correct columns for the table.
 $columns = array(
@@ -87,7 +95,7 @@ $indexes = array(
 	),
 );
 
-$smcFunc['db_create_table']('cf_fields', $columns, $indexes, array(), 'update_remove');
+$smcFunc['db_create_table']('{db_prefix}cf_fields', $columns, $indexes, array(), 'update_remove');
 
 //	Delete any field that has the ID 0, just for version compatibility reasons.
 $smcFunc['db_query']('', '

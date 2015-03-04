@@ -7,11 +7,36 @@ function CustomForm()
 {
 	global $smcFunc, $context, $txt, $scripturl, $sourcedir, $user_info, $modSettings;
 	
+global $txt, $context, $sourcedir, $modSettings;
+   
+   
+   // Generate a visual verification code to make sure the user is no bot.
+      $context['require_verification'] = $user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
+      if ($context['require_verification'])
+      {
+         require_once($sourcedir . '/Subs-Editor.php');
+         $verificationOptions = array(
+            'id' => 'register',
+         );
+         $context['visual_verification'] = create_control_verification($verificationOptions);
+         $context['visual_verification_id'] = $verificationOptions['id'];
+      }
+      // Otherwise we have nothing to show.
+      else
+         $context['visual_verification'] = false;
+
+		//	Are we looking for the thank you page.
+		if (isset($_REQUEST['thankyou']))
+{
+		$context['sub_template'] = 'ThankYou';
+		loadTemplate('CustomForm');
+}
+else
 	//	Do we have a valid form id?
-	if(isset($_REQUEST['id'])
-	&& intval($_REQUEST['id']))
+	if(isset($_REQUEST['n'])
+	&& intval($_REQUEST['n']))
 	{
-		$form_id = intval($_REQUEST['id']);
+		$form_id = intval($_REQUEST['n']);
 		
 		//	Wait a second... Are you even allowed to use this form?
 		if(!allowedTo('custom_forms_'.$form_id))
@@ -19,20 +44,22 @@ function CustomForm()
 		
 		//	Get the data about the current form.
 		$request = $smcFunc['db_query']('','
-			SELECT title, output, subject, id_board, template_function
+			SELECT title, output, subject, id_board, icon, form_exit, template_function
 			FROM {db_prefix}cf_forms
 			WHERE id_form = {int:id}',
 			array(
 				'id' => $form_id,
 			)
 		);
-		
+
 		//	Did we get some form data? If not then redirect the user to the form view page.
 		if(!($form_data = $smcFunc['db_fetch_assoc']($request)))
 			redirectExit("action=form;");
 			
 		$output = $form_data['output'];
+		$exit = $form_data['form_exit'];
 		$subject = $form_data['subject'];
+		$icon = $form_data['icon'];
 		$board = $form_data['id_board'];
 		$form_title = $form_data['title'];
 		
@@ -66,7 +93,7 @@ function CustomForm()
 			redirectExit("action=form;");
 			
 		$fail_submit = false;
-		
+	
 		//	Do we need to submit this form?
 		if(isset($_GET['submit']))
 		{
@@ -152,6 +179,15 @@ function CustomForm()
 						if(($size != ''))
 							$value = rtrim(substr($value, 0, $size), '.');
 					break;
+					case 'radiobox':
+						//	Skip this field, if there are no radio select values.
+						if(empty($type_vars))
+							continue 2;
+						$value = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : '';
+						//	Make sure that the radiobox value is in the array, otherwise stop those dodgy users from passing weird values. ;)
+						if(!in_array($value, $type_vars))
+							$value = '';
+					break;
 					//	Do the formating for both large and normal textboxes. 
 					default:
 						$value = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : '';
@@ -170,10 +206,10 @@ function CustomForm()
 								$value = substr($value, 0, $size);
 						}
 				}
-				
+
 				//	Do we have an invalid value? Is this field required?
 				if(($required
-				&& (($value == '') || ($value == 0))
+				&& (($value == '') || ($value == '0'))
 				&& ($field['type'] != 'checkbox'))
 				//	Failing for selectboxes is far more simple, If there is no valid value, it fails.
 				|| (($field['type'] == 'selectbox') && ($value == '')))
@@ -186,32 +222,80 @@ function CustomForm()
 				
 				//	Add this fields value to the list of variables for the output post.
 				$vars[] = '/\{'.$field['title'].'\}/';
-				$replace[] = $value;
-				
+				$replace[] = str_replace('$','\$',$value);
+
+                //    {{ }} Syntax: Setup REGEX for removing entire {{ }} string or just stripping the outermost { }, depending upon the replacement value being blank or not
+                if($value == '')
+                {
+                    $vars_blank[] = '/\{[^\{\}]*\{'.$field['title'].'\}[^\{\}]*\}/'; 
+                    $vars_non_blank[] = '//';
+                }
+                else
+                {
+                    $vars_blank[] = '//';
+                    $vars_non_blank[] = '/\{[^\{\}]*\{'.$field['title'].'\}[^\{\}]*\}/';
+                }				
+
 				//	Also add this data back into the data array, just in case we can't actually submit the form.
 				$data[$i]['value'] = $value;
 				
 				//	Do a small fix for the last line, if this is a checkbox.
 				if($field['type'] == 'checkbox')
 					$data[$i]['value'] = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : false;
+
+                    if (($required) && (!$data[$i]['value']))
+                    {
+                        //   Do the 'fail form/field' stuff.
+                        $data[$i]['failed'] = true;
+                        $fail_submit = true;
+                        continue;
+                    }
+
 				//	Do a small fix for the last line, if this is a largetextbox.
 				if(($field['type'] == 'largetextbox'))
 					$data[$i]['value'] = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : '';
 			}
-			
+
+   // Check whether the visual verification code was entered correctly.
+      $context['require_verification'] = $user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
+      if ($context['require_verification'])
+	{
+			require_once($sourcedir . '/Subs-Editor.php');
+			$verificationOptions = array(
+				'id' => 'register',
+			);
+			$context['visual_verification'] = create_control_verification($verificationOptions, true);
+
+			if (is_array($context['visual_verification']))
+			{
+				loadLanguage('Errors');
+				foreach ($context['visual_verification'] as $error)
+					fatal_error($txt['error_' . $error], false);
+			}
+		}
+
 			//	Do we have completly valid field data?
 			if(!$fail_submit)
 			{
 				require_once($sourcedir.'/Subs-Post.php');
 
+                //    {{ }} Syntax: Strip out everything in {{ }} if value is blank
+                $output = preg_replace($vars_blank, '', $output);
+                $subject = preg_replace($vars_blank, '', $subject);
+
+                //    {{ }} Syntax: Remove outside brackets if value is not blank
+                $output = preg_replace_callback($vars_non_blank, create_function('$matches','return substr($matches[0],1,-1);'), $output);
+                $subject = preg_replace_callback($vars_non_blank, create_function('$matches','return substr($matches[0],1,-1);'), $subject);
+
 				//	Replace all vars with their correct value, for both the message and the subject.
 				$output = preg_replace($vars, $replace, $output);
 				$subject = preg_replace($vars, $replace, $subject);
-				
+
 				// Collect all necessary parameters for the creation of the post.
 				$msgOptions = array(
 					'id' =>  0,
 					'subject' => $subject,
+					'icon' => $icon,
 					'body' => $output,
 					'smileys_enabled' => true,
 				);
@@ -230,7 +314,16 @@ function CustomForm()
 				createPost($msgOptions, $topicOptions, $posterOptions);
 				
 				//	Redirect this user as well.
-				redirectexit('board=' . $board . '.0');
+				if ($exit == 'board' || $exit == '')
+				  redirectexit('board=' . $board . '.0');
+				elseif ($exit == 'forum')
+				  redirectExit();
+				elseif ($exit == 'form')
+				  redirectExit("action=form;");
+				elseif ($exit == 'thanks')
+				  redirectExit("action=form;thankyou");
+				else
+				  redirectexit("$exit");
 			}
 		}
 		
@@ -264,7 +357,12 @@ function CustomForm()
 			if(($field['type'] == 'selectbox')
 			&& empty($vars))
 				continue;
-			
+
+			//	Make sure that we have valid options, if this is a radiobox.
+			if(($field['type'] == 'radiobox')
+			&& empty($vars))
+				continue;			
+
 			//	Store any previous values for the template to look after.
 			if(isset($field['value']))
 				$modSettings[$field['title']] = $field['value'];
@@ -291,7 +389,7 @@ function CustomForm()
 		$context['settings_title'] = '<a href="'.$scripturl.'?action=form;">'.((isset($modSettings['CustomForm_view_title']) && ($modSettings['CustomForm_view_title'] != '')) ? $modSettings['CustomForm_view_title'] : $txt['CustomForm_tabheader']) . '</a> : ' . $form_title;
 		$context['failed_form_submit'] = $fail_submit;
 		$context['template_function'] = $form_data['template_function'];
-		$context['post_url'] = $scripturl.'?action=form;id='.$form_id.';submit;';
+		$context['post_url'] = $scripturl.'?action=form;n='.$form_id.';submit;';
 		$context['sub_template'] = 'submit_form';
 		loadTemplate('CustomForm');
 	}
@@ -327,7 +425,7 @@ function CustomForm()
 			WHERE b.id_board = f.id_board
 			AND b.redirect = \'\''
 		);
-		
+
 		//	Go through all of the forms and add them to the list.
 		while($row = $smcFunc['db_fetch_assoc']($request))
 		{
@@ -350,12 +448,13 @@ function CustomForm()
 		
 		//	Free the db request.
 		$smcFunc['db_free_result']($request);
-		
+
 		//	Finally load the necessary template for this action.	
 		$context['sub_template'] = 'FormList';
 		loadTemplate('CustomForm');
+
 	}
-	
+
 	//	Set the page title, just for lolz! :D
 	$context['page_title'] = (isset($modSettings['CustomForm_view_title']) && ($modSettings['CustomForm_view_title'] != '')) ? $modSettings['CustomForm_view_title'] : $txt['CustomForm_tabheader'];
 }
