@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>live627:form_leaders</id>
+	<version>1.0</version>
+
+	<file name="$sourcedir/Post.php">
+		<operation>
+			<search position="after"><![CDATA[// If they came from quick reply, and have to enter verification details, give them some notice.]]></search>
+			<add><![CDATA[pf_post_form();
+
+	]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[// Any mistakes?]]></search>
+			<add><![CDATA[pf_post_post_validate($post_errors, $posterIsGuest);
+
+	]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[$context['post_error']['messages'] = array();]]></search>
+			<add><![CDATA[// Why the hell is this even here!?]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[foreach ($post_errors as $post_error)]]></search>
+			<add><![CDATA[
+		if (is_array($post_error))
+		{
+			$post_error_id = $post_error[0];
+			// Not really used, but we'll still set that for consistency.
+			$context['post_error'][$post_error_id] = true;
+			$context['post_error']['messages'][] = sprintf($txt['error_' . $post_error_id], $post_error[1]);
+		}
+		else]]></add>
+		</operation>
+	</file>
+
+	<file name="$themedir/Post.template.php">
+		<operation>
+			<search position="after"><![CDATA[// Is visual verification enabled?]]></search>
+			<add><![CDATA[// Now put the topic fields, if any.
+	if (!empty($context['fields']))
+	{
+		echo '
+					<div id="postFieldsOnTopicHeader">
+						<img src="', $settings['images_url'], '/collapse.gif" alt="-" id="postFieldsOnTopicExpand" style="display: none;" /> <strong><a href="#" id="postFieldsOnTopicExpandLink">', $txt['custom_forms'], '</a></strong>
+					</div>
+					<div id="postFieldsOnTopic" class="smalltext">
+						<dl class="settings">';
+
+		template_input_custom_forms();
+
+		echo '
+						</dl>
+					</div>';
+	}
+
+	]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[// Code for showing and hiding additional options.]]></search>
+			<add><![CDATA[// Code for topic fields toggle.
+	global $user_info;
+	if (!empty($context['fields']))
+		echo '
+			var oSwappostFieldsOnTopic = new smc_Toggle({
+				bToggleEnabled: true,
+				bCurrentlyCollapsed: ', $context['is_custom_forms_collapsed'] ? 'true' : 'false', ',
+				aSwappableContainers: [
+					\'postFieldsOnTopic\'
+				],
+				aSwapImages: [
+					{
+						sId: \'postFieldsOnTopicExpand\',
+						srcExpanded: smf_images_url + \'/collapse.gif\',
+						altExpanded: \'-\',
+						srcCollapsed: smf_images_url + \'/expand.gif\',
+						altCollapsed: \'+\'
+					}
+				],
+				aSwapLinks: [
+					{
+						sId: \'postFieldsOnTopicExpandLink\',
+						msgExpanded: ', JavaScriptEscape($txt['custom_forms']), ',
+						msgCollapsed: ', JavaScriptEscape($txt['custom_forms']), '
+					}
+				],
+				oThemeOptions: {
+					bUseThemeSettings: ' . ($user_info['is_guest'] ? 'false' : 'true') . ',
+					sOptionName: \'postFields\',
+					sSessionVar: ' . JavaScriptEscape($context['session_var']) . ',
+					sSessionId: ' . JavaScriptEscape($context['session_id']) . '
+				},
+				oCookieOptions: {
+					bUseCookie: ' . ($user_info['is_guest'] ? 'true' : 'false') . ',
+					sCookieName: \'postFields\'
+				}
+			});';
+
+	]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Subs-Post.php">
+		<operation>
+			<search position="after"><![CDATA[// Alright, done now... we can abort now, I guess... at least this much is done.]]></search>
+			<add><![CDATA[pf_after($msgOptions, $topicOptions);
+
+	]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[// Finally, if we are setting the approved state we need to do much more work :(]]></search>
+			<add><![CDATA[pf_after($msgOptions, $topicOptions);
+
+	]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Display.php">
+		<operation>
+			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
+			<add><![CDATA[pf_display_message_list($messages);
+
+	]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[$output['is_message_author'] = $message['id_member'] == $user_info['id'];]]></search>
+			<add><![CDATA[
+
+	pf_display_post_done($counter, $output);]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/RemoveTopic.php">
+		<operation>
+			<search position="after"><![CDATA[// Update the pesky statistics.]]></search>
+			<add><![CDATA[pf_remove_message($message, $decreasePostCount);
+
+	]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[// Update the totals...]]></search>
+			<add><![CDATA[pf_remove_topics($topics, $decreasePostCount, $ignoreRecycling);
+
+	]]></add>
+		</operation>
+	</file>-
+
+	<file name="$themedir/Search.template.php">
+		<operation>
+		<search position="after"><![CDATA[if (empty($modSettings['search_simple_fulltext']))]]></search>
+			<add><![CDATA[template_search_custom_forms_simple();
+
+		]]></add>
+		</operation>
+		<operation>
+		<search position="before"><![CDATA[<dd>', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="4" class="input_text" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="4" class="input_text" /> ', $txt['days_word'], '</dd>]]></search>
+			<add><![CDATA[';
+
+		template_search_custom_forms();
+
+		echo']]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Search.php">
+		<operation>
+			<search position="before"><![CDATA[$search_params['maxage'] = !empty($search_params['maxage']) ? (int) $search_params['maxage'] : (int) $_REQUEST['maxage'];]]></search>
+			<add><![CDATA[
+
+	// Custom Forms
+	if (!empty($search_params['field']) || !empty($_REQUEST['customform']))
+	{
+		$search_params['field'] = !empty($search_params['field']) ? $search_params['field'] : $_REQUEST['customform'];
+		$query_custom_forms = array();
+		foreach ($search_params['field'] as $id_field => $value)
+		{
+			if (empty($value))
+			{
+				unset($search_params['field'][$id_field]);
+				continue;
+			}
+
+			$query_custom_forms['case'][] = 'mfd.id_field = {int:field_id_' . $id_field . '} AND mfd.value = {string:val_field_id_' . $id_field . '}';
+			$query_custom_forms['params']['field_id_' . $id_field] = $id_field;
+			$query_custom_forms['params']['val_field_id_' . $id_field] = $value;
+
+			// Hack to beat the session cache.
+			$search_params['val_field_id_' . $id_field] = $value;
+		}
+
+		$request = $smcFunc['db_search_query']('', '
+			SELECT mfd.id_msg
+			FROM {db_prefix}custom_form_fields AS mf
+				INNER JOIN {db_prefix}custom_form_field_data AS mfd ON (CASE
+					WHEN ' . implode(' THEN 1
+					WHEN ', $query_custom_forms['case']). ' THEN 1 END)
+			WHERE mf.id_field IN ({array_int:field_list}) AND mf.can_search = \'yes\'',
+			array_merge($query_custom_forms['params'], array(
+				'field_list' => array_keys($search_params['field']),
+			))
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['query_custom_forms'][$row['id_msg']] = true;
+		$smcFunc['db_free_result']($request);
+	}]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[// *** A last error check]]></search>
+			<add><![CDATA[
+	unset($context['search_errors']['invalid_search_string']);]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[$subject_query['where'][] = 't.id_form ' . $formQuery;]]></search>
+			<add><![CDATA[
+
+					// Custom Forms
+					if (!empty($search_params['field']))
+					{
+						$subject_query['where'][] = 't.id_first_msg IN ({array_int:field_list})';
+						$subject_query['params']['field_list'] = array_keys($context['query_custom_forms']);
+					}]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[if (!empty($search_params['topic']))
+						{
+							$subject_query['where'][] = 't.id_topic = {int:topic}';
+							$subject_query['params']['topic'] = $search_params['topic'];
+						}]]></search>
+			<add><![CDATA[
+
+						// Custom Forms
+						if (!empty($search_params['field']))
+						{
+							$subject_query['where'][] = 't.id_first_msg IN ({array_int:field_list})';
+							$subject_query['params']['field_list'] = array_keys($context['query_custom_forms']);
+						}]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[if (!empty($search_params['topic']))
+					{
+						$main_query['where'][] = 'm.id_topic = {int:topic}';
+						$main_query['parameters']['topic'] = $search_params['topic'];
+					}]]></search>
+			<add><![CDATA[
+
+					// Custom Forms
+					if (!empty($search_params['field']))
+					{
+						$main_query['where'][] = 'm.id_msg IN ({array_int:field_list})';
+						$main_query['parameters']['field_list'] = array_keys($context['query_custom_forms']);
+					}]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[$context['page_title'] = $txt['set_parameters'];]]></search>
+			<add><![CDATA[
+
+	$fields = total_getCustomFormFieldsSearchable();
+	$list = array();
+	foreach ($fields as $field)
+	{
+		$group_list = explode(',', $field['groups']);
+		$is_allowed = array_intersect($user_info['groups'], $group_list);
+		if (empty($is_allowed))
+			continue;
+
+		$list[$field['id_field']] = $field;
+	}
+	call_integration_hook('integrate_get_custom_forms_searchable_filtered', array($list));
+	pf_load_fields($list);
+	loadLanguage('CustomFormFields');
+	loadTemplate('CustomFormFields');]]></add>
+		</operation>
+	</file>
+
+</modification>
