@@ -590,6 +590,7 @@ function EditCustomFormField()
 				$in_data,
 				array('id_field')
 			);
+			$context['fid'] = $smcFunc['db_insert_id']('{db_prefix}custom_form_fields', 'id_field');
 		}
 		if (!empty($_POST['forms']))
 		{
