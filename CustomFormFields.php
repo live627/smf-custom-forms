@@ -600,7 +600,7 @@ function EditCustomFormField()
 					'current_field' => $context['fid'],
 				)
 			);
-			$forms = array_map(function($value) {
+			$forms = array_map(function ($value) use ($context) {
 				return [(int) $value, $context['fid']];
 			}, array_keys($_POST['forms']));
 			$smcFunc['db_insert']('',
