@@ -115,7 +115,7 @@ function template_edit2()
 
 	echo '
 	<div id="admincenter">
-		<form action="', $scripturl, '?action=admin;area=customforms;sa=edit" method="post" accept-charset="UTF-8">
+		<form action="', $scripturl, '?action=admin;area=customforms;sa=edit2" method="post" accept-charset="UTF-8">
 			<div class="cat_bar">
 				<h3 class="catbg">
 					', $context['page_title2'], '

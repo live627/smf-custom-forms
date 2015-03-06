@@ -97,7 +97,7 @@ function ListCustomForms()
 			'function' => 'list_getCustomForms',
 		),
 		'get_count' => array(
-			'function' => 'list_getCustomFormFieldSize',
+			'function' => 'list_getNumCustomForms',
 		),
 		'columns' => array(
 			'name' => array(
@@ -225,7 +225,7 @@ function list_getCustomForms($start, $items_per_page, $sort)
 
 	$list = array();
 	$request = $smcFunc['db_query']('', '
-		SELECT id_form, name, description, type, bbc, active, can_search
+		SELECT id_form, name, description, bbc, active, can_search
 		FROM {db_prefix}custom_forms
 		ORDER BY {raw:sort}
 		LIMIT {int:start}, {int:items_per_page}',
@@ -273,7 +273,7 @@ function total_getCustomFormsSearchable()
 	return $list;
 }
 
-function get_custom_forms_filtered($form, $is_message_index = false)
+function get_custom_forms_filtered3($form, $is_message_index = false)
 {
 	global $context, $user_info;
 
@@ -292,7 +292,7 @@ function get_custom_forms_filtered($form, $is_message_index = false)
 	return $list;
 }
 
-function list_getCustomFormFieldSize()
+function list_getNumCustomForms()
 {
 	global $smcFunc;
 
@@ -306,7 +306,7 @@ function list_getCustomFormFieldSize()
 	return $numProfileFields;
 }
 
-function EditCustomFormField()
+function EditCustomForm()
 {
 	global $txt, $scripturl, $context, $settings, $smcFunc;
 
@@ -354,35 +354,28 @@ function EditCustomFormField()
 		);
 		$context['field'] = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-		{
-			if ($row['type'] == 'textarea')
-				@list ($rows, $cols) = @explode(',', $row['default_value']);
-			else
-			{
-				$rows = 3;
-				$cols = 30;
-			}
-
 			$context['field'] = array(
 				'name' => $row['name'],
 				'description' => $row['description'],
-				'enclose' => $row['enclose'],
-				'type' => $row['type'],
-				'length' => $row['size'],
-				'rows' => $rows,
-				'cols' => $cols,
 				'bbc' => $row['bbc'] == 'yes',
-				'default_check' => $row['type'] == 'check' && $row['default_value'] ? true : false,
-				'default_select' => $row['type'] == 'select' || $row['type'] == 'radio' ? $row['default_value'] : '',
-				'options' => strlen($row['options']) > 1 ? explode(',', $row['options']) : array('', '', ''),
 				'active' => $row['active'] == 'yes',
 				'can_search' => $row['can_search'] == 'yes',
-				'mask' => $row['mask'],
-				'regex' => $row['regex'],
-				'forms' => !empty($row['forms']) ? explode(',', $row['forms']) : array(),
+				'fields' => array(),
 				'groups' => !empty($row['groups']) ? explode(',', $row['groups']) : array(),
 			);
-		}
+		$smcFunc['db_free_result']($request);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_field
+			FROM {db_prefix}custom_form_field_link
+			WHERE id_form = {int:current_field}',
+			array(
+				'current_field' => $context['fid'],
+			)
+		);
+		$context['field']['fields'] = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['field']['fields'][] = $row['id_field'];
 		$smcFunc['db_free_result']($request);
 	}
 
@@ -391,20 +384,10 @@ function EditCustomFormField()
 		$context['field'] = array(
 			'name' => '',
 			'description' => '',
-			'enclose' => '',
-			'type' => 'text',
-			'length' => 255,
-			'rows' => 4,
-			'cols' => 30,
 			'bbc' => false,
-			'default_check' => false,
-			'default_select' => '',
-			'options' => array('', '', ''),
 			'active' => true,
 			'can_search' => false,
-			'mask' => '',
-			'regex' => '',
-			'forms' => array(),
+			'fields' => array(),
 			'groups' => array(),
 		);
 
@@ -422,70 +405,29 @@ function EditCustomFormField()
 		$active = !empty($_POST['active']) ? 'yes' : 'no';
 		$can_search = !empty($_POST['can_search']) ? 'yes' : 'no';
 
-		$mask = isset($_POST['mask']) ? $_POST['mask'] : '';
-		$regex = isset($_POST['regex']) ? $_POST['regex'] : '';
-		$length = isset($_POST['length']) ? (int) $_POST['length'] : 255;
 		$groups = !empty($_POST['groups']) ? implode(',', array_keys($_POST['groups'])) : '';
 		$forms = !empty($_POST['forms']) ? implode(',', array_keys($_POST['forms'])) : '';
 
-		$options = '';
-		$newOptions = array();
-		$default = isset($_POST['default_check']) && $_POST['type'] == 'check' ? 1 : '';
-		if (!empty($_POST['select_option']) && ($_POST['type'] == 'select' || $_POST['type'] == 'radio'))
-		{
-			foreach ($_POST['select_option'] as $k => $v)
-			{
-				$v = $smcFunc['htmlspecialchars']($v);
-				$v = strtr($v, array(',' => ''));
-
-				if (trim($v) == '')
-					continue;
-
-				$newOptions[$k] = $v;
-
-				if (isset($_POST['default_select']) && $_POST['default_select'] == $k)
-					$default = $v;
-			}
-			$options = implode(',', $newOptions);
-		}
-
-		if ($_POST['type'] == 'textarea')
-			$default = (int) $_POST['rows'] . ',' . (int) $_POST['cols'];
-
 		$up_col = array(
-			'name = {string:name}', ' description = {string:description}', ' enclose = {string:enclose}',
-			'`type` = {string:type}', ' size = {int:length}',
-			'options = {string:options}',
-			'active = {string:active}', ' default_value = {string:default_value}',
-			'can_search = {string:can_search}', ' bbc = {string:bbc}', ' mask = {string:mask}', ' regex = {string:regex}',
-			'groups = {string:groups}', ' forms = {string:forms}',
+			'name = {string:name}', ' description = {string:description}',
+			'active = {string:active}', 'can_search = {string:can_search}', ' bbc = {string:bbc}',
+			'groups = {string:groups}',
 		);
 		$up_data = array(
-			'length' => $length,
 			'active' => $active,
 			'can_search' => $can_search,
 			'bbc' => $bbc,
 			'current_field' => $context['fid'],
 			'name' => $_POST['name'],
 			'description' => $_POST['description'],
-			'enclose' => $_POST['enclose'],
-			'type' => $_POST['type'],
-			'options' => $options,
-			'default_value' => $default,
-			'mask' => $mask,
-			'regex' => $regex,
 			'groups' => $groups,
-			'forms' => $forms,
 		);
 		$in_col = array(
-			'name' => 'string', 'description' => 'string', 'enclose' => 'string',
-			'type' => 'string', 'size' => 'string', 'options' => 'string', 'active' => 'string', 'default_value' => 'string',
-			'can_search' => 'string', 'bbc' => 'string', 'mask' => 'string', 'regex' => 'string', 'groups' => 'string', 'forms' => 'string',
+			'name' => 'string', 'description' => 'string', 'active' => 'string',
+			'can_search' => 'string', 'bbc' => 'string', 'groups' => 'string',
 		);
 		$in_data = array(
-			$_POST['name'], $_POST['description'], $_POST['enclose'],
-			$_POST['type'], $length, $options, $active, $default,
-			$can_search, $bbc, $mask, $regex, $groups, $forms,
+			$_POST['name'], $_POST['description'], $active, $can_search, $bbc, $groups,
 		);
 		call_integration_hook('integrate_save_post_field', array(&$up_col, &$up_data, &$in_col, &$in_data));
 

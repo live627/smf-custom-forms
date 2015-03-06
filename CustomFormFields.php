@@ -20,7 +20,7 @@ function pf_admin_areas(&$admin_areas)
 
 function CustomFormFields()
 {
-	global $context, $txt;
+	global $context, $sourcedir, $txt;
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
@@ -30,7 +30,7 @@ function CustomFormFields()
 
 	$sub_actions = array(
 		'index' => 'ListCustomForms',
-		'edit' => 'EditCustomFormField',
+		'edit' => 'EditCustomForm',
 		'index2' => 'ListCustomFormFields',
 		'edit2' => 'EditCustomFormField',
 	);
@@ -385,7 +385,7 @@ function EditCustomFormField()
 	$context['page_title'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['pf_title'] : $txt['pf_add']);
 	$context['page_title2'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['pf_title'] : $txt['pf_add']);
 	$context['html_headers'] .= '<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/customformsadmin.js"></script>';
-	loadTemplate('CustomFormFields');
+	loadTemplate('CustomForms');
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_form, name
@@ -450,10 +450,23 @@ function EditCustomFormField()
 				'can_search' => $row['can_search'] == 'yes',
 				'mask' => $row['mask'],
 				'regex' => $row['regex'],
-				'forms' => !empty($row['forms']) ? explode(',', $row['forms']) : array(),
+				'forms' => array(),
 				'groups' => !empty($row['groups']) ? explode(',', $row['groups']) : array(),
 			);
 		}
+		$smcFunc['db_free_result']($request);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_form
+			FROM {db_prefix}custom_form_field_link
+			WHERE id_field = {int:current_field}',
+			array(
+				'current_field' => $context['fid'],
+			)
+		);
+		$context['field']['forms'] = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['field']['forms'][] = $row['id_form'];
 		$smcFunc['db_free_result']($request);
 	}
 
@@ -497,7 +510,6 @@ function EditCustomFormField()
 		$regex = isset($_POST['regex']) ? $_POST['regex'] : '';
 		$length = isset($_POST['length']) ? (int) $_POST['length'] : 255;
 		$groups = !empty($_POST['groups']) ? implode(',', array_keys($_POST['groups'])) : '';
-		$forms = !empty($_POST['forms']) ? implode(',', array_keys($_POST['forms'])) : '';
 
 		$options = '';
 		$newOptions = array();
@@ -529,7 +541,7 @@ function EditCustomFormField()
 			'options = {string:options}',
 			'active = {string:active}', ' default_value = {string:default_value}',
 			'can_search = {string:can_search}', ' bbc = {string:bbc}', ' mask = {string:mask}', ' regex = {string:regex}',
-			'groups = {string:groups}', ' forms = {string:forms}',
+			'groups = {string:groups}',
 		);
 		$up_data = array(
 			'length' => $length,
@@ -546,17 +558,16 @@ function EditCustomFormField()
 			'mask' => $mask,
 			'regex' => $regex,
 			'groups' => $groups,
-			'forms' => $forms,
 		);
 		$in_col = array(
 			'name' => 'string', 'description' => 'string', 'enclose' => 'string',
 			'type' => 'string', 'size' => 'string', 'options' => 'string', 'active' => 'string', 'default_value' => 'string',
-			'can_search' => 'string', 'bbc' => 'string', 'mask' => 'string', 'regex' => 'string', 'groups' => 'string', 'forms' => 'string',
+			'can_search' => 'string', 'bbc' => 'string', 'mask' => 'string', 'regex' => 'string', 'groups' => 'string',
 		);
 		$in_data = array(
 			$_POST['name'], $_POST['description'], $_POST['enclose'],
 			$_POST['type'], $length, $options, $active, $default,
-			$can_search, $bbc, $mask, $regex, $groups, $forms,
+			$can_search, $bbc, $mask, $regex, $groups,
 		);
 		call_integration_hook('integrate_save_post_field', array(&$up_col, &$up_data, &$in_col, &$in_data));
 
@@ -577,6 +588,25 @@ function EditCustomFormField()
 				'{db_prefix}custom_form_fields',
 				$in_col,
 				$in_data,
+				array('id_field')
+			);
+		}
+		if (!empty($_POST['forms']))
+		{
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}custom_form_field_link
+				WHERE id_field = {int:current_field}',
+				array(
+					'current_field' => $context['fid'],
+				)
+			);
+			$forms = array_map(function($value) {
+				return [(int) $value, $context['fid']];
+			}, array_keys($_POST['forms']));
+			$smcFunc['db_insert']('',
+				'{db_prefix}custom_form_fields',
+				array('id_field'),
+				$forms,
 				array('id_field')
 			);
 		}
