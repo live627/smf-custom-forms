@@ -604,7 +604,7 @@ function EditCustomFormField()
 				return [(int) $value, $context['fid']];
 			}, array_keys($_POST['forms']));
 			$smcFunc['db_insert']('',
-				'{db_prefix}custom_form_fields',
+				'{db_prefix}custom_form_field_link',
 				array('id_form' => 'int', 'id_field' => 'int'),
 				$forms,
 				array('id_field')
