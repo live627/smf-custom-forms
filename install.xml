@@ -7,13 +7,13 @@
 	<file name="$sourcedir/Post.php">
 		<operation>
 			<search position="after"><![CDATA[// If they came from quick reply, and have to enter verification details, give them some notice.]]></search>
-			<add><![CDATA[pf_post_form();
+			<add><![CDATA[custom_forms_post_form();
 
 	]]></add>
 		</operation>
 		<operation>
 			<search position="after"><![CDATA[// Any mistakes?]]></search>
-			<add><![CDATA[pf_post_post_validate($post_errors, $posterIsGuest);
+			<add><![CDATA[custom_forms_post_post_validate($post_errors, $posterIsGuest);
 
 	]]></add>
 		</operation>
@@ -104,13 +104,13 @@
 	<file name="$sourcedir/Subs-Post.php">
 		<operation>
 			<search position="after"><![CDATA[// Alright, done now... we can abort now, I guess... at least this much is done.]]></search>
-			<add><![CDATA[pf_after($msgOptions, $topicOptions);
+			<add><![CDATA[custom_forms_after($msgOptions, $topicOptions);
 
 	]]></add>
 		</operation>
 		<operation>
 			<search position="after"><![CDATA[// Finally, if we are setting the approved state we need to do much more work :(]]></search>
-			<add><![CDATA[pf_after($msgOptions, $topicOptions);
+			<add><![CDATA[custom_forms_after($msgOptions, $topicOptions);
 
 	]]></add>
 		</operation>
@@ -119,7 +119,7 @@
 	<file name="$sourcedir/Display.php">
 		<operation>
 			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
-			<add><![CDATA[pf_display_message_list($messages);
+			<add><![CDATA[custom_forms_display_message_list($messages);
 
 	]]></add>
 		</operation>
@@ -127,20 +127,20 @@
 			<search position="before"><![CDATA[$output['is_message_author'] = $message['id_member'] == $user_info['id'];]]></search>
 			<add><![CDATA[
 
-	pf_display_post_done($counter, $output);]]></add>
+	custom_forms_display_post_done($counter, $output);]]></add>
 		</operation>
 	</file>
 
 	<file name="$sourcedir/RemoveTopic.php">
 		<operation>
 			<search position="after"><![CDATA[// Update the pesky statistics.]]></search>
-			<add><![CDATA[pf_remove_message($message, $decreasePostCount);
+			<add><![CDATA[custom_forms_remove_message($message, $decreasePostCount);
 
 	]]></add>
 		</operation>
 		<operation>
 			<search position="after"><![CDATA[// Update the totals...]]></search>
-			<add><![CDATA[pf_remove_topics($topics, $decreasePostCount, $ignoreRecycling);
+			<add><![CDATA[custom_forms_remove_topics($topics, $decreasePostCount, $ignoreRecycling);
 
 	]]></add>
 		</operation>
@@ -267,7 +267,7 @@
 		$list[$field['id_field']] = $field;
 	}
 	call_integration_hook('integrate_get_custom_forms_searchable_filtered', array($list));
-	pf_load_fields($list);
+	custom_forms_load_fields($list);
 	loadLanguage('ManageCustomFormFields');
 	loadTemplate('ManageCustomFormFields');]]></add>
 		</operation>

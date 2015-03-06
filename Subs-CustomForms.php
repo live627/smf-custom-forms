@@ -1,6 +1,6 @@
 <?php
 
-function pf_admin_areas(&$admin_areas)
+function custom_forms_admin_areas(&$admin_areas)
 {
 	global $txt;
 
@@ -18,7 +18,7 @@ function pf_admin_areas(&$admin_areas)
 	);
 }
 
-function pf_load_fields($fields)
+function custom_forms_load_fields($fields)
 {
 	global $form, $context, $options, $smcFunc;
 
@@ -104,17 +104,17 @@ function rennder_field($field, $value, $exists)
 	);
 }
 
-function pf_post_form()
+function custom_forms_post_form()
 {
 	global $form, $context, $options, $user_info;
 
-	pf_load_fields(get_custom_forms_filtered($form));
+	custom_forms_load_fields(get_custom_forms_filtered($form));
 	loadLanguage('CustomFormFields');
 	loadTemplate('CustomFormFields');
 	$context['is_custom_forms_collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['postFields']) : !empty($options['postFields']);
 }
 
-function pf_after($msgOptions, $topicOptions)
+function custom_forms_after($msgOptions, $topicOptions)
 {
 	global $form, $context, $smcFunc, $topic, $user_info;
 
@@ -202,7 +202,7 @@ function pf_after($msgOptions, $topicOptions)
 	}
 }
 
-function pf_post_post_validate(&$post_errors, $posterIsGuest)
+function custom_forms_post_post_validate(&$post_errors, $posterIsGuest)
 {
 	global $form, $context, $sourcedir, $smcFunc, $topic;
 
@@ -247,12 +247,12 @@ function pf_post_post_validate(&$post_errors, $posterIsGuest)
 		}
 }
 
-function pf_remove_message($message, $decreasePostCount)
+function custom_forms_remove_message($message, $decreasePostCount)
 {
-	pf_remove_messages($message, $decreasePostCount);
+	custom_forms_remove_messages($message, $decreasePostCount);
 }
 
-function pf_remove_messages($message, $decreasePostCount)
+function custom_forms_remove_messages($message, $decreasePostCount)
 {
 	global $smcFunc;
 
@@ -266,7 +266,7 @@ function pf_remove_messages($message, $decreasePostCount)
 		);
 }
 
-function pf_remove_topics($topics, $decreasePostCount, $ignoreRecycling)
+function custom_forms_remove_topics($topics, $decreasePostCount, $ignoreRecycling)
 {
 	global $smcFunc;
 
@@ -285,10 +285,10 @@ function pf_remove_topics($topics, $decreasePostCount, $ignoreRecycling)
 	$smcFunc['db_free_result']($request);
 
 	if (!empty($messages))
-		pf_remove_messages($messages, $decreasePostCount);
+		custom_forms_remove_messages($messages, $decreasePostCount);
 }
 
-function pf_display_topics($topic_ids)
+function custom_forms_display_topics($topic_ids)
 {
 	global $smcFunc;
 
@@ -310,10 +310,10 @@ function pf_display_topics($topic_ids)
 	$smcFunc['db_free_result']($request);
 
 	if (!empty($messages))
-		pf_display_message_list($messages, true);
+		custom_forms_display_message_list($messages, true);
 }
 
-function pf_display_message_list($messages, $is_message_index = false)
+function custom_forms_display_message_list($messages, $is_message_index = false)
 {
 	global $form, $context, $smcFunc;
 
@@ -349,7 +349,7 @@ function pf_display_message_list($messages, $is_message_index = false)
 	}
 }
 
-function pf_display_post_done($counter, &$output)
+function custom_forms_display_post_done($counter, &$output)
 {
 	global $context;
 	$field_order = array(1, 2, 4, 5, 6, 10);

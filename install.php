@@ -9,7 +9,7 @@ elseif (!defined('SMF'))
 	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
 
 add_integration_function('integrate_pre_include', '$sourcedir/Subs-CustomForms.php');
-add_integration_function('integrate_admin_areas', 'pf_admin_areas');
+add_integration_function('integrate_admin_areas', 'custom_forms_admin_areas');
 
 if (!array_key_exists('db_add_column', $smcFunc))
 	db_extend('packages');
