@@ -10,10 +10,10 @@ function custom_forms_admin_areas(&$admin_areas)
 		'icon' => 'settings.gif',
 		'function' => 'ManageCustomFormFields',
 		'subsections' => array(
-			'index' => array($txt['pf_menu_index']),
-			'edit' => array($txt['pf_menu_edit']),
-			'index2' => array($txt['pf_menu_index2']),
-			'edit2' => array($txt['pf_menu_edit2']),
+			'index' => array($txt['custom_forms_menu_index']),
+			'edit' => array($txt['custom_forms_menu_edit']),
+			'index2' => array($txt['custom_forms_menu_index2']),
+			'edit2' => array($txt['custom_forms_menu_edit2']),
 		),
 	);
 }

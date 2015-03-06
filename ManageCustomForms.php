@@ -88,10 +88,10 @@ function ListManageCustomForms()
 		redirectexit('action=admin;area=customforms;sa=edit');
 
 	$listOptions = array(
-		'id' => 'pf_fields',
+		'id' => 'custom_forms_fields',
 		'base_href' => $scripturl . '?action=action=admin;area=customforms',
 		'default_sort_col' => 'name',
-		'no_items_label' => $txt['pf_none'],
+		'no_items_label' => $txt['custom_forms_none'],
 		'items_per_page' => 25,
 		'get_items' => array(
 			'function' => 'list_getManageCustomForms',
@@ -102,7 +102,7 @@ function ListManageCustomForms()
 		'columns' => array(
 			'name' => array(
 				'header' => array(
-					'value' => $txt['pf_name'],
+					'value' => $txt['custom_forms_name'],
 					'style' => 'text-align: left;',
 				),
 				'data' => array(
@@ -120,7 +120,7 @@ function ListManageCustomForms()
 			),
 			'bbc' => array(
 				'header' => array(
-					'value' => $txt['pf_bbc'],
+					'value' => $txt['custom_forms_bbc'],
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
@@ -137,7 +137,7 @@ function ListManageCustomForms()
 			),
 			'active' => array(
 				'header' => array(
-					'value' => $txt['pf_active'],
+					'value' => $txt['custom_forms_active'],
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
@@ -154,7 +154,7 @@ function ListManageCustomForms()
 			),
 			'can_search' => array(
 				'header' => array(
-					'value' => $txt['pf_can_search'],
+					'value' => $txt['custom_forms_can_search'],
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
@@ -207,7 +207,7 @@ function ListManageCustomForms()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="save" value="' . $txt['save'] . '" class="submit">&nbsp;&nbsp;<input type="submit" name="delete" value="' . $txt['delete'] . '" onclick="return confirm(' . JavaScriptEscape($txt['pf_delete_sure']) . ');" class="delete">&nbsp;&nbsp;<input type="submit" name="new" value="' . $txt['pf_make_new'] . '" class="new">',
+				'value' => '<input type="submit" name="save" value="' . $txt['save'] . '" class="submit">&nbsp;&nbsp;<input type="submit" name="delete" value="' . $txt['delete'] . '" onclick="return confirm(' . JavaScriptEscape($txt['custom_forms_delete_sure']) . ');" class="delete">&nbsp;&nbsp;<input type="submit" name="new" value="' . $txt['custom_forms_make_new'] . '" class="new">',
 				'style' => 'text-align: right;',
 			),
 		),
@@ -216,7 +216,7 @@ function ListManageCustomForms()
 	call_integration_hook('integrate_list_custom_forms', array(&$listOptions));
 	createList($listOptions);
 	$context['sub_template'] = 'show_list';
-	$context['default_list'] = 'pf_fields';
+	$context['default_list'] = 'custom_forms_fields';
 }
 
 function list_getManageCustomForms($start, $items_per_page, $sort)
@@ -311,8 +311,8 @@ function EditManageCustomForm()
 	global $txt, $scripturl, $context, $settings, $smcFunc;
 
 	$context['fid'] = isset($_REQUEST['fid']) ? (int) $_REQUEST['fid'] : 0;
-	$context['page_title'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['pf_title'] : $txt['pf_add']);
-	$context['page_title2'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['pf_title'] : $txt['pf_add']);
+	$context['page_title'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['custom_forms_title'] : $txt['custom_forms_add']);
+	$context['page_title2'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['custom_forms_title'] : $txt['custom_forms_add']);
 	$context['html_headers'] .= '<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/customformsadmin.js"></script>';
 	loadTemplate('ManageCustomForms');
 

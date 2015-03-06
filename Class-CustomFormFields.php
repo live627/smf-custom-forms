@@ -129,7 +129,7 @@ class postFields_select extends postFieldsBase
 			$found = true;
 
 		if (!$found)
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('custom_forms_invalid_value', $this->field['name']);
 	}
 	function getValue()
 	{
@@ -236,7 +236,7 @@ class postFieldMask_email extends postFieldMaskBase
 	{
 		global $txt;
 		if (!preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $this->value))
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('custom_forms_invalid_value', $this->field['name']);
 	}
 }
 
@@ -249,7 +249,7 @@ class postFieldMask_regex extends postFieldMaskBase
 			if (!empty($this->field['err']))
 				$this->err = $this->field['err'];
 			else
-				$this->err = array('pf_invalid_value', $this->field['name']);
+				$this->err = array('custom_forms_invalid_value', $this->field['name']);
 	}
 }
 
@@ -259,7 +259,7 @@ class postFieldMask_number extends postFieldMaskBase
 	{
 		global $txt;
 		if (!preg_match('/^\s*([0-9]+)\s*$/', $this->value))
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('custom_forms_invalid_value', $this->field['name']);
 	}
 }
 
@@ -269,7 +269,7 @@ class postFieldMask_float extends postFieldMaskBase
 	{
 		global $txt;
 		if (!preg_match('/^\s*([0-9]+(\.[0-9]+)?)\s*$/', $this->value))
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('custom_forms_invalid_value', $this->field['name']);
 	}
 }
 
@@ -279,7 +279,7 @@ class postFieldMask_nohtml extends postFieldMaskBase
 	{
 		global $txt;
 		if (strip_tags($this->value) != $this->value)
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('custom_forms_invalid_value', $this->field['name']);
 	}
 }
 
