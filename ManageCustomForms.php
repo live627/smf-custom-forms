@@ -1,6 +1,6 @@
 <?php
 
-function ListCustomForms()
+function ListManageCustomForms()
 {
 	global $txt, $context, $sourcedir, $smcFunc, $scripturl;
 
@@ -41,7 +41,7 @@ function ListCustomForms()
 	if (isset($_POST['save']))
 	{
 		checkSession();
-		foreach (total_getCustomForms() as $field)
+		foreach (total_getManageCustomForms() as $field)
 		{
 			$bbc = !empty($_POST['bbc'][$field['id_form']]) ? 'yes' : 'no';
 			if ($bbc != $field['bbc'])
@@ -94,10 +94,10 @@ function ListCustomForms()
 		'no_items_label' => $txt['pf_none'],
 		'items_per_page' => 25,
 		'get_items' => array(
-			'function' => 'list_getCustomForms',
+			'function' => 'list_getManageCustomForms',
 		),
 		'get_count' => array(
-			'function' => 'list_getNumCustomForms',
+			'function' => 'list_getNumManageCustomForms',
 		),
 		'columns' => array(
 			'name' => array(
@@ -219,7 +219,7 @@ function ListCustomForms()
 	$context['default_list'] = 'pf_fields';
 }
 
-function list_getCustomForms($start, $items_per_page, $sort)
+function list_getManageCustomForms($start, $items_per_page, $sort)
 {
 	global $smcFunc;
 
@@ -242,7 +242,7 @@ function list_getCustomForms($start, $items_per_page, $sort)
 	return $list;
 }
 
-function total_getCustomForms()
+function total_getManageCustomForms()
 {
 	global $smcFunc;
 
@@ -257,7 +257,7 @@ function total_getCustomForms()
 	return $list;
 }
 
-function total_getCustomFormsSearchable()
+function total_getManageCustomFormsSearchable()
 {
 	global $smcFunc;
 
@@ -277,7 +277,7 @@ function get_custom_forms_filtered3($form, $is_message_index = false)
 {
 	global $context, $user_info;
 
-	$fields = total_getCustomForms();
+	$fields = total_getManageCustomForms();
 	$list = array();
 	foreach ($fields as $field)
 	{
@@ -292,7 +292,7 @@ function get_custom_forms_filtered3($form, $is_message_index = false)
 	return $list;
 }
 
-function list_getNumCustomForms()
+function list_getNumManageCustomForms()
 {
 	global $smcFunc;
 
@@ -306,7 +306,7 @@ function list_getNumCustomForms()
 	return $numProfileFields;
 }
 
-function EditCustomForm()
+function EditManageCustomForm()
 {
 	global $txt, $scripturl, $context, $settings, $smcFunc;
 
@@ -314,7 +314,7 @@ function EditCustomForm()
 	$context['page_title'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['pf_title'] : $txt['pf_add']);
 	$context['page_title2'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['pf_title'] : $txt['pf_add']);
 	$context['html_headers'] .= '<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/customformsadmin.js"></script>';
-	loadTemplate('CustomForms');
+	loadTemplate('ManageCustomForms');
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_field, name, type

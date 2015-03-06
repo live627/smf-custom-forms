@@ -255,7 +255,7 @@
 			<search position="before"><![CDATA[$context['page_title'] = $txt['set_parameters'];]]></search>
 			<add><![CDATA[
 
-	$fields = total_getCustomFormFieldsSearchable();
+	$fields = total_getManageCustomFormFieldsSearchable();
 	$list = array();
 	foreach ($fields as $field)
 	{
@@ -268,8 +268,8 @@
 	}
 	call_integration_hook('integrate_get_custom_forms_searchable_filtered', array($list));
 	pf_load_fields($list);
-	loadLanguage('CustomFormFields');
-	loadTemplate('CustomFormFields');]]></add>
+	loadLanguage('ManageCustomFormFields');
+	loadTemplate('ManageCustomFormFields');]]></add>
 		</operation>
 	</file>
 
