@@ -11,6 +11,7 @@
 		<require-file name="Class-CustomFormFields.php" destination="$sourcedir" />
 		<require-file name="ManageCustomFormFields.php" destination="$sourcedir" />
 		<require-file name="ManageCustomForms.php" destination="$sourcedir" />
+		<require-file name="Subs-CustomForms.php" destination="$sourcedir" />
 		<require-file name="ManageManageCustomForms.template.php" destination="$themedir" />
 		<require-file name="customformsadmin.js" destination="$themedir/scripts" />
 		<require-file name="ManageCustomForms.english.php" destination="$languagedir" />
@@ -21,6 +22,7 @@
 		<remove-file name="$sourcedir/Class-CustomFormFields.php" />
 		<remove-file name="$sourcedir/ManageCustomFormFields.php" />
 		<remove-file name="$sourcedir/ManageCustomForms.php" />
+		<remove-file name="$sourcedir/Subs-CustomForms.php" />
 		<remove-file name="$themedir/scripts/customformsadmin.js" />
 		<remove-file name="$themedir/ManageCustomForms.template.php" />
 		<remove-file name="$languagedir/ManageCustomForms.english.php" />
