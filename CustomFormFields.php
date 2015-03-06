@@ -605,7 +605,7 @@ function EditCustomFormField()
 			}, array_keys($_POST['forms']));
 			$smcFunc['db_insert']('',
 				'{db_prefix}custom_form_fields',
-				array('id_field'),
+				array('id_form' => 'int', 'id_field' => 'int'),
 				$forms,
 				array('id_field')
 			);
