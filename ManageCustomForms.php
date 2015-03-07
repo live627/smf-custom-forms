@@ -248,10 +248,10 @@ function total_getManageCustomForms()
 
 	$list = array();
 	$request = $smcFunc['db_query']('', '
-		SELECT *
+		SELECT id_form, name, description, bbc
 		FROM {db_prefix}custom_forms');
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$list[$row['id_form']] = $row;
+	while (list ($id_form, $name, $description, $bbc) = $smcFunc['db_fetch_row']($request))
+		$list[$id_form] = [$name, $description, $bbc];
 	$smcFunc['db_free_result']($request);
 	call_integration_hook('integrate_get_custom_forms', array(&$list));
 	return $list;
@@ -263,7 +263,7 @@ function total_getManageCustomFormsSearchable()
 
 	$list = array();
 	$request = $smcFunc['db_query']('', '
-		SELECT *
+		SELECT id_form, name, description, bbc
 		FROM {db_prefix}custom_forms
 		WHERE can_search = \'yes\'');
 	while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -273,7 +273,7 @@ function total_getManageCustomFormsSearchable()
 	return $list;
 }
 
-function get_custom_forms_filtered3($form, $is_message_index = false)
+function get_custom_forms_filtered3()
 {
 	global $context, $user_info;
 
