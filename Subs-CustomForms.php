@@ -32,26 +32,9 @@ function custom_forms_menu_buttons(&$menu_buttons)
 	global $txt, $context, $modSettings, $scripturl;
 
 	$new_button = array(
-		'title' => !empty($modSettings['custom_forms_tab_label']) ? $modSettings['custom_forms_tab_label'] : $txt['custom_forms'],
 		'href' => $scripturl . '?action=custom_forms',
+		'title' => $txt['custom_forms'],
 		'show' => allowedTo('view_custom_forms'),
-		'sub_buttons' => array(
-			'custom_forms' => array(
-				'title' => !empty($modSettings['the_custom_forms_display_name']) ? $modSettings['the_custom_forms_display_name'] : $txt['custom_forms_title'],
-				'href' => $scripturl . '?action=custom_forms;area=custom_forms',
-				'show' => true,
-			),
-			'agreement' => array(
-				'title' => !empty($modSettings['the_custom_forms_agreement_display_name']) ? $modSettings['the_custom_forms_agreement_display_name'] : $txt['agreement'],
-				'href' => $scripturl . '?action=custom_forms;area=agreement',
-				'show' => !empty($modSettings['the_custom_forms_enable_agreement']),
-			),
-			'additional' => array(
-				'title' => !empty($modSettings['the_custom_forms_additional_display_name']) ? $modSettings['the_custom_forms_additional_display_name'] : $txt['additional'],
-				'href' => $scripturl . '?action=custom_forms;area=additional',
-				'show' => !empty($modSettings['the_custom_forms_enable_additional']),
-			),
-		),
 	);
 
 	$new_menu_buttons = array();
