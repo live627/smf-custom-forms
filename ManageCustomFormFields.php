@@ -322,7 +322,7 @@ function total_getManageCustomFormFieldsSearchable()
 	return $list;
 }
 
-function get_custom_forms_filtered($form, $is_message_index = false)
+function get_custom_forms_filtered($id_form)
 {
 	global $context, $user_info;
 
