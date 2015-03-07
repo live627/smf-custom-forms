@@ -32,8 +32,8 @@ function custom_forms_menu_buttons(&$menu_buttons)
 	global $txt, $context, $modSettings, $scripturl;
 
 	$new_button = array(
-		'href' => $scripturl . '?action=custom_forms',
 		'title' => $txt['custom_forms'],
+		'href' => $scripturl . '?action=forms',
 		'show' => allowedTo('view_custom_forms'),
 	);
 
