@@ -99,11 +99,11 @@ function ModifyCustomFormsSettings($return_config = false)
 		saveDBSettings($config_vars);
 		writeLog();
 
-		redirectexit('action=admin;area=modsettings;sa=custom_forms');
+		redirectexit('action=admin;area=customforms;sa=settings');
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=custom_forms';
 	$context['settings_title'] = $txt['custom_forms_title'];
+	$context['post_url'] = $scripturl . '?action=admin;area=customforms;save;sa=settings';
 
 	prepareDBSettingContext($config_vars);
 }
