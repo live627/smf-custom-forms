@@ -9,6 +9,10 @@ elseif (!defined('SMF'))
 	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
 
 add_integration_function('integrate_pre_include', '$sourcedir/Subs-CustomForms.php');
+add_integration_function('integrate_load_theme', 'custom_forms_load_theme');
+add_integration_function('integrate_actions', 'custom_forms_actions');
+add_integration_function('integrate_menu_buttons', 'custom_forms_buttons');
+add_integration_function('integrate_modify_modifications', 'custom_forms_modify_modifications');
 add_integration_function('integrate_admin_areas', 'custom_forms_admin_areas');
 
 if (!array_key_exists('db_add_column', $smcFunc))
