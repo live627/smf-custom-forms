@@ -1,4 +1,8 @@
 <?php
+// Version: 1.0: ManageCustomForms.php
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
 
 function ListManageCustomForms()
 {
