@@ -75,18 +75,9 @@ function ModifyCustomFormsSettings($return_config = false)
 	global $txt, $scripturl, $context, $settings, $sc;
 
 	$config_vars = array(
-		array('text', 'custom_forms_tab_label', '20'),
+		array('check', 'custom_forms_enable'),
 	'',
-		array('text', 'the_custom_forms_display_name', '20'),
-		array('large_text', 'the_custom_forms_text', '12'),
-	'',
-		array('check', 'the_custom_forms_enable_agreement'),
-		array('text', 'the_custom_forms_agreement_display_name', '20', 'postinput' => $txt['the_custom_forms_edit_agreement_pre_html'] . $scripturl .
-			'?action=admin;area=regcenter;sa=agreement">' . $txt['the_custom_forms_edit_name'] . $txt['the_custom_forms_edit_agreement_post_html']),
-	'',
-		array('check', 'the_custom_forms_enable_additional'),
-		array('text', 'the_custom_forms_additional_display_name', '20'),
-		array('large_text', 'the_custom_forms_additional_text', '12'),
+		array('check', 'custom_forms_enable_menu'),
 	);
 
 	if ($return_config)
