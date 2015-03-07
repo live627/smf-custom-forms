@@ -102,8 +102,8 @@ function ModifyCustomFormsSettings($return_config = false)
 		redirectexit('action=admin;area=customforms;sa=settings');
 	}
 
-	$context['settings_title'] = $txt['custom_forms_title'];
 	$context['post_url'] = $scripturl . '?action=admin;area=customforms;save;sa=settings';
+	$context['settings_title'] = $txt['custom_forms'];
 
 	prepareDBSettingContext($config_vars);
 }
