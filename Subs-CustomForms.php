@@ -65,11 +65,6 @@ function custom_forms_menu_buttons(&$menu_buttons)
 	$menu_buttons = $new_menu_buttons;
 }
 
-function custom_forms_modify_modifications(&$sub_actions)
-{
-	$sub_actions['custom_forms'] = 'ModifyCustomFormsSettings';
-}
-
 function ModifyCustomFormsSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc;
