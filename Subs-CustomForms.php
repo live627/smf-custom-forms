@@ -22,6 +22,104 @@ function custom_forms_admin_areas(&$admin_areas)
 	);
 }
 
+function custom_forms_load_theme()
+{
+	loadLanguage('CustomForms');
+}
+
+function custom_forms_menu_buttons(&$menu_buttons)
+{
+	global $txt, $context, $modSettings, $scripturl;
+
+	$new_button = array(
+		'title' => !empty($modSettings['custom_forms_tab_label']) ? $modSettings['custom_forms_tab_label'] : $txt['custom_forms'],
+		'href' => $scripturl . '?action=custom_forms',
+		'show' => allowedTo('view_custom_forms'),
+		'sub_buttons' => array(
+			'custom_forms' => array(
+				'title' => !empty($modSettings['the_custom_forms_display_name']) ? $modSettings['the_custom_forms_display_name'] : $txt['custom_forms_title'],
+				'href' => $scripturl . '?action=custom_forms;area=custom_forms',
+				'show' => true,
+			),
+			'agreement' => array(
+				'title' => !empty($modSettings['the_custom_forms_agreement_display_name']) ? $modSettings['the_custom_forms_agreement_display_name'] : $txt['agreement'],
+				'href' => $scripturl . '?action=custom_forms;area=agreement',
+				'show' => !empty($modSettings['the_custom_forms_enable_agreement']),
+			),
+			'additional' => array(
+				'title' => !empty($modSettings['the_custom_forms_additional_display_name']) ? $modSettings['the_custom_forms_additional_display_name'] : $txt['additional'],
+				'href' => $scripturl . '?action=custom_forms;area=additional',
+				'show' => !empty($modSettings['the_custom_forms_enable_additional']),
+			),
+		),
+	);
+
+	$new_menu_buttons = array();
+	foreach ($menu_buttons as $area => $info)
+	{
+		$new_menu_buttons[$area] = $info;
+		if ($area == 'help')
+			$new_menu_buttons['custom_forms'] = $new_button;
+	}
+
+	$menu_buttons = $new_menu_buttons;
+}
+
+function custom_forms_modify_modifications(&$sub_actions)
+{
+	$sub_actions['custom_forms'] = 'ModifyCustomFormsSettings';
+}
+
+function ModifyCustomFormsSettings($return_config = false)
+{
+	global $txt, $scripturl, $context, $settings, $sc;
+
+	$config_vars = array(
+		array('text', 'custom_forms_tab_label', '20'),
+	'',
+		array('text', 'the_custom_forms_display_name', '20'),
+		array('large_text', 'the_custom_forms_text', '12'),
+	'',
+		array('check', 'the_custom_forms_enable_agreement'),
+		array('text', 'the_custom_forms_agreement_display_name', '20', 'postinput' => $txt['the_custom_forms_edit_agreement_pre_html'] . $scripturl .
+			'?action=admin;area=regcenter;sa=agreement">' . $txt['the_custom_forms_edit_name'] . $txt['the_custom_forms_edit_agreement_post_html']),
+	'',
+		array('check', 'the_custom_forms_enable_additional'),
+		array('text', 'the_custom_forms_additional_display_name', '20'),
+		array('large_text', 'the_custom_forms_additional_text', '12'),
+	);
+
+	if ($return_config)
+		return $config_vars;
+
+	if (isset($_GET['save']))
+	{
+		checkSession();
+
+		saveDBSettings($config_vars);
+		writeLog();
+
+		redirectexit('action=admin;area=modsettings;sa=custom_forms');
+	}
+
+	$context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=custom_forms';
+	$context['settings_title'] = $txt['custom_forms_title'];
+
+	prepareDBSettingContext($config_vars);
+}
+
+function custom_forms_actions(&$action_array)
+{
+	$action_array['forms'] = array('CustomForms.php', 'CustomForms');
+}
+
+function custom_forms_load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
+{
+	$permissionList['membergroup'] += array(
+		'view_custom_forms' => array(false, 'general', 'view_basic_info'),
+	);
+}
+
 function custom_forms_load_fields($fields)
 {
 	global $form, $context, $options, $smcFunc;
