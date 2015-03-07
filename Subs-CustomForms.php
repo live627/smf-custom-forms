@@ -58,8 +58,8 @@ function custom_forms_menu_buttons(&$menu_buttons)
 	foreach ($menu_buttons as $area => $info)
 	{
 		$new_menu_buttons[$area] = $info;
-		if ($area == 'help')
-			$new_menu_buttons['custom_forms'] = $new_button;
+		if ($area == 'mlist')
+			$new_menu_buttons['forms'] = $new_button;
 	}
 
 	$menu_buttons = $new_menu_buttons;
