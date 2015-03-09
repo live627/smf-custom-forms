@@ -140,7 +140,7 @@ class Integration
 {
 	global $scripturl, $settings, $sourcedir;
 	require_once($sourcedir . '/Class-CustomFormFields.php');
-	$class_name = 'postFields_' . $field['type'];
+	$class_name = 'Fields_' . $field['type'];
 	if (!class_exists($class_name)) {
 		fatal_error('Param "' . $field['type'] . '" not found for field "' . $field['name'] . '" at ID #' . $field['id_field'] . '.', false);
 	}
@@ -182,7 +182,7 @@ class Integration
 	custom_forms_load_fields(get_custom_forms_filtered($form));
 	loadLanguage('CustomFormFields');
 	loadTemplate('CustomFormFields');
-	$context['is_custom_forms_collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['postFields']) : !empty($options['postFields']);
+	$context['is_custom_forms_collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['Fields']) : !empty($options['Fields']);
 }
 
 	public static function after($msgOptions, $topicOptions)
@@ -224,7 +224,7 @@ class Integration
 	foreach ($field_list as $field) {
 		if ((empty($topic) || empty($topic_value)) && $field['topic_only'] == 'yes') {
 			$value = isset($_POST['customform'][$field['id_field']]) ? $_POST['customform'][$field['id_field']] : '';
-			$class_name = 'postFields_' . $field['type'];
+			$class_name = 'Fields_' . $field['type'];
 			if (!class_exists($class_name) || (isset($values[$field['id_field']]) && $values[$field['id_field']] == $value)) {
 				continue;
 			}
@@ -296,7 +296,7 @@ class Integration
 	foreach ($field_list as $field) {
 		if ((empty($topic) || empty($topic_value)) && $field['topic_only'] == 'yes') {
 			$value = isset($_POST['customform'][$field['id_field']]) ? $_POST['customform'][$field['id_field']] : '';
-			$class_name = 'postFields_' . $field['type'];
+			$class_name = 'Fields_' . $field['type'];
 			if (!class_exists($class_name)) {
 				fatal_error('Param "' . $field['type'] . '" not found for field "' . $field['name'] . '" at ID #' . $field['id_field'] . '.', false);
 			}

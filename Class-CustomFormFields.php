@@ -1,6 +1,16 @@
 <?php
+// Version: 1.0: Integration.php
+namespace CustomForms;
 
-interface postFields
+if (!defined('SMF')) {
+	die('Hacking attempt...');
+}
+
+/**
+ * @package CustomForms
+ * @since 1.0
+ */
+interface Fields
 {
 	/*
 	 * Constructs the field.
@@ -25,7 +35,7 @@ interface postFields
 	function validate();
 }
 
-abstract class postFieldsBase implements postFields
+abstract class FieldsBase implements Fields
 {
 	public $input_html;
 	public $output_html;
@@ -87,7 +97,7 @@ abstract class postFieldsBase implements postFields
 	}
 }
 
-class postFields_check extends postFieldsBase
+class Fields_check extends FieldsBase
 {
 	function setHtml()
 	{
@@ -108,7 +118,7 @@ class postFields_check extends postFieldsBase
 	}
 }
 
-class postFields_select extends postFieldsBase
+class Fields_select extends FieldsBase
 {
 	function setHtml()
 	{
@@ -150,7 +160,7 @@ class postFields_select extends postFieldsBase
 	}
 }
 
-class postFields_radio extends postFieldsBase
+class Fields_radio extends FieldsBase
 {
 	function setHtml()
 	{
@@ -167,18 +177,18 @@ class postFields_radio extends postFieldsBase
 
 	function validate()
 	{
-		$helper = new postFields_select($this->field, $this->value, $this->exists);
+		$helper = new Fields_select($this->field, $this->value, $this->exists);
 		$helper->validate();
 	}
 
 	function getValue()
 	{
-		$helper = new postFields_select($this->field, $this->value, $this->exists);
+		$helper = new Fields_select($this->field, $this->value, $this->exists);
 		$helper->getValue();
 	}
 }
 
-class postFields_text extends postFieldsBase
+class Fields_text extends FieldsBase
 {
 	function setHtml()
 	{
@@ -192,7 +202,7 @@ class postFields_text extends postFieldsBase
 			$value = westr::substr($this->value, 0, $this->field['length']);
 		}
 
-		$class_name = 'postFieldMask_' . $this->field['mask'];
+		$class_name = 'FieldMask_' . $this->field['mask'];
 		if (!class_exists($class_name)) {
 			fatal_error('Mask "' . $this->field['mask'] . '" not found for field "' . $this->field['name'] . '" at ID #' . $this->field['id_field'] . '.', false);
 		}
@@ -205,7 +215,7 @@ class postFields_text extends postFieldsBase
 	}
 }
 
-class postFields_textarea extends postFieldsBase
+class Fields_textarea extends FieldsBase
 {
 	function setHtml()
 	{
@@ -216,19 +226,19 @@ class postFields_textarea extends postFieldsBase
 
 	function validate()
 	{
-		$helper = new postFields_text($this->field, $this->value, $this->exists);
+		$helper = new Fields_text($this->field, $this->value, $this->exists);
 		$helper->validate();
 	}
 }
 
-interface postFieldMask
+interface FieldMask
 {
 	function __construct($value, $field);
 
 	function validate();
 }
 
-abstract class postFieldMaskBase implements postFieldMask
+abstract class FieldMaskBase implements FieldMask
 {
 	protected $value;
 	protected $field;
@@ -247,7 +257,7 @@ abstract class postFieldMaskBase implements postFieldMask
 	}
 }
 
-class postFieldMask_email extends postFieldMaskBase
+class FieldMask_email extends FieldMaskBase
 {
 	function validate()
 	{
@@ -258,7 +268,7 @@ class postFieldMask_email extends postFieldMaskBase
 	}
 }
 
-class postFieldMask_regex extends postFieldMaskBase
+class FieldMask_regex extends FieldMaskBase
 {
 	function validate()
 	{
@@ -273,7 +283,7 @@ class postFieldMask_regex extends postFieldMaskBase
 	}
 }
 
-class postFieldMask_number extends postFieldMaskBase
+class FieldMask_number extends FieldMaskBase
 {
 	function validate()
 	{
@@ -284,7 +294,7 @@ class postFieldMask_number extends postFieldMaskBase
 	}
 }
 
-class postFieldMask_float extends postFieldMaskBase
+class FieldMask_float extends FieldMaskBase
 {
 	function validate()
 	{
@@ -295,7 +305,7 @@ class postFieldMask_float extends postFieldMaskBase
 	}
 }
 
-class postFieldMask_nohtml extends postFieldMaskBase
+class FieldMask_nohtml extends FieldMaskBase
 {
 	function validate()
 	{
