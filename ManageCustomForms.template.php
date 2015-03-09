@@ -39,10 +39,11 @@ function template_edit()
 						<dd>
 							<div class="information">';
 
-	foreach ($context['fields'] as $id_field => $field_link)
+	foreach ($context['fields'] as $id_field => $field_link) {
 		echo '
 								<input type="checkbox" name="fields[', $id_field, ']"', in_array($id_field, $context['field']['fields']) ? ' checked' : '', '>
 								', $field_link, '<br />';
+	}
 
 	echo '
 							</div>
@@ -53,10 +54,11 @@ function template_edit()
 						<dd>
 							<div class="information">';
 
-	foreach ($context['groups'] as $id_group => $group_link)
+	foreach ($context['groups'] as $id_group => $group_link) {
 		echo '
 								<input type="checkbox" name="groups[', $id_group, ']"', in_array($id_group, $context['field']['groups']) ? ' checked' : '', '>
 								', $group_link, '<br />';
+	}
 
 	echo '
 							</div>
@@ -91,9 +93,10 @@ function template_edit()
 				<div class="righttext">
 					<input type="submit" name="save" value="', $txt['save'], '" class="submit">';
 
-	if ($context['fid'])
+	if ($context['fid']) {
 		echo '
 					<input type="submit" name="delete" value="', $txt['delete'], '" onclick="return confirm(', JavaScriptEscape($txt['custom_forms_delete_sure']), ');" class="delete">';
+	}
 
 	echo '
 				</div></div>
@@ -101,14 +104,16 @@ function template_edit()
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">';
 
-	if ($context['fid'])
+	if ($context['fid']) {
 		echo '
 			<input type="hidden" name="fid" value="', $context['fid'], '">';
+	}
 
 	echo '
 		</form>
 	</div>';
 }
+
 function template_edit2()
 {
 	global $context, $txt, $settings, $scripturl;
@@ -156,10 +161,11 @@ function template_edit2()
 						<dd>
 							<div class="information">';
 
-	foreach ($context['forms'] as $id_form => $form_link)
+	foreach ($context['forms'] as $id_form => $form_link) {
 		echo '
 								<input type="checkbox" name="forms[', $id_form, ']"', in_array($id_form, $context['field']['forms']) ? ' checked' : '', '>
 								', $form_link, '<br />';
+	}
 
 	echo '
 							</div>
@@ -170,10 +176,11 @@ function template_edit2()
 						<dd>
 							<div class="information">';
 
-	foreach ($context['groups'] as $id_group => $group_link)
+	foreach ($context['groups'] as $id_group => $group_link) {
 		echo '
 								<input type="checkbox" name="groups[', $id_group, ']"', in_array($id_group, $context['field']['groups']) ? ' checked' : '', '>
 								', $group_link, '<br />';
+	}
 
 	echo '
 							</div>
@@ -231,9 +238,10 @@ function template_edit2()
 						<dd id="options_dd">
 							<div>';
 
-	foreach ($context['field']['options'] as $k => $option)
+	foreach ($context['field']['options'] as $k => $option) {
 		echo '
 								', $k == 0 ? '' : '<br>', '<input type="radio" name="default_select" value="', $k, '"', $context['field']['default_select'] == $option ? ' checked' : '', '><input type="text" name="select_option[', $k, ']" value="', $option, '">';
+	}
 
 	echo '
 								<span id="addopt"></span>
@@ -293,9 +301,10 @@ function template_edit2()
 				<div class="righttext">
 					<input type="submit" name="save" value="', $txt['save'], '" class="submit">';
 
-	if ($context['fid'])
+	if ($context['fid']) {
 		echo '
 					<input type="submit" name="delete" value="', $txt['delete'], '" onclick="return confirm(', JavaScriptEscape($txt['custom_forms_delete_sure']), ');" class="delete">';
+	}
 
 	echo '
 				</div></div>
@@ -303,9 +312,10 @@ function template_edit2()
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '">';
 
-	if ($context['fid'])
+	if ($context['fid']) {
 		echo '
 			<input type="hidden" name="fid" value="', $context['fid'], '">';
+	}
 
 	echo '
 		</form>
@@ -322,16 +332,14 @@ function template_input_custom_forms()
 {
 	global $context, $scripturl;
 
-	if (!empty($context['fields']))
-	{
+	if (!empty($context['fields'])) {
 
-		foreach ($context['fields'] as $field)
-		{
+		foreach ($context['fields'] as $field) {
 			$call = strtr($field['name'], ' ', '_');
 
-			if (is_callable('template_custom_forms_' . $call))
+			if (is_callable('template_custom_forms_' . $call)) {
 				call_user_func_array('template_custom_forms_' . $call, array($field));
-			else
+			} else {
 				echo '
 							<dt>
 								<strong>', $field['name'], ': </strong><br />
@@ -340,6 +348,7 @@ function template_input_custom_forms()
 							<dd>
 								', $field['input_html'], '
 							</dd>';
+			}
 		}
 	}
 }
@@ -348,11 +357,11 @@ function template_search_custom_forms()
 {
 	global $context, $scripturl;
 
-	if (!empty($context['fields']))
-		foreach (array_reverse($context['fields']) as $field)
-			if (is_callable('template_search_custom_forms_' . $field['name']))
+	if (!empty($context['fields'])) {
+		foreach (array_reverse($context['fields']) as $field) {
+			if (is_callable('template_search_custom_forms_' . $field['name'])) {
 				call_user_func_array('template_search_custom_forms_' . $field['name'], array($field));
-			else
+			} else {
 				echo '
 						<dt>
 							', $field['name'], ': <br />
@@ -361,6 +370,9 @@ function template_search_custom_forms()
 						<dd>
 							', $field['input_html'], '
 						</dd>';
+			}
+		}
+	}
 }
 
 function template_search_custom_forms_simple()

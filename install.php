@@ -1,12 +1,11 @@
 <?php
 
-if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
-{
+if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF')) {
 	$ssi = true;
 	require_once(dirname(__FILE__) . '/SSI.php');
-}
-elseif (!defined('SMF'))
+} elseif (!defined('SMF')) {
 	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
+}
 
 add_integration_function('integrate_pre_include', '$sourcedir/CustomForms/ModHelper/Psr4AutoloaderClass.php');
 add_integration_function('integrate_load_theme', 'CustomForms\\Integration::load_theme');
@@ -15,8 +14,9 @@ add_integration_function('integrate_menu_buttons', 'CustomForms\\Integration::bu
 add_integration_function('integrate_modify_modifications', 'CustomForms\\Integration::modify_modifications');
 add_integration_function('integrate_admin_areas', 'CustomForms\\Integration::admin_areas');
 
-if (!array_key_exists('db_add_column', $smcFunc))
+if (!array_key_exists('db_add_column', $smcFunc)) {
 	db_extend('packages');
+}
 
 $columns = array(
 	array(
@@ -214,7 +214,8 @@ $indexes = array(
 
 $smcFunc['db_create_table']('{db_prefix}custom_form_field_data', $columns, $indexes, array(), 'update_remove');
 
-if (!empty($ssi))
+if (!empty($ssi)) {
 	echo 'Database installation complete!';
+}
 
 ?>

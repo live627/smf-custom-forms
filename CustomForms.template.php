@@ -32,24 +32,24 @@ function template_view_form()
 		</div>
 		<ul class="reset">';
 
-		foreach ($context['forms'] as $item)
-		{
-			$col = empty($col) ? 2 : '';
-			$color_class = 'windowbg' . $col;
+	foreach ($context['forms'] as $item) {
+		$col = empty($col) ? 2 : '';
+		$color_class = 'windowbg' . $col;
 
-			echo '
+		echo '
 			<li class="padding ', $color_class, '">
 				', $item['link'], '';
 
-			if (!empty($item['description']))
-				echo '
-				<div class="d">', $item['description'], '</div>';
-
+		if (!empty($item['description'])) {
 			echo '
-			</li>';
+				<div class="d">', $item['description'], '</div>';
 		}
 
 		echo '
+			</li>';
+	}
+
+	echo '
 		</ul>
 		<div class="pagesection">
 			<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>
@@ -72,15 +72,15 @@ function template_view_form()
 				<span class="topslice"><span></span></span>
 				<div class="content">';
 
-	if (!empty($context['post_errors']))
-	{
+	if (!empty($context['post_errors'])) {
 		echo '
 					<div class="errorbox">
 						<h4>There were some errors</h4>';
 
-		foreach ($context['post_errors'] as $error)
+		foreach ($context['post_errors'] as $error) {
 			echo '
 						<span>', $error, '</span>';
+		}
 
 		echo '
 					</div>';
@@ -89,8 +89,8 @@ function template_view_form()
 	echo '
 						<dl class="settings">';
 
-	if (!empty($context['fields']))
-		foreach ($context['fields'] as $field)
+	if (!empty($context['fields'])) {
+		foreach ($context['fields'] as $field) {
 			echo '
 							<dt>
 								<strong>', $field['name'], ': </strong>
@@ -99,6 +99,8 @@ function template_view_form()
 							<dd>
 								', $field['input_html'], '
 							</dd>';
+		}
+	}
 
 	echo '
 						</dl>

@@ -1,37 +1,37 @@
 <?xml version="1.0"?>
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
-	<id>live627:custom_forms</id>
-	<name>Custom Forms</name>
-	<type>modification</type>
-	<version>2.0</version>
+    <id>live627:custom_forms</id>
+    <name>Custom Forms</name>
+    <type>modification</type>
+    <version>2.0</version>
 
-	<install for="2.0 - 2.0.99">
-		<database>install.php</database>
-		<require-file name="Class-CustomFormFields.php" destination="$sourcedir" />
-		<require-file name="ManageCustomFormFields.php" destination="$sourcedir" />
-		<require-file name="CustomForms.php" destination="$sourcedir" />
-		<require-file name="ManageCustomForms.php" destination="$sourcedir" />
-		<require-file name="Subs-CustomForms.php" destination="$sourcedir" />
-		<require-file name="CustomForms.template.php" destination="$themedir" />
-		<require-file name="ManageCustomForms.template.php" destination="$themedir" />
-		<require-file name="customformsadmin.js" destination="$themedir/scripts" />
-		<require-file name="CustomForms.english.php" destination="$languagedir" />
-		<require-file name="ManageCustomForms.english.php" destination="$languagedir" />
-	</install>
+    <install for="2.0 - 2.0.99">
+        <database>install.php</database>
+        <require-file name="Class-CustomFormFields.php" destination="$sourcedir"/>
+        <require-file name="ManageCustomFormFields.php" destination="$sourcedir"/>
+        <require-file name="CustomForms.php" destination="$sourcedir"/>
+        <require-file name="ManageCustomForms.php" destination="$sourcedir"/>
+        <require-file name="Subs-CustomForms.php" destination="$sourcedir"/>
+        <require-file name="CustomForms.template.php" destination="$themedir"/>
+        <require-file name="ManageCustomForms.template.php" destination="$themedir"/>
+        <require-file name="customformsadmin.js" destination="$themedir/scripts"/>
+        <require-file name="CustomForms.english.php" destination="$languagedir"/>
+        <require-file name="ManageCustomForms.english.php" destination="$languagedir"/>
+    </install>
 
-	<uninstall for="2.0 - 2.0.99">
-		<code>uninstall-required.php</code>
-		<remove-file name="$sourcedir/Class-CustomFormFields.php" />
-		<remove-file name="$sourcedir/ManageCustomFormFields.php" />
-		<remove-file name="$sourcedir/CustomForms.php" />
-		<remove-file name="$sourcedir/ManageCustomForms.php" />
-		<remove-file name="$sourcedir/Subs-CustomForms.php" />
-		<remove-file name="$themedir/CustomForms.template.php" />
-		<remove-file name="$themedir/ManageCustomForms.template.php" />
-		<remove-file name="$themedir/scripts/customformsadmin.js" />
-		<remove-file name="$languagedir/CustomForms.english.php" />
-		<remove-file name="$languagedir/ManageCustomForms.english.php" />
-	</uninstall>
+    <uninstall for="2.0 - 2.0.99">
+        <code>uninstall-required.php</code>
+        <remove-file name="$sourcedir/Class-CustomFormFields.php"/>
+        <remove-file name="$sourcedir/ManageCustomFormFields.php"/>
+        <remove-file name="$sourcedir/CustomForms.php"/>
+        <remove-file name="$sourcedir/ManageCustomForms.php"/>
+        <remove-file name="$sourcedir/Subs-CustomForms.php"/>
+        <remove-file name="$themedir/CustomForms.template.php"/>
+        <remove-file name="$themedir/ManageCustomForms.template.php"/>
+        <remove-file name="$themedir/scripts/customformsadmin.js"/>
+        <remove-file name="$languagedir/CustomForms.english.php"/>
+        <remove-file name="$languagedir/ManageCustomForms.english.php"/>
+    </uninstall>
 
 </package-info>

@@ -1,29 +1,30 @@
 <?xml version="1.0"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
-	<id>live627:form_leaders</id>
-	<version>1.0</version>
+    <id>live627:form_leaders</id>
+    <version>1.0</version>
 
-	<file name="$sourcedir/Post.php">
-		<operation>
-			<search position="after"><![CDATA[// If they came from quick reply, and have to enter verification details, give them some notice.]]></search>
-			<add><![CDATA[custom_forms_post_form();
-
-	]]></add>
-		</operation>
-		<operation>
-			<search position="after"><![CDATA[// Any mistakes?]]></search>
-			<add><![CDATA[custom_forms_post_post_validate($post_errors, $posterIsGuest);
+    <file name="$sourcedir/Post.php">
+        <operation>
+            <search position="after">
+                <![CDATA[// If they came from quick reply, and have to enter verification details, give them some notice.]]></search>
+            <add><![CDATA[custom_forms_post_form();
 
 	]]></add>
-		</operation>
-		<operation>
-			<search position="after"><![CDATA[$context['post_error']['messages'] = array();]]></search>
-			<add><![CDATA[// Why the hell is this even here!?]]></add>
-		</operation>
-		<operation>
-			<search position="before"><![CDATA[foreach ($post_errors as $post_error)]]></search>
-			<add><![CDATA[
+        </operation>
+        <operation>
+            <search position="after"><![CDATA[// Any mistakes?]]></search>
+            <add><![CDATA[custom_forms_post_post_validate($post_errors, $posterIsGuest);
+
+	]]></add>
+        </operation>
+        <operation>
+            <search position="after"><![CDATA[$context['post_error']['messages'] = array();]]></search>
+            <add><![CDATA[// Why the hell is this even here!?]]></add>
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[foreach ($post_errors as $post_error)]]></search>
+            <add><![CDATA[
 		if (is_array($post_error))
 		{
 			$post_error_id = $post_error[0];
@@ -32,13 +33,13 @@
 			$context['post_error']['messages'][] = sprintf($txt['error_' . $post_error_id], $post_error[1]);
 		}
 		else]]></add>
-		</operation>
-	</file>
+        </operation>
+    </file>
 
-	<file name="$themedir/Post.template.php">
-		<operation>
-			<search position="after"><![CDATA[// Is visual verification enabled?]]></search>
-			<add><![CDATA[// Now put the topic fields, if any.
+    <file name="$themedir/Post.template.php">
+        <operation>
+            <search position="after"><![CDATA[// Is visual verification enabled?]]></search>
+            <add><![CDATA[// Now put the topic fields, if any.
 	if (!empty($context['fields']))
 	{
 		echo '
@@ -56,10 +57,10 @@
 	}
 
 	]]></add>
-		</operation>
-		<operation>
-			<search position="after"><![CDATA[// Code for showing and hiding additional options.]]></search>
-			<add><![CDATA[// Code for topic fields toggle.
+        </operation>
+        <operation>
+            <search position="after"><![CDATA[// Code for showing and hiding additional options.]]></search>
+            <add><![CDATA[// Code for topic fields toggle.
 	global $user_info;
 	if (!empty($context['fields']))
 		echo '
@@ -98,75 +99,82 @@
 			});';
 
 	]]></add>
-		</operation>
-	</file>
+        </operation>
+    </file>
 
-	<file name="$sourcedir/Subs-Post.php">
-		<operation>
-			<search position="after"><![CDATA[// Alright, done now... we can abort now, I guess... at least this much is done.]]></search>
-			<add><![CDATA[custom_forms_after($msgOptions, $topicOptions);
-
-	]]></add>
-		</operation>
-		<operation>
-			<search position="after"><![CDATA[// Finally, if we are setting the approved state we need to do much more work :(]]></search>
-			<add><![CDATA[custom_forms_after($msgOptions, $topicOptions);
+    <file name="$sourcedir/Subs-Post.php">
+        <operation>
+            <search position="after">
+                <![CDATA[// Alright, done now... we can abort now, I guess... at least this much is done.]]></search>
+            <add><![CDATA[custom_forms_after($msgOptions, $topicOptions);
 
 	]]></add>
-		</operation>
-	</file>
-
-	<file name="$sourcedir/Display.php">
-		<operation>
-			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
-			<add><![CDATA[custom_forms_display_message_list($messages);
+        </operation>
+        <operation>
+            <search position="after">
+                <![CDATA[// Finally, if we are setting the approved state we need to do much more work :(]]></search>
+            <add><![CDATA[custom_forms_after($msgOptions, $topicOptions);
 
 	]]></add>
-		</operation>
-		<operation>
-			<search position="before"><![CDATA[$output['is_message_author'] = $message['id_member'] == $user_info['id'];]]></search>
-			<add><![CDATA[
+        </operation>
+    </file>
+
+    <file name="$sourcedir/Display.php">
+        <operation>
+            <search position="after">
+                <![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
+            <add><![CDATA[custom_forms_display_message_list($messages);
+
+	]]></add>
+        </operation>
+        <operation>
+            <search position="before">
+                <![CDATA[$output['is_message_author'] = $message['id_member'] == $user_info['id'];]]></search>
+            <add><![CDATA[
 
 	custom_forms_display_post_done($counter, $output);]]></add>
-		</operation>
-	</file>
+        </operation>
+    </file>
 
-	<file name="$sourcedir/RemoveTopic.php">
-		<operation>
-			<search position="after"><![CDATA[// Update the pesky statistics.]]></search>
-			<add><![CDATA[custom_forms_remove_message($message, $decreasePostCount);
-
-	]]></add>
-		</operation>
-		<operation>
-			<search position="after"><![CDATA[// Update the totals...]]></search>
-			<add><![CDATA[custom_forms_remove_topics($topics, $decreasePostCount, $ignoreRecycling);
+    <file name="$sourcedir/RemoveTopic.php">
+        <operation>
+            <search position="after"><![CDATA[// Update the pesky statistics.]]></search>
+            <add><![CDATA[custom_forms_remove_message($message, $decreasePostCount);
 
 	]]></add>
-		</operation>
-	</file>-
+        </operation>
+        <operation>
+            <search position="after"><![CDATA[// Update the totals...]]></search>
+            <add><![CDATA[custom_forms_remove_topics($topics, $decreasePostCount, $ignoreRecycling);
 
-	<file name="$themedir/Search.template.php">
-		<operation>
-		<search position="after"><![CDATA[if (empty($modSettings['search_simple_fulltext']))]]></search>
-			<add><![CDATA[template_search_custom_forms_simple();
+	]]></add>
+        </operation>
+    </file>
+    -
+
+    <file name="$themedir/Search.template.php">
+        <operation>
+            <search position="after"><![CDATA[if (empty($modSettings['search_simple_fulltext']))]]></search>
+            <add><![CDATA[template_search_custom_forms_simple();
 
 		]]></add>
-		</operation>
-		<operation>
-		<search position="before"><![CDATA[<dd>', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="4" class="input_text" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="4" class="input_text" /> ', $txt['days_word'], '</dd>]]></search>
-			<add><![CDATA[';
+        </operation>
+        <operation>
+            <search position="before">
+                <![CDATA[<dd>', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="4" class="input_text" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="4" class="input_text" /> ', $txt['days_word'], '</dd>]]></search>
+            <add><![CDATA[';
 
 		template_search_custom_forms();
 
 		echo']]></add>
-		</operation>
-	</file>
+        </operation>
+    </file>
 
-	<file name="$sourcedir/Search.php">
-		<operation>
-			<search position="before"><![CDATA[$search_params['maxage'] = !empty($search_params['maxage']) ? (int) $search_params['maxage'] : (int) $_REQUEST['maxage'];]]></search>
-			<add><![CDATA[
+    <file name="$sourcedir/Search.php">
+        <operation>
+            <search position="before">
+                <![CDATA[$search_params['maxage'] = !empty($search_params['maxage']) ? (int) $search_params['maxage'] : (int) $_REQUEST['maxage'];]]></search>
+            <add><![CDATA[
 
 	// Custom Forms
 	if (!empty($search_params['field']) || !empty($_REQUEST['customform']))
@@ -204,15 +212,15 @@
 			$context['query_custom_forms'][$row['id_msg']] = true;
 		$smcFunc['db_free_result']($request);
 	}]]></add>
-		</operation>
-		<operation>
-			<search position="before"><![CDATA[// *** A last error check]]></search>
-			<add><![CDATA[
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[// *** A last error check]]></search>
+            <add><![CDATA[
 	unset($context['search_errors']['invalid_search_string']);]]></add>
-		</operation>
-		<operation>
-			<search position="before"><![CDATA[$subject_query['where'][] = 't.id_form ' . $formQuery;]]></search>
-			<add><![CDATA[
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[$subject_query['where'][] = 't.id_form ' . $formQuery;]]></search>
+            <add><![CDATA[
 
 					// Custom Forms
 					if (!empty($search_params['field']))
@@ -220,14 +228,14 @@
 						$subject_query['where'][] = 't.id_first_msg IN ({array_int:field_list})';
 						$subject_query['params']['field_list'] = array_keys($context['query_custom_forms']);
 					}]]></add>
-		</operation>
-		<operation>
-			<search position="before"><![CDATA[if (!empty($search_params['topic']))
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[if (!empty($search_params['topic']))
 						{
 							$subject_query['where'][] = 't.id_topic = {int:topic}';
 							$subject_query['params']['topic'] = $search_params['topic'];
 						}]]></search>
-			<add><![CDATA[
+            <add><![CDATA[
 
 						// Custom Forms
 						if (!empty($search_params['field']))
@@ -235,14 +243,14 @@
 							$subject_query['where'][] = 't.id_first_msg IN ({array_int:field_list})';
 							$subject_query['params']['field_list'] = array_keys($context['query_custom_forms']);
 						}]]></add>
-		</operation>
-		<operation>
-			<search position="before"><![CDATA[if (!empty($search_params['topic']))
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[if (!empty($search_params['topic']))
 					{
 						$main_query['where'][] = 'm.id_topic = {int:topic}';
 						$main_query['parameters']['topic'] = $search_params['topic'];
 					}]]></search>
-			<add><![CDATA[
+            <add><![CDATA[
 
 					// Custom Forms
 					if (!empty($search_params['field']))
@@ -250,10 +258,10 @@
 						$main_query['where'][] = 'm.id_msg IN ({array_int:field_list})';
 						$main_query['parameters']['field_list'] = array_keys($context['query_custom_forms']);
 					}]]></add>
-		</operation>
-		<operation>
-			<search position="before"><![CDATA[$context['page_title'] = $txt['set_parameters'];]]></search>
-			<add><![CDATA[
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[$context['page_title'] = $txt['set_parameters'];]]></search>
+            <add><![CDATA[
 
 	$fields = total_getManageCustomFormFieldsSearchable();
 	$list = array();
@@ -270,7 +278,7 @@
 	custom_forms_load_fields($list);
 	loadLanguage('ManageCustomFormFields');
 	loadTemplate('ManageCustomFormFields');]]></add>
-		</operation>
-	</file>
+        </operation>
+    </file>
 
 </modification>

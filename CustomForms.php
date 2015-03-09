@@ -1,8 +1,9 @@
 <?php
 // Version 1.0: CustomForms.php
 
-if (!defined('SMF'))
+if (!defined('SMF')) {
 	die('Hacking attempt...');
+}
 
 function CustomForms()
 {
@@ -13,16 +14,14 @@ function CustomForms()
 	$context['current_page'] = isset($_REQUEST['in']) ? $_REQUEST['in'] : 'all';
 	$forms = total_getManageCustomForms();
 
-	switch ($context['current_page'])
-	{
+	switch ($context['current_page']) {
 		case 'all':
 			$num_per_page = 25;
 			$start = 0;
 			$context['page_index'] = constructPageIndex($scripturl . '?action=forms', $start, 7, $num_per_page);
 			$context['page_title'] = $txt['additional'];
 			require_once($sourcedir . '/ManageCustomForms.php');
-			foreach ($forms as $id_form => list ($name, $description, $bbc))
-			{
+			foreach ($forms as $id_form => list ($name, $description, $bbc)) {
 				$context['forms'][$id_form]['link'] = '<a href="' . $scripturl . '?action=forms;in=' . $id_form . '>' . $name . '</a>';
 				$context['forms'][$id_form]['description'] = $bbc == 'yes' ? parse_bbc($description) : $description;
 			}
@@ -48,8 +47,7 @@ function CustomForms()
 	);
 
 	require_once($sourcedir . '/ManageCustomForms.php');
-	foreach ($forms as $id_form => list ($name))
-	{
+	foreach ($forms as $id_form => list ($name)) {
 		$custom_forms_areas['forms']['areas'][$id_form]['label'] = $name;
 		$custom_forms_areas['forms']['areas'][$id_form]['custom_url'] = $scripturl . '?action=forms;in=' . $id_form;
 	}
@@ -60,14 +58,13 @@ function CustomForms()
 	);
 
 	// Any files to include?
-	if (!empty($modSettings['integrate_custom_forms_include']))
-	{
+	if (!empty($modSettings['integrate_custom_forms_include'])) {
 		$custom_forms_includes = explode(',', $modSettings['integrate_custom_forms_include']);
-		foreach ($custom_forms_includes as $include)
-		{
+		foreach ($custom_forms_includes as $include) {
 			$include = strtr(trim($include), array('$boarddir' => $boarddir, '$sourcedir' => $sourcedir, '$themedir' => $settings['theme_dir']));
-			if (file_exists($include))
+			if (file_exists($include)) {
 				require_once($include);
+			}
 		}
 	}
 
@@ -79,19 +76,21 @@ function CustomForms()
 	unset($custom_forms_areas);
 
 	// Nothing valid?
-	if ($custom_forms_include_data == false)
+	if ($custom_forms_include_data == false) {
 		fatal_lang_error('no_access', false);
+	}
 
 	// Build the link tree.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=forms',
 		'name' => $txt['custom_forms'],
 	);
-	if (isset($custom_forms_include_data['current_area']) && $custom_forms_include_data['current_area'] != 'all')
+	if (isset($custom_forms_include_data['current_area']) && $custom_forms_include_data['current_area'] != 'all') {
 		$context['linktree'][] = array(
 			'url' => $scripturl . '?action=forms;area=' . $custom_forms_include_data['current_area'],
 			'name' => $custom_forms_include_data['label'],
 		);
+	}
 
 	loadTemplate('CustomForms');
 }

@@ -1,16 +1,16 @@
 <?php
 // Version: 1.0: ManageCustomForms.php
 
-if (!defined('SMF'))
+if (!defined('SMF')) {
 	die('Hacking attempt...');
+}
 
 function ListManageCustomForms()
 {
 	global $txt, $context, $sourcedir, $smcFunc, $scripturl;
 
 	// Deleting?
-	if (isset($_POST['delete'], $_POST['remove']))
-	{
+	if (isset($_POST['delete'], $_POST['remove'])) {
 		checkSession();
 
 		// Delete the user data first.
@@ -42,13 +42,11 @@ function ListManageCustomForms()
 	}
 
 	// Changing the status?
-	if (isset($_POST['save']))
-	{
+	if (isset($_POST['save'])) {
 		checkSession();
-		foreach (total_getManageCustomForms() as $field)
-		{
+		foreach (total_getManageCustomForms() as $field) {
 			$bbc = !empty($_POST['bbc'][$field['id_form']]) ? 'yes' : 'no';
-			if ($bbc != $field['bbc'])
+			if ($bbc != $field['bbc']) {
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}custom_forms
 					SET bbc = {string:bbc}
@@ -58,9 +56,10 @@ function ListManageCustomForms()
 						'field' => $field['id_form'],
 					)
 				);
+			}
 
 			$active = !empty($_POST['active'][$field['id_form']]) ? 'yes' : 'no';
-			if ($active != $field['active'])
+			if ($active != $field['active']) {
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}custom_forms
 					SET active = {string:active}
@@ -70,9 +69,10 @@ function ListManageCustomForms()
 						'field' => $field['id_form'],
 					)
 				);
+			}
 
 			$can_search = !empty($_POST['can_search'][$field['id_form']]) ? 'yes' : 'no';
-			if ($can_search != $field['can_search'])
+			if ($can_search != $field['can_search']) {
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}custom_forms
 					SET can_search = {string:can_search}
@@ -82,14 +82,16 @@ function ListManageCustomForms()
 						'field' => $field['id_form'],
 					)
 				);
+			}
 			call_integration_hook('integrate_update_post_field', array($field));
 		}
 		redirectexit('action=admin;area=customforms');
 	}
 
 	// New field?
-	if (isset($_POST['new']))
+	if (isset($_POST['new'])) {
 		redirectexit('action=admin;area=customforms;sa=edit');
+	}
 
 	$listOptions = array(
 		'id' => 'custom_forms_fields',
@@ -239,8 +241,9 @@ function list_getManageCustomForms($start, $items_per_page, $sort)
 			'items_per_page' => $items_per_page,
 		)
 	);
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$list[] = $row;
+	}
 	$smcFunc['db_free_result']($request);
 
 	return $list;
@@ -254,10 +257,12 @@ function total_getManageCustomForms()
 	$request = $smcFunc['db_query']('', '
 		SELECT id_form, name, description, bbc
 		FROM {db_prefix}custom_forms');
-	while (list ($id_form, $name, $description, $bbc) = $smcFunc['db_fetch_row']($request))
+	while (list ($id_form, $name, $description, $bbc) = $smcFunc['db_fetch_row']($request)) {
 		$list[$id_form] = [$name, $description, $bbc];
+	}
 	$smcFunc['db_free_result']($request);
 	call_integration_hook('integrate_get_custom_forms', array(&$list));
+
 	return $list;
 }
 
@@ -270,10 +275,12 @@ function total_getManageCustomFormsSearchable()
 		SELECT id_form, name, description, bbc
 		FROM {db_prefix}custom_forms
 		WHERE can_search = \'yes\'');
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$list[$row['id_form']] = $row;
+	}
 	$smcFunc['db_free_result']($request);
 	call_integration_hook('integrate_get_custom_forms_searchable', array(&$list));
+
 	return $list;
 }
 
@@ -283,16 +290,17 @@ function get_custom_forms_filtered3()
 
 	$fields = total_getManageCustomForms();
 	$list = array();
-	foreach ($fields as $field)
-	{
+	foreach ($fields as $field) {
 		$group_list = explode(',', $field['groups']);
 		$is_allowed = array_intersect($user_info['groups'], $group_list);
-		if (empty($is_allowed))
+		if (empty($is_allowed)) {
 			continue;
+		}
 
 		$list[$field['id_form']] = $field;
 	}
 	call_integration_hook('integrate_get_custom_forms_filtered', array(&$list, $form));
+
 	return $list;
 }
 
@@ -314,7 +322,7 @@ function EditManageCustomForm()
 {
 	global $txt, $scripturl, $context, $settings, $smcFunc;
 
-	$context['fid'] = isset($_REQUEST['fid']) ? (int) $_REQUEST['fid'] : 0;
+	$context['fid'] = isset($_REQUEST['fid']) ? (int)$_REQUEST['fid'] : 0;
 	$context['page_title'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['custom_forms_title'] : $txt['custom_forms_add']);
 	$context['page_title2'] = $txt['custom_forms'] . ' - ' . ($context['fid'] ? $txt['custom_forms_title'] : $txt['custom_forms_add']);
 	$context['html_headers'] .= '<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/customformsadmin.js"></script>';
@@ -324,8 +332,9 @@ function EditManageCustomForm()
 		SELECT id_field, name, type
 		FROM {db_prefix}custom_form_fields');
 	$context['fields'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$context['fields'][$row['id_field']] = $row['type'] . ' - ' . $row['name'];
+	}
 	$smcFunc['db_free_result']($request);
 
 	$request = $smcFunc['db_query']('', '
@@ -340,14 +349,14 @@ function EditManageCustomForm()
 		)
 	);
 	$context['groups'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$context['groups'][$row['id_group']] = '<span' . ($row['online_color'] ? ' style="color: ' . $row['online_color'] . '"' : '') . '>' . $row['group_name'] . '</span>';
+	}
 	$smcFunc['db_free_result']($request);
 
 	loadLanguage('Profile');
 
-	if ($context['fid'])
-	{
+	if ($context['fid']) {
 		$request = $smcFunc['db_query']('', '
 			SELECT *
 			FROM {db_prefix}custom_forms
@@ -357,7 +366,7 @@ function EditManageCustomForm()
 			)
 		);
 		$context['field'] = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			$context['field'] = array(
 				'name' => $row['name'],
 				'description' => $row['description'],
@@ -367,6 +376,7 @@ function EditManageCustomForm()
 				'fields' => array(),
 				'groups' => !empty($row['groups']) ? explode(',', $row['groups']) : array(),
 			);
+		}
 		$smcFunc['db_free_result']($request);
 
 		$request = $smcFunc['db_query']('', '
@@ -378,13 +388,14 @@ function EditManageCustomForm()
 			)
 		);
 		$context['field']['fields'] = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			$context['field']['fields'][] = $row['id_field'];
+		}
 		$smcFunc['db_free_result']($request);
 	}
 
 	// Setup the default values as needed.
-	if (empty($context['field']))
+	if (empty($context['field'])) {
 		$context['field'] = array(
 			'name' => '',
 			'description' => '',
@@ -394,14 +405,15 @@ function EditManageCustomForm()
 			'fields' => array(),
 			'groups' => array(),
 		);
+	}
 
 	// Are we saving?
-	if (isset($_POST['save']))
-	{
+	if (isset($_POST['save'])) {
 		checkSession();
 
-		if (trim($_POST['name']) == '')
+		if (trim($_POST['name']) == '') {
 			fatal_lang_error('post_option_need_name');
+		}
 		$_POST['name'] = $smcFunc['htmlspecialchars']($_POST['name']);
 		$_POST['description'] = $smcFunc['htmlspecialchars']($_POST['description']);
 
@@ -435,8 +447,7 @@ function EditManageCustomForm()
 		);
 		call_integration_hook('integrate_save_post_field', array(&$up_col, &$up_data, &$in_col, &$in_data));
 
-		if ($context['fid'])
-		{
+		if ($context['fid']) {
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}custom_forms
 				SET
@@ -445,9 +456,7 @@ function EditManageCustomForm()
 				WHERE id_form = {int:current_field}',
 				$up_data
 			);
-		}
-		else
-		{
+		} else {
 			$smcFunc['db_insert']('',
 				'{db_prefix}custom_forms',
 				$in_col,
@@ -465,9 +474,7 @@ function EditManageCustomForm()
 			)
 		); */
 		redirectexit('action=admin;area=customforms');
-	}
-	elseif (isset($_POST['delete']) && $context['field']['colname'])
-	{
+	} elseif (isset($_POST['delete']) && $context['field']['colname']) {
 		checkSession();
 
 		// Delete the user data first.
