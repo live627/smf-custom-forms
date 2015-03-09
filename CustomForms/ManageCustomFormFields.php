@@ -1,10 +1,17 @@
 <?php
 // Version: 1.0: ManageCustomFormFields.php
+namespace CustomForms;
 
 if (!defined('SMF')) {
 	die('Hacking attempt...');
 }
 
+/**
+ * @package CustomForms
+ * @since 1.0
+ */
+class ManageCustomFormFields
+{
 function ManageCustomFormFields()
 {
 	global $context, $sourcedir, $txt;
@@ -645,4 +652,5 @@ function EditManageCustomFormField()
 		call_integration_hook('integrate_delete_post_field');
 		redirectexit('action=admin;area=customforms');
 	}
+}
 }
