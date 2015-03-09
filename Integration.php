@@ -1,5 +1,5 @@
 <?php
-// Version: 1.0: Subs-CustomForms.php
+// Version: 1.0: Integration.php
 
 namespace CustomForms;
 
