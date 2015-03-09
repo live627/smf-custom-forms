@@ -12,7 +12,7 @@ if (!defined('SMF'))
  */
 class Integration
 
-	function admin_areas(&$admin_areas)
+	public static function admin_areas(&$admin_areas)
 	{
 		global $txt;
 
@@ -30,7 +30,7 @@ class Integration
 		);
 	}
 
-	function load_theme()
+	public static function load_theme()
 	{
 		loadLanguage('CustomForms');
 
@@ -47,7 +47,7 @@ class Integration
 		$loader->addNamespace('CustomForms', $sourcedir . '/CustomForms');
 	}
 
-	function menu_buttons(&$menu_buttons)
+	public static function menu_buttons(&$menu_buttons)
 	{
 		global $txt, $context, $modSettings, $scripturl;
 
@@ -68,7 +68,7 @@ class Integration
 		$menu_buttons = $new_menu_buttons;
 	}
 
-	function ModifyCustomFormsSettings($return_config = false)
+	public static function ModifyCustomFormsSettings($return_config = false)
 	{
 		global $txt, $scripturl, $context, $settings, $sc;
 
@@ -97,19 +97,19 @@ class Integration
 		prepareDBSettingContext($config_vars);
 	}
 
-	function actions(&$action_array)
+	public static function actions(&$action_array)
 	{
 		$action_array['forms'] = array('CustomForms.php', 'CustomForms');
 	}
 
-	function load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
+	public static function load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
 	{
 		$permissionList['membergroup'] += array(
 			'view_custom_forms' => array(false, 'general', 'view_basic_info'),
 		);
 	}
 
-	function load_fields($fields)
+	public static function load_fields($fields)
 	{
 		global $form, $context, $options, $smcFunc;
 
@@ -153,7 +153,7 @@ class Integration
 		}
 	}
 
-	function rennder_field($field, $value, $exists)
+	public static function rennder_field($field, $value, $exists)
 	{
 		global $scripturl, $settings, $sourcedir;
 
@@ -195,7 +195,7 @@ class Integration
 		);
 	}
 
-	function post_form()
+	public static function post_form()
 	{
 		global $form, $context, $options, $user_info;
 
@@ -205,7 +205,7 @@ class Integration
 		$context['is_custom_forms_collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['postFields']) : !empty($options['postFields']);
 	}
 
-	function after($msgOptions, $topicOptions)
+	public static function after($msgOptions, $topicOptions)
 	{
 		global $form, $context, $smcFunc, $topic, $user_info;
 
@@ -293,7 +293,7 @@ class Integration
 		}
 	}
 
-	function post_post_validate(&$post_errors, $posterIsGuest)
+	public static function post_post_validate(&$post_errors, $posterIsGuest)
 	{
 		global $form, $context, $sourcedir, $smcFunc, $topic;
 
@@ -338,12 +338,12 @@ class Integration
 			}
 	}
 
-	function remove_message($message, $decreasePostCount)
+	public static function remove_message($message, $decreasePostCount)
 	{
 		custom_forms_remove_messages($message, $decreasePostCount);
 	}
 
-	function remove_messages($message, $decreasePostCount)
+	public static function remove_messages($message, $decreasePostCount)
 	{
 		global $smcFunc;
 
@@ -357,7 +357,7 @@ class Integration
 			);
 	}
 
-	function remove_topics($topics, $decreasePostCount, $ignoreRecycling)
+	public static function remove_topics($topics, $decreasePostCount, $ignoreRecycling)
 	{
 		global $smcFunc;
 
@@ -379,7 +379,7 @@ class Integration
 			custom_forms_remove_messages($messages, $decreasePostCount);
 	}
 
-	function display_topics($topic_ids)
+	public static function display_topics($topic_ids)
 	{
 		global $smcFunc;
 
@@ -404,7 +404,7 @@ class Integration
 			custom_forms_display_message_list($messages, true);
 	}
 
-	function display_message_list($messages, $is_message_index = false)
+	public static function display_message_list($messages, $is_message_index = false)
 	{
 		global $form, $context, $smcFunc;
 
