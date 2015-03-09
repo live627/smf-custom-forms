@@ -11,7 +11,7 @@ if (!defined('SMF')) {
  * @since 1.0
  */
 class Integration
-
+{
 	public static function admin_areas(&$admin_areas)
 	{
 		global $txt;

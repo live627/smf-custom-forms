@@ -513,7 +513,7 @@ function EditManageCustomFormField()
 		$default = isset($_POST['default_check']) && $_POST['type'] == 'check' ? 1 : '';
 		if (!empty($_POST['select_option']) && ($_POST['type'] == 'select' || $_POST['type'] == 'radio')) {
 			foreach ($_POST['select_option'] as $k => $v) {
-				$v = $smcFunc['htmlspecialchars($v);
+				$v = $smcFunc['htmlspecialchars']($v);
 				$v = strtr($v, array(',' => ''));
 
 				if (trim($v) == '') {
