@@ -1,5 +1,5 @@
 <?php
-// Version: 1.0: Subs-CustomForms.php
+// Version: 1.0: ManageCustomFormFields.php
 
 if (!defined('SMF')) {
 	die('Hacking attempt...');
