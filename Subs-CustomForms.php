@@ -12,7 +12,7 @@ if (!defined('SMF'))
  */
 class Integration
 
-	function custom_forms_admin_areas(&$admin_areas)
+	function admin_areas(&$admin_areas)
 	{
 		global $txt;
 
@@ -30,7 +30,7 @@ class Integration
 		);
 	}
 
-	function custom_forms_load_theme()
+	function load_theme()
 	{
 		loadLanguage('CustomForms');
 
@@ -47,7 +47,7 @@ class Integration
 		$loader->addNamespace('CustomForms', $sourcedir . '/CustomForms');
 	}
 
-	function custom_forms_menu_buttons(&$menu_buttons)
+	function menu_buttons(&$menu_buttons)
 	{
 		global $txt, $context, $modSettings, $scripturl;
 
@@ -97,19 +97,19 @@ class Integration
 		prepareDBSettingContext($config_vars);
 	}
 
-	function custom_forms_actions(&$action_array)
+	function actions(&$action_array)
 	{
 		$action_array['forms'] = array('CustomForms.php', 'CustomForms');
 	}
 
-	function custom_forms_load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
+	function load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
 	{
 		$permissionList['membergroup'] += array(
 			'view_custom_forms' => array(false, 'general', 'view_basic_info'),
 		);
 	}
 
-	function custom_forms_load_fields($fields)
+	function load_fields($fields)
 	{
 		global $form, $context, $options, $smcFunc;
 
@@ -195,7 +195,7 @@ class Integration
 		);
 	}
 
-	function custom_forms_post_form()
+	function post_form()
 	{
 		global $form, $context, $options, $user_info;
 
@@ -205,7 +205,7 @@ class Integration
 		$context['is_custom_forms_collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['postFields']) : !empty($options['postFields']);
 	}
 
-	function custom_forms_after($msgOptions, $topicOptions)
+	function after($msgOptions, $topicOptions)
 	{
 		global $form, $context, $smcFunc, $topic, $user_info;
 
@@ -293,7 +293,7 @@ class Integration
 		}
 	}
 
-	function custom_forms_post_post_validate(&$post_errors, $posterIsGuest)
+	function post_post_validate(&$post_errors, $posterIsGuest)
 	{
 		global $form, $context, $sourcedir, $smcFunc, $topic;
 
@@ -338,12 +338,12 @@ class Integration
 			}
 	}
 
-	function custom_forms_remove_message($message, $decreasePostCount)
+	function remove_message($message, $decreasePostCount)
 	{
 		custom_forms_remove_messages($message, $decreasePostCount);
 	}
 
-	function custom_forms_remove_messages($message, $decreasePostCount)
+	function remove_messages($message, $decreasePostCount)
 	{
 		global $smcFunc;
 
@@ -357,7 +357,7 @@ class Integration
 			);
 	}
 
-	function custom_forms_remove_topics($topics, $decreasePostCount, $ignoreRecycling)
+	function remove_topics($topics, $decreasePostCount, $ignoreRecycling)
 	{
 		global $smcFunc;
 
@@ -379,7 +379,7 @@ class Integration
 			custom_forms_remove_messages($messages, $decreasePostCount);
 	}
 
-	function custom_forms_display_topics($topic_ids)
+	function display_topics($topic_ids)
 	{
 		global $smcFunc;
 
@@ -404,7 +404,7 @@ class Integration
 			custom_forms_display_message_list($messages, true);
 	}
 
-	function custom_forms_display_message_list($messages, $is_message_index = false)
+	function display_message_list($messages, $is_message_index = false)
 	{
 		global $form, $context, $smcFunc;
 
