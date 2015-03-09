@@ -8,11 +8,7 @@
 
     <install for="2.0 - 2.0.99">
         <database>install.php</database>
-        <require-file name="Class-CustomFormFields.php" destination="$sourcedir"/>
-        <require-file name="ManageCustomFormFields.php" destination="$sourcedir"/>
-        <require-file name="CustomForms.php" destination="$sourcedir"/>
-        <require-file name="ManageCustomForms.php" destination="$sourcedir"/>
-        <require-file name="Subs-CustomForms.php" destination="$sourcedir"/>
+        <require-dir name="CustomForms.php" destination="$sourcedir"/>
         <require-file name="CustomForms.template.php" destination="$themedir"/>
         <require-file name="ManageCustomForms.template.php" destination="$themedir"/>
         <require-file name="customformsadmin.js" destination="$themedir/scripts"/>
@@ -22,11 +18,7 @@
 
     <uninstall for="2.0 - 2.0.99">
         <code>uninstall-required.php</code>
-        <remove-file name="$sourcedir/Class-CustomFormFields.php"/>
-        <remove-file name="$sourcedir/ManageCustomFormFields.php"/>
-        <remove-file name="$sourcedir/CustomForms.php"/>
-        <remove-file name="$sourcedir/ManageCustomForms.php"/>
-        <remove-file name="$sourcedir/Subs-CustomForms.php"/>
+        <remove-dir name="$sourcedir/CustomForms.php"/>
         <remove-file name="$themedir/CustomForms.template.php"/>
         <remove-file name="$themedir/ManageCustomForms.template.php"/>
         <remove-file name="$themedir/scripts/customformsadmin.js"/>
