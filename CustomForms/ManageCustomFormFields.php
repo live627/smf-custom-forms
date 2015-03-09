@@ -12,7 +12,7 @@ if (!defined('SMF')) {
  */
 class ManageCustomFormFields
 {
-	function ManageCustomFormFields()
+	public static function ManageCustomFormFields()
 	{
 		global $context, $sourcedir, $txt;
 
@@ -40,11 +40,11 @@ class ManageCustomFormFields
 		// This area is reserved for admins only - do this here since the menu code does not.
 		isAllowedTo('asmin_forum');
 
-		// Calls a function based on the sub-action
+		// Calls a private function based on the sub-action
 		$sub_actions[$_GET['sa']]();
 	}
 
-	function ListManageCustomFormFields()
+	private function ListManageCustomFormFields()
 	{
 		global $txt, $context, $sourcedir, $smcFunc, $scripturl;
 
@@ -282,7 +282,7 @@ class ManageCustomFormFields
 		$context['default_list'] = 'custom_forms_fields';
 	}
 
-	function list_getManageCustomFormFields($start, $items_per_page, $sort)
+	private function list_getManageCustomFormFields($start, $items_per_page, $sort)
 	{
 		global $smcFunc;
 
@@ -306,7 +306,7 @@ class ManageCustomFormFields
 		return $list;
 	}
 
-	function total_getManageCustomFormFields()
+	private function total_getManageCustomFormFields()
 	{
 		global $smcFunc;
 
@@ -323,7 +323,7 @@ class ManageCustomFormFields
 		return $list;
 	}
 
-	function total_getManageCustomFormFieldsSearchable()
+	private function total_getManageCustomFormFieldsSearchable()
 	{
 		global $smcFunc;
 
@@ -341,7 +341,7 @@ class ManageCustomFormFields
 		return $list;
 	}
 
-	function get_custom_forms_filtered($id_form)
+	private function get_custom_forms_filtered($id_form)
 	{
 		global $context, $user_info;
 
@@ -366,7 +366,7 @@ class ManageCustomFormFields
 		return $list;
 	}
 
-	function list_getManageCustomFormFieldSize()
+	private function list_getManageCustomFormFieldSize()
 	{
 		global $smcFunc;
 
@@ -380,7 +380,7 @@ class ManageCustomFormFields
 		return $numProfileFields;
 	}
 
-	function EditManageCustomFormField()
+	private function EditManageCustomFormField()
 	{
 		global $txt, $scripturl, $context, $settings, $smcFunc;
 

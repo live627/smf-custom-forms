@@ -12,7 +12,7 @@ if (!defined('SMF')) {
  */
 class ManageCustomForms
 {
-	function ListManageCustomForms()
+	private function ListManageCustomForms()
 	{
 		global $txt, $context, $sourcedir, $smcFunc, $scripturl;
 
@@ -232,7 +232,7 @@ class ManageCustomForms
 		$context['default_list'] = 'custom_forms_fields';
 	}
 
-	function list_getManageCustomForms($start, $items_per_page, $sort)
+	private function list_getManageCustomForms($start, $items_per_page, $sort)
 	{
 		global $smcFunc;
 
@@ -256,7 +256,7 @@ class ManageCustomForms
 		return $list;
 	}
 
-	function total_getManageCustomForms()
+	private function total_getManageCustomForms()
 	{
 		global $smcFunc;
 
@@ -273,7 +273,7 @@ class ManageCustomForms
 		return $list;
 	}
 
-	function total_getManageCustomFormsSearchable()
+	private function total_getManageCustomFormsSearchable()
 	{
 		global $smcFunc;
 
@@ -291,7 +291,7 @@ class ManageCustomForms
 		return $list;
 	}
 
-	function get_custom_forms_filtered3()
+	private function get_custom_forms_filtered3()
 	{
 		global $context, $user_info;
 
@@ -311,7 +311,7 @@ class ManageCustomForms
 		return $list;
 	}
 
-	function list_getNumManageCustomForms()
+	private function list_getNumManageCustomForms()
 	{
 		global $smcFunc;
 
@@ -325,7 +325,7 @@ class ManageCustomForms
 		return $numProfileFields;
 	}
 
-	function EditManageCustomForm()
+	private function EditManageCustomForm()
 	{
 		global $txt, $scripturl, $context, $settings, $smcFunc;
 
