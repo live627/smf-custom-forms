@@ -179,16 +179,16 @@ class Integration
 	public static function post_form()
 	{
 		global $form, $context, $options, $user_info;
-		custom_forms_load_fields(get_custom_forms_filtered($form));
+		CustomForms\\Integration::load_fields(get_CustomForms\\Integration::filtered($form));
 		loadLanguage('CustomFormFields');
 		loadTemplate('CustomFormFields');
-		$context['is_custom_forms_collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['Fields']) : !empty($options['Fields']);
+		$context['is_CustomForms\\Integration::collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['Fields']) : !empty($options['Fields']);
 	}
 
 	public static function after($msgOptions, $topicOptions)
 	{
 		global $form, $context, $smcFunc, $topic, $user_info;
-		$field_list = get_custom_forms_filtered($form);
+		$field_list = get_CustomForms\\Integration::filtered($form);
 		$changes = $log_changes = array();
 		$_POST['icon'] = 'xx';
 		if (isset($_REQUEST['msg'])) {
@@ -277,7 +277,7 @@ class Integration
 		if (isset($_POST['customform'])) {
 			$_POST['customform'] = htmlspecialchars__recursive($_POST['customform']);
 		}
-		$field_list = get_custom_forms_filtered($form);
+		$field_list = get_CustomForms\\Integration::filtered($form);
 		require_once($sourcedir . '/Class-CustomFormFields.php');
 		loadLanguage('CustomFormFields');
 		if (isset($topic)) {
@@ -311,7 +311,7 @@ class Integration
 
 	public static function remove_message($message, $decreasePostCount)
 	{
-		custom_forms_remove_messages($message, $decreasePostCount);
+		CustomForms\\Integration::remove_messages($message, $decreasePostCount);
 	}
 
 	public static function remove_messages($message, $decreasePostCount)
@@ -345,7 +345,7 @@ class Integration
 		}
 		$smcFunc['db_free_result']($request);
 		if (!empty($messages)) {
-			custom_forms_remove_messages($messages, $decreasePostCount);
+			CustomForms\\Integration::remove_messages($messages, $decreasePostCount);
 		}
 	}
 
@@ -369,14 +369,14 @@ class Integration
 		}
 		$smcFunc['db_free_result']($request);
 		if (!empty($messages)) {
-			custom_forms_display_message_list($messages, true);
+			CustomForms\\Integration::display_message_list($messages, true);
 		}
 	}
 
 	public static function display_message_list($messages, $is_message_index = false)
 	{
 		global $form, $context, $smcFunc;
-		$field_list = get_custom_forms_filtered($form, $is_message_index);
+		$field_list = get_CustomForms\\Integration::filtered($form, $is_message_index);
 		if (empty($field_list)) {
 			return;
 		}

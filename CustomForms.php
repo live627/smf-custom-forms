@@ -29,7 +29,7 @@ function CustomForms()
 
 		default:
 			$context['page_title'] = $forms[$context['current_page']][0];
-			custom_forms_load_fields(get_custom_forms_filtered($context['current_page']));
+			CustomForms\\Integration::load_fields(get_CustomForms\\Integration::filtered($context['current_page']));
 	}
 
 	require_once($sourcedir . '/Subs-Menu.php');
