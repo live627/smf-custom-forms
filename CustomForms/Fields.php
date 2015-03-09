@@ -1,5 +1,5 @@
 <?php
-// Version: 1.0: Integration.php
+// Version: 1.0: Fields.php
 namespace CustomForms;
 
 if (!defined('SMF')) {
