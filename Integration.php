@@ -104,7 +104,7 @@ class Integration
 		$value = '';
 		$exists = false;
 		if (isset($_REQUEST['msg'])) {
-			$request = $smcFunc['db_query']('', '
+			$request = ModHelper\\Database::query('', '
 					SELECT *
 						FROM {db_prefix}custom_form_field_data
 						WHERE id_msg = {int:msg}
@@ -115,10 +115,10 @@ class Integration
 				)
 			);
 			$values = array();
-			while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			while ($row = ModHelper\\Database::fetch_assoc($request)) {
 				$values[$row['id_field']] = isset($row['value']) ? $row['value'] : '';
 			}
-			$smcFunc['db_free_result']($request);
+			ModHelper\\Database::free_result($request);
 		}
 		foreach ($fields as $field) {
 			// If this was submitted already then make the value the posted version.
@@ -192,7 +192,7 @@ class Integration
 		$changes = $log_changes = array();
 		$_POST['icon'] = 'xx';
 		if (isset($_REQUEST['msg'])) {
-			$request = $smcFunc['db_query']('', '
+			$request = ModHelper\\Database::query('', '
 					SELECT *
 					FROM {db_prefix}custom_form_field_data
 					WHERE id_msg = {int:msg}
@@ -203,13 +203,13 @@ class Integration
 				)
 			);
 			$values = array();
-			while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			while ($row = ModHelper\\Database::fetch_assoc($request)) {
 				$values[$row['id_field']] = isset($row['value']) ? $row['value'] : '';
 			}
-			$smcFunc['db_free_result']($request);
+			ModHelper\\Database::free_result($request);
 		}
 		if (isset($topic)) {
-			$request = $smcFunc['db_query']('', '
+			$request = ModHelper\\Database::query('', '
 					SELECT id_first_msg
 					FROM {db_prefix}topics
 					WHERE id_topic = {int:current_topic}',
@@ -217,9 +217,9 @@ class Integration
 					'current_topic' => $topic,
 				)
 			);
-			list ($topic_value) = $smcFunc['db_fetch_row']($request);
+			list ($topic_value) = ModHelper\\Database::fetch_row($request);
 			$topic_value = $topic_value != $_REQUEST['msg'];
-			$smcFunc['db_free_result']($request);
+			ModHelper\\Database::free_result($request);
 		}
 		foreach ($field_list as $field) {
 			if ((empty($topic) || empty($topic_value)) && $field['topic_only'] == 'yes') {
@@ -245,14 +245,14 @@ class Integration
 			}
 		}
 		if (!empty($changes)) {
-			$smcFunc['db_insert']('replace',
+			ModHelper\\Database::insert('replace',
 				'{db_prefix}custom_form_field_data',
 				array('id_field' => 'int', 'value' => 'string', 'id_msg' => 'int'),
 				$changes,
 				array('id_field', 'id_msg')
 			);
 			if (!empty($log_changes) && !empty($modSettings['modlog_enabled'])) {
-				$smcFunc['db_insert']('',
+				ModHelper\\Database::insert('',
 					'{db_prefix}log_actions',
 					array(
 						'action' => 'string', 'id_log' => 'int', 'log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16',
@@ -281,7 +281,7 @@ class Integration
 		require_once($sourcedir . '/Class-CustomFormFields.php');
 		loadLanguage('CustomFormFields');
 		if (isset($topic)) {
-			$request = $smcFunc['db_query']('', '
+			$request = ModHelper\\Database::query('', '
 					SELECT id_first_msg
 					FROM {db_prefix}topics
 					WHERE id_topic = {int:current_topic}',
@@ -289,9 +289,9 @@ class Integration
 					'current_topic' => $topic,
 				)
 			);
-			list ($topic_value) = $smcFunc['db_fetch_row']($request);
+			list ($topic_value) = ModHelper\\Database::fetch_row($request);
 			$topic_value = $topic_value != $_REQUEST['msg'];
-			$smcFunc['db_free_result']($request);
+			ModHelper\\Database::free_result($request);
 		}
 		foreach ($field_list as $field) {
 			if ((empty($topic) || empty($topic_value)) && $field['topic_only'] == 'yes') {
@@ -318,7 +318,7 @@ class Integration
 	{
 		global $smcFunc;
 		if (!empty($messages)) {
-			$smcFunc['db_query']('', '
+			ModHelper\\Database::query('', '
 					DELETE FROM {db_prefix}custom_form_field_data
 					WHERE id_msg IN ({array_int:message_list})',
 				array(
@@ -332,7 +332,7 @@ class Integration
 	{
 		global $smcFunc;
 		$messages = array();
-		$request = $smcFunc['db_query']('', '
+		$request = ModHelper\\Database::query('', '
 				SELECT id_msg
 				FROM {db_prefix}messages
 				WHERE id_topic IN ({array_int:topics})',
@@ -340,10 +340,10 @@ class Integration
 				'topics' => $topics,
 			)
 		);
-		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		while ($row = ModHelper\\Database::fetch_assoc($request)) {
 			$messages[] = $row['id_msg'];
 		}
-		$smcFunc['db_free_result']($request);
+		ModHelper\\Database::free_result($request);
 		if (!empty($messages)) {
 			CustomForms\\Integration::remove_messages($messages, $decreasePostCount);
 		}
@@ -356,7 +356,7 @@ class Integration
 			return;
 		}
 		$messages = array();
-		$request = $smcFunc['db_query']('', '
+		$request = ModHelper\\Database::query('', '
 				SELECT id_first_msg
 				FROM {db_prefix}topics
 				WHERE id_topic IN ({array_int:topics})',
@@ -364,10 +364,10 @@ class Integration
 				'topics' => $topic_ids,
 			)
 		);
-		while ($row = $smcFunc['db_fetch_row']($request)) {
+		while ($row = ModHelper\\Database::fetch_row($request)) {
 			$messages[] = $row[0];
 		}
-		$smcFunc['db_free_result']($request);
+		ModHelper\\Database::free_result($request);
 		if (!empty($messages)) {
 			CustomForms\\Integration::display_message_list($messages, true);
 		}
@@ -380,7 +380,7 @@ class Integration
 		if (empty($field_list)) {
 			return;
 		}
-		$request = $smcFunc['db_query']('', '
+		$request = ModHelper\\Database::query('', '
 				SELECT *
 				FROM {db_prefix}custom_form_field_data
 				WHERE id_msg IN ({array_int:message_list})
@@ -391,12 +391,12 @@ class Integration
 			)
 		);
 		$context['fields'] = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		while ($row = ModHelper\\Database::fetch_assoc($request)) {
 			$exists = isset($row['value']);
 			$value = $exists ? $row['value'] : '';
 			$context['fields'][$row['id_msg']][$row['id_field']] = rennder_field($field_list[$row['id_field']], $value, $exists);
 		}
-		$smcFunc['db_free_result']($request);
+		ModHelper\\Database::free_result($request);
 		if (!empty($context['fields'])) {
 			loadLanguage('CustomFormFields');
 			loadTemplate('CustomFormFields');

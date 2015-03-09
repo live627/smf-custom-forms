@@ -14,7 +14,7 @@ function ListManageCustomForms()
 		checkSession();
 
 		// Delete the user data first.
-		$smcFunc['db_query']('', '
+		ModHelper\\Database::query('', '
 			DELETE FROM {db_prefix}custom_form_field_data
 			WHERE id_form IN ({array_int:fields})',
 			array(
@@ -22,7 +22,7 @@ function ListManageCustomForms()
 			)
 		);
 		// Then the link.
-		$smcFunc['db_query']('', '
+		ModHelper\\Database::query('', '
 			DELETE FROM {db_prefix}custom_form_field_link
 			WHERE id_form IN ({array_int:fields})',
 			array(
@@ -30,7 +30,7 @@ function ListManageCustomForms()
 			)
 		);
 		// Finally - the form themselves are gone!
-		$smcFunc['db_query']('', '
+		ModHelper\\Database::query('', '
 			DELETE FROM {db_prefix}custom_forms
 			WHERE id_form IN ({array_int:fields})',
 			array(
@@ -47,7 +47,7 @@ function ListManageCustomForms()
 		foreach (total_getManageCustomForms() as $field) {
 			$bbc = !empty($_POST['bbc'][$field['id_form']]) ? 'yes' : 'no';
 			if ($bbc != $field['bbc']) {
-				$smcFunc['db_query']('', '
+				ModHelper\\Database::query('', '
 					UPDATE {db_prefix}custom_forms
 					SET bbc = {string:bbc}
 					WHERE id_form = {int:field}',
@@ -60,7 +60,7 @@ function ListManageCustomForms()
 
 			$active = !empty($_POST['active'][$field['id_form']]) ? 'yes' : 'no';
 			if ($active != $field['active']) {
-				$smcFunc['db_query']('', '
+				ModHelper\\Database::query('', '
 					UPDATE {db_prefix}custom_forms
 					SET active = {string:active}
 					WHERE id_form = {int:field}',
@@ -73,7 +73,7 @@ function ListManageCustomForms()
 
 			$can_search = !empty($_POST['can_search'][$field['id_form']]) ? 'yes' : 'no';
 			if ($can_search != $field['can_search']) {
-				$smcFunc['db_query']('', '
+				ModHelper\\Database::query('', '
 					UPDATE {db_prefix}custom_forms
 					SET can_search = {string:can_search}
 					WHERE id_form = {int:field}',
@@ -230,7 +230,7 @@ function list_getManageCustomForms($start, $items_per_page, $sort)
 	global $smcFunc;
 
 	$list = array();
-	$request = $smcFunc['db_query']('', '
+	$request = ModHelper\\Database::query('', '
 		SELECT id_form, name, description, bbc, active, can_search
 		FROM {db_prefix}custom_forms
 		ORDER BY {raw:sort}
@@ -241,10 +241,10 @@ function list_getManageCustomForms($start, $items_per_page, $sort)
 			'items_per_page' => $items_per_page,
 		)
 	);
-	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+	while ($row = ModHelper\\Database::fetch_assoc($request)) {
 		$list[] = $row;
 	}
-	$smcFunc['db_free_result']($request);
+	ModHelper\\Database::free_result($request);
 
 	return $list;
 }
@@ -254,13 +254,13 @@ function total_getManageCustomForms()
 	global $smcFunc;
 
 	$list = array();
-	$request = $smcFunc['db_query']('', '
+	$request = ModHelper\\Database::query('', '
 		SELECT id_form, name, description, bbc
 		FROM {db_prefix}custom_forms');
-	while (list ($id_form, $name, $description, $bbc) = $smcFunc['db_fetch_row']($request)) {
+	while (list ($id_form, $name, $description, $bbc) = ModHelper\\Database::fetch_row($request)) {
 		$list[$id_form] = [$name, $description, $bbc];
 	}
-	$smcFunc['db_free_result']($request);
+	ModHelper\\Database::free_result($request);
 	call_integration_hook('integrate_get_custom_forms', array(&$list));
 
 	return $list;
@@ -271,14 +271,14 @@ function total_getManageCustomFormsSearchable()
 	global $smcFunc;
 
 	$list = array();
-	$request = $smcFunc['db_query']('', '
+	$request = ModHelper\\Database::query('', '
 		SELECT id_form, name, description, bbc
 		FROM {db_prefix}custom_forms
 		WHERE can_search = \'yes\'');
-	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+	while ($row = ModHelper\\Database::fetch_assoc($request)) {
 		$list[$row['id_form']] = $row;
 	}
-	$smcFunc['db_free_result']($request);
+	ModHelper\\Database::free_result($request);
 	call_integration_hook('integrate_get_custom_forms_searchable', array(&$list));
 
 	return $list;
@@ -308,12 +308,12 @@ function list_getNumManageCustomForms()
 {
 	global $smcFunc;
 
-	$request = $smcFunc['db_query']('', '
+	$request = ModHelper\\Database::query('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}custom_forms');
 
-	list ($numProfileFields) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
+	list ($numProfileFields) = ModHelper\\Database::fetch_row($request);
+	ModHelper\\Database::free_result($request);
 
 	return $numProfileFields;
 }
@@ -328,16 +328,16 @@ function EditManageCustomForm()
 	$context['html_headers'] .= '<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/customformsadmin.js"></script>';
 	loadTemplate('ManageCustomForms');
 
-	$request = $smcFunc['db_query']('', '
+	$request = ModHelper\\Database::query('', '
 		SELECT id_field, name, type
 		FROM {db_prefix}custom_form_fields');
 	$context['fields'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+	while ($row = ModHelper\\Database::fetch_assoc($request)) {
 		$context['fields'][$row['id_field']] = $row['type'] . ' - ' . $row['name'];
 	}
-	$smcFunc['db_free_result']($request);
+	ModHelper\\Database::free_result($request);
 
-	$request = $smcFunc['db_query']('', '
+	$request = ModHelper\\Database::query('', '
 		SELECT id_group, group_name, online_color
 		FROM {db_prefix}membergroups
 		WHERE min_posts = {int:min_posts}
@@ -349,15 +349,15 @@ function EditManageCustomForm()
 		)
 	);
 	$context['groups'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+	while ($row = ModHelper\\Database::fetch_assoc($request)) {
 		$context['groups'][$row['id_group']] = '<span' . ($row['online_color'] ? ' style="color: ' . $row['online_color'] . '"' : '') . '>' . $row['group_name'] . '</span>';
 	}
-	$smcFunc['db_free_result']($request);
+	ModHelper\\Database::free_result($request);
 
 	loadLanguage('Profile');
 
 	if ($context['fid']) {
-		$request = $smcFunc['db_query']('', '
+		$request = ModHelper\\Database::query('', '
 			SELECT *
 			FROM {db_prefix}custom_forms
 			WHERE id_form = {int:current_field}',
@@ -366,7 +366,7 @@ function EditManageCustomForm()
 			)
 		);
 		$context['field'] = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		while ($row = ModHelper\\Database::fetch_assoc($request)) {
 			$context['field'] = array(
 				'name' => $row['name'],
 				'description' => $row['description'],
@@ -377,9 +377,9 @@ function EditManageCustomForm()
 				'groups' => !empty($row['groups']) ? explode(',', $row['groups']) : array(),
 			);
 		}
-		$smcFunc['db_free_result']($request);
+		ModHelper\\Database::free_result($request);
 
-		$request = $smcFunc['db_query']('', '
+		$request = ModHelper\\Database::query('', '
 			SELECT id_field
 			FROM {db_prefix}custom_form_field_link
 			WHERE id_form = {int:current_field}',
@@ -388,10 +388,10 @@ function EditManageCustomForm()
 			)
 		);
 		$context['field']['fields'] = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		while ($row = ModHelper\\Database::fetch_assoc($request)) {
 			$context['field']['fields'][] = $row['id_field'];
 		}
-		$smcFunc['db_free_result']($request);
+		ModHelper\\Database::free_result($request);
 	}
 
 	// Setup the default values as needed.
@@ -414,8 +414,8 @@ function EditManageCustomForm()
 		if (trim($_POST['name']) == '') {
 			fatal_lang_error('post_option_need_name');
 		}
-		$_POST['name'] = $smcFunc['htmlspecialchars']($_POST['name']);
-		$_POST['description'] = $smcFunc['htmlspecialchars']($_POST['description']);
+		$_POST['name'] = $smcFunc['htmlspecialchars($_POST['name']);
+		$_POST['description'] = $smcFunc['htmlspecialchars($_POST['description']);
 
 		$bbc = !empty($_POST['bbc']) ? 'yes' : 'no';
 		$active = !empty($_POST['active']) ? 'yes' : 'no';
@@ -448,7 +448,7 @@ function EditManageCustomForm()
 		call_integration_hook('integrate_save_post_field', array(&$up_col, &$up_data, &$in_col, &$in_data));
 
 		if ($context['fid']) {
-			$smcFunc['db_query']('', '
+			ModHelper\\Database::query('', '
 				UPDATE {db_prefix}custom_forms
 				SET
 					' . implode(',
@@ -457,7 +457,7 @@ function EditManageCustomForm()
 				$up_data
 			);
 		} else {
-			$smcFunc['db_insert']('',
+			ModHelper\\Database::insert('',
 				'{db_prefix}custom_forms',
 				$in_col,
 				$in_data,
@@ -466,7 +466,7 @@ function EditManageCustomForm()
 		}
 
 		/* // As there's currently no option to priorize certain fields over others, let's order them alphabetically.
-		$smcFunc['db_query']('', '
+		ModHelper\\Database::query('', '
 			ALTER TABLE {db_prefix}custom_forms
 			ORDER BY name',
 			array(
@@ -478,7 +478,7 @@ function EditManageCustomForm()
 		checkSession();
 
 		// Delete the user data first.
-		$smcFunc['db_query']('', '
+		ModHelper\\Database::query('', '
 			DELETE FROM {db_prefix}custom_form_field_data
 			WHERE id_form = {int:current_field}',
 			array(
@@ -486,7 +486,7 @@ function EditManageCustomForm()
 			)
 		);
 		// Then the link.
-		$smcFunc['db_query']('', '
+		ModHelper\\Database::query('', '
 			DELETE FROM {db_prefix}custom_form_field_link
 			WHERE id_form = {int:current_field}',
 			array(
@@ -494,7 +494,7 @@ function EditManageCustomForm()
 			)
 		);
 		// Finally - the form itself is gone!
-		$smcFunc['db_query']('', '
+		ModHelper\\Database::query('', '
 			DELETE FROM {db_prefix}custom_forms
 			WHERE id_form = {int:current_field}',
 			array(
