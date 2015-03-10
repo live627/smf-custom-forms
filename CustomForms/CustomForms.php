@@ -6,6 +6,10 @@ if (!defined('SMF')) {
 	die('Hacking attempt...');
 }
 
+/**
+ * @package CustomForms
+ * @since 1.0
+ */
 function CustomForms()
 {
 	global $boarddir, $context, $modSettings, $scripturl, $settings, $sourcedir, $txt;

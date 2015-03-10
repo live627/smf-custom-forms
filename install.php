@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package CustomForms
+ * @since 1.0
+ */
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF')) {
 	$ssi = true;
 	require_once(dirname(__FILE__) . '/SSI.php');
