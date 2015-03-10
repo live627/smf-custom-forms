@@ -1,5 +1,6 @@
 <?php
 // Version 1.0: CustomForms.php
+namespace CustomForms;
 
 if (!defined('SMF')) {
 	die('Hacking attempt...');
