@@ -11,12 +11,11 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF')) {
 	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
 }
 
-add_integration_function('integrate_pre_include', '$sourcedir/CustomForms/ModHelper/Psr4AutoloaderClass.php');
-add_integration_function('integrate_load_theme', 'CustomForms\\Integration::load_theme');
-add_integration_function('integrate_actions', 'CustomForms\\Integration::actions');
-add_integration_function('integrate_menu_buttons', 'CustomForms\\Integration::buttons');
-add_integration_function('integrate_modify_modifications', 'CustomForms\\Integration::modify_modifications');
-add_integration_function('integrate_admin_areas', 'CustomForms\\Integration::admin_areas');
+new Hooks()->add('integrate_pre_include', '$sourcedir/CustomForms/ModHelper/Psr4AutoloaderClass.php')
+	->add('integrate_load_theme', 'CustomForms\\Integration::load_theme')
+	->add('integrate_actions', 'CustomForms\\Integration::actions')
+	->add('integrate_menu_buttons', 'CustomForms\\Integration::buttons')
+	->add('integrate_admin_areas', 'CustomForms\\Integration::admin_areas');
 
 if (!array_key_exists('db_add_column', $smcFunc)) {
 	db_extend('packages');
