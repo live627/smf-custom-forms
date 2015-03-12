@@ -8,6 +8,7 @@
 
     <install for="2.0 - 2.0.99">
         <code>check.php</code>
+        <code>add_remove_hooks.php</code>
         <database>install.php</database>
         <require-dir name="CustomForms.php" destination="$sourcedir"/>
         <require-file name="CustomForms.template.php" destination="$themedir"/>
@@ -18,7 +19,7 @@
     </install>
 
     <uninstall for="2.0 - 2.0.99">
-        <code>uninstall-required.php</code>
+        <code>add_remove_hooks.php</code>
         <remove-dir name="$sourcedir/CustomForms.php"/>
         <remove-file name="$themedir/CustomForms.template.php"/>
         <remove-file name="$themedir/ManageCustomForms.template.php"/>
