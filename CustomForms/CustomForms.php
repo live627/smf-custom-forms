@@ -10,7 +10,7 @@ if (!defined('SMF')) {
  * @package CustomForms
  * @since 1.0
  */
-class ManageCustomFormFields
+class CustomForms
 {
 	public function __construct()
 	{
