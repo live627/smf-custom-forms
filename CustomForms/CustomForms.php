@@ -10,7 +10,9 @@ if (!defined('SMF')) {
  * @package CustomForms
  * @since 1.0
  */
-function CustomForms()
+class ManageCustomFormFields
+{
+public function __construct()
 {
 	global $boarddir, $context, $modSettings, $scripturl, $settings, $sourcedir, $txt;
 
@@ -98,6 +100,7 @@ function CustomForms()
 	}
 
 	loadTemplate('CustomForms');
+}
 }
 
 ?>
