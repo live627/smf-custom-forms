@@ -26,7 +26,7 @@ class CustomForms extends \ModHelper\A
 				$num_per_page = 25;
 				$start = 0;
 				$context['page_index'] = constructPageIndex($scripturl . '?action=forms', $start, 7, $num_per_page);
-				$context['page_title'] = $txt['additional'];
+				$context['page_title'] = $txt['custom_forms_all'];
 				foreach ($forms as $id_form => list ($name, $description, $bbc)) {
 					$context['forms'][$id_form]['link'] = '<a href="' . $scripturl . '?action=forms;in=' . $id_form . '>' . $name . '</a>';
 					$context['forms'][$id_form]['description'] = $bbc == 'yes' ? parse_bbc($description) : $description;
