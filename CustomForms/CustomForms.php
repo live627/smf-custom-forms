@@ -19,7 +19,7 @@ class CustomForms extends \ModHelper\A
 		isAllowedTo('view_custom_forms');
 
 		$context['current_page'] = isset($_REQUEST['in']) ? $_REQUEST['in'] : 'all';
-		$forms = total_getManageCustomForms();
+		$forms = ManageCustomForms::total_getManageCustomForms();
 
 		switch ($context['current_page']) {
 			case 'all':
@@ -27,7 +27,6 @@ class CustomForms extends \ModHelper\A
 				$start = 0;
 				$context['page_index'] = constructPageIndex($scripturl . '?action=forms', $start, 7, $num_per_page);
 				$context['page_title'] = $txt['additional'];
-				require_once($sourcedir . '/ManageCustomForms.php');
 				foreach ($forms as $id_form => list ($name, $description, $bbc)) {
 					$context['forms'][$id_form]['link'] = '<a href="' . $scripturl . '?action=forms;in=' . $id_form . '>' . $name . '</a>';
 					$context['forms'][$id_form]['description'] = $bbc == 'yes' ? parse_bbc($description) : $description;
@@ -36,7 +35,7 @@ class CustomForms extends \ModHelper\A
 
 			default:
 				$context['page_title'] = $forms[$context['current_page']][0];
-				\CustomForms\Integration::load_fields(get_\CustomForms\Integration::filtered($context['current_page']));
+				Integration::load_fields(Integration::get_filtered($context['current_page']));
 		}
 
 		require_once($sourcedir . '/Subs-Menu.php');
