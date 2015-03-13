@@ -318,6 +318,16 @@ class ManageCustomFormFields
 			$list[$row['id_field']] = $row;
 		}
 		\ModHelper\Database::free_result($request);
+		$request = \ModHelper\Database::query('', '
+			SELECT id_form, id_field
+			FROM {db_prefix}custom_form_field_link');
+		while (list ($id_form, $id_field) = \ModHelper\Database::fetch_assoc($request)) {
+			if (!isset($list[$id_field]['forms'])) {
+				$list[$id_field]['forms'] = [];
+			}
+			$list[$id_field]['forms'][] = $id_form;
+		}
+		\ModHelper\Database::free_result($request);
 		call_integration_hook('integrate_get_custom_forms', array(&$list));
 
 		return $list;
@@ -345,11 +355,10 @@ class ManageCustomFormFields
 	{
 		global $context, $user_info;
 
-		$fields = total_getManageCustomFormFields();
+		$fields = self::total_getManageCustomFormFields();
 		$list = array();
 		foreach ($fields as $field) {
-			$form_list = array_flip(explode(',', $field['forms']));
-			if (!isset($form_list[$form])) {
+			if (!isset($field['forms'][$form])) {
 				continue;
 			}
 
