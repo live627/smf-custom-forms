@@ -52,7 +52,6 @@ class CustomForms extends \ModHelper\A
 			),
 		);
 
-		require_once($sourcedir . '/ManageCustomForms.php');
 		foreach ($forms as $id_form => list ($name)) {
 			$custom_forms_areas['forms']['areas'][$id_form]['label'] = $name;
 			$custom_forms_areas['forms']['areas'][$id_form]['custom_url'] = $scripturl . '?action=forms;in=' . $id_form;
