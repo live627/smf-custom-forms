@@ -104,7 +104,7 @@ class Integration
 		$value = '';
 		$exists = false;
 		if (isset($_REQUEST['msg'])) {
-			$request = ModHelper\\Database::query('', '
+			$request = \ModHelper\Database::query('', '
 					SELECT *
 						FROM {db_prefix}custom_form_field_data
 						WHERE id_msg = {int:msg}
@@ -115,10 +115,10 @@ class Integration
 				)
 			);
 			$values = array();
-			while ($row = ModHelper\\Database::fetch_assoc($request)) {
+			while ($row = \ModHelper\Database::fetch_assoc($request)) {
 				$values[$row['id_field']] = isset($row['value']) ? $row['value'] : '';
 			}
-			ModHelper\\Database::free_result($request);
+			\ModHelper\Database::free_result($request);
 		}
 		foreach ($fields as $field) {
 			// If this was submitted already then make the value the posted version.
@@ -179,7 +179,7 @@ class Integration
 	public static function post_form()
 	{
 		global $form, $context, $options, $user_info;
-		CustomForms\\Integration::load_fields(get_CustomForms\\Integration::filtered($form));
+		\CustomForms\Integration::load_fields(get_\CustomForms\Integration::filtered($form));
 		loadLanguage('CustomFormFields');
 		loadTemplate('CustomFormFields');
 		$context['is_CustomForms\\Integration::collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['Fields']) : !empty($options['Fields']);
@@ -188,11 +188,11 @@ class Integration
 	public static function after($msgOptions, $topicOptions)
 	{
 		global $form, $context, $smcFunc, $topic, $user_info;
-		$field_list = get_CustomForms\\Integration::filtered($form);
+		$field_list = get_\CustomForms\Integration::filtered($form);
 		$changes = $log_changes = array();
 		$_POST['icon'] = 'xx';
 		if (isset($_REQUEST['msg'])) {
-			$request = ModHelper\\Database::query('', '
+			$request = \ModHelper\Database::query('', '
 					SELECT *
 					FROM {db_prefix}custom_form_field_data
 					WHERE id_msg = {int:msg}
@@ -203,13 +203,13 @@ class Integration
 				)
 			);
 			$values = array();
-			while ($row = ModHelper\\Database::fetch_assoc($request)) {
+			while ($row = \ModHelper\Database::fetch_assoc($request)) {
 				$values[$row['id_field']] = isset($row['value']) ? $row['value'] : '';
 			}
-			ModHelper\\Database::free_result($request);
+			\ModHelper\Database::free_result($request);
 		}
 		if (isset($topic)) {
-			$request = ModHelper\\Database::query('', '
+			$request = \ModHelper\Database::query('', '
 					SELECT id_first_msg
 					FROM {db_prefix}topics
 					WHERE id_topic = {int:current_topic}',
@@ -217,9 +217,9 @@ class Integration
 					'current_topic' => $topic,
 				)
 			);
-			list ($topic_value) = ModHelper\\Database::fetch_row($request);
+			list ($topic_value) = \ModHelper\Database::fetch_row($request);
 			$topic_value = $topic_value != $_REQUEST['msg'];
-			ModHelper\\Database::free_result($request);
+			\ModHelper\Database::free_result($request);
 		}
 		foreach ($field_list as $field) {
 			if ((empty($topic) || empty($topic_value)) && $field['topic_only'] == 'yes') {
@@ -245,14 +245,14 @@ class Integration
 			}
 		}
 		if (!empty($changes)) {
-			ModHelper\\Database::insert('replace',
+			\ModHelper\Database::insert('replace',
 				'{db_prefix}custom_form_field_data',
 				array('id_field' => 'int', 'value' => 'string', 'id_msg' => 'int'),
 				$changes,
 				array('id_field', 'id_msg')
 			);
 			if (!empty($log_changes) && !empty($modSettings['modlog_enabled'])) {
-				ModHelper\\Database::insert('',
+				\ModHelper\Database::insert('',
 					'{db_prefix}log_actions',
 					array(
 						'action' => 'string', 'id_log' => 'int', 'log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16',
@@ -277,11 +277,11 @@ class Integration
 		if (isset($_POST['customform'])) {
 			$_POST['customform'] = htmlspecialchars__recursive($_POST['customform']);
 		}
-		$field_list = get_CustomForms\\Integration::filtered($form);
+		$field_list = get_\CustomForms\Integration::filtered($form);
 		require_once($sourcedir . '/Class-CustomFormFields.php');
 		loadLanguage('CustomFormFields');
 		if (isset($topic)) {
-			$request = ModHelper\\Database::query('', '
+			$request = \ModHelper\Database::query('', '
 					SELECT id_first_msg
 					FROM {db_prefix}topics
 					WHERE id_topic = {int:current_topic}',
@@ -289,9 +289,9 @@ class Integration
 					'current_topic' => $topic,
 				)
 			);
-			list ($topic_value) = ModHelper\\Database::fetch_row($request);
+			list ($topic_value) = \ModHelper\Database::fetch_row($request);
 			$topic_value = $topic_value != $_REQUEST['msg'];
-			ModHelper\\Database::free_result($request);
+			\ModHelper\Database::free_result($request);
 		}
 		foreach ($field_list as $field) {
 			if ((empty($topic) || empty($topic_value)) && $field['topic_only'] == 'yes') {
@@ -311,14 +311,14 @@ class Integration
 
 	public static function remove_message($message, $decreasePostCount)
 	{
-		CustomForms\\Integration::remove_messages($message, $decreasePostCount);
+		\CustomForms\Integration::remove_messages($message, $decreasePostCount);
 	}
 
 	public static function remove_messages($message, $decreasePostCount)
 	{
 		global $smcFunc;
 		if (!empty($messages)) {
-			ModHelper\\Database::query('', '
+			\ModHelper\Database::query('', '
 					DELETE FROM {db_prefix}custom_form_field_data
 					WHERE id_msg IN ({array_int:message_list})',
 				array(
@@ -332,7 +332,7 @@ class Integration
 	{
 		global $smcFunc;
 		$messages = array();
-		$request = ModHelper\\Database::query('', '
+		$request = \ModHelper\Database::query('', '
 				SELECT id_msg
 				FROM {db_prefix}messages
 				WHERE id_topic IN ({array_int:topics})',
@@ -340,12 +340,12 @@ class Integration
 				'topics' => $topics,
 			)
 		);
-		while ($row = ModHelper\\Database::fetch_assoc($request)) {
+		while ($row = \ModHelper\Database::fetch_assoc($request)) {
 			$messages[] = $row['id_msg'];
 		}
-		ModHelper\\Database::free_result($request);
+		\ModHelper\Database::free_result($request);
 		if (!empty($messages)) {
-			CustomForms\\Integration::remove_messages($messages, $decreasePostCount);
+			\CustomForms\Integration::remove_messages($messages, $decreasePostCount);
 		}
 	}
 
@@ -356,7 +356,7 @@ class Integration
 			return;
 		}
 		$messages = array();
-		$request = ModHelper\\Database::query('', '
+		$request = \ModHelper\Database::query('', '
 				SELECT id_first_msg
 				FROM {db_prefix}topics
 				WHERE id_topic IN ({array_int:topics})',
@@ -364,23 +364,23 @@ class Integration
 				'topics' => $topic_ids,
 			)
 		);
-		while ($row = ModHelper\\Database::fetch_row($request)) {
+		while ($row = \ModHelper\Database::fetch_row($request)) {
 			$messages[] = $row[0];
 		}
-		ModHelper\\Database::free_result($request);
+		\ModHelper\Database::free_result($request);
 		if (!empty($messages)) {
-			CustomForms\\Integration::display_message_list($messages, true);
+			\CustomForms\Integration::display_message_list($messages, true);
 		}
 	}
 
 	public static function display_message_list($messages, $is_message_index = false)
 	{
 		global $form, $context, $smcFunc;
-		$field_list = get_CustomForms\\Integration::filtered($form, $is_message_index);
+		$field_list = get_\CustomForms\Integration::filtered($form, $is_message_index);
 		if (empty($field_list)) {
 			return;
 		}
-		$request = ModHelper\\Database::query('', '
+		$request = \ModHelper\Database::query('', '
 				SELECT *
 				FROM {db_prefix}custom_form_field_data
 				WHERE id_msg IN ({array_int:message_list})
@@ -391,12 +391,12 @@ class Integration
 			)
 		);
 		$context['fields'] = array();
-		while ($row = ModHelper\\Database::fetch_assoc($request)) {
+		while ($row = \ModHelper\Database::fetch_assoc($request)) {
 			$exists = isset($row['value']);
 			$value = $exists ? $row['value'] : '';
 			$context['fields'][$row['id_msg']][$row['id_field']] = rennder_field($field_list[$row['id_field']], $value, $exists);
 		}
-		ModHelper\\Database::free_result($request);
+		\ModHelper\Database::free_result($request);
 		if (!empty($context['fields'])) {
 			loadLanguage('CustomFormFields');
 			loadTemplate('CustomFormFields');

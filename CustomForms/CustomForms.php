@@ -36,7 +36,7 @@ class CustomForms
 
 			default:
 				$context['page_title'] = $forms[$context['current_page']][0];
-				CustomForms\\Integration::load_fields(get_CustomForms\\Integration::filtered($context['current_page']));
+				\CustomForms\Integration::load_fields(get_\CustomForms\Integration::filtered($context['current_page']));
 		}
 
 		require_once($sourcedir . '/Subs-Menu.php');
