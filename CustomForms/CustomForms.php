@@ -35,7 +35,7 @@ class CustomForms extends \ModHelper\A
 
 			default:
 				$context['page_title'] = $forms[$context['current_page']][0];
-				Integration::load_fields(Integration::get_filtered($context['current_page']));
+				Integration::load_fields(ManageCustomFormFields::get_custom_forms_filtered($context['current_page']));
 		}
 
 		require_once($sourcedir . '/Subs-Menu.php');

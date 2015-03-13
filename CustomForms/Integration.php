@@ -84,7 +84,7 @@ class Integration
 
 	public static function actions(&$action_array)
 	{
-		$action_array['forms'] = array('CustomForms.php', 'CustomForms');
+		$action_array['forms'] = array('CustomForms/CustomForms.php', '\CustomForms\CustomForms::init');
 	}
 
 	public static function load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
@@ -132,18 +132,14 @@ class Integration
 				$value = $values[$field['id_field']];
 			}
 			$exists = !empty($value);
-			$context['fields'][] = rennder_field($field, $value, $exists);
+			$context['fields'][] = self::rennder_field($field, $value, $exists);
 		}
 	}
 
 	public static function rennder_field($field, $value, $exists)
 	{
 		global $scripturl, $settings, $sourcedir;
-		require_once($sourcedir . '/Class-CustomFormFields.php');
-		$class_name = 'Fields_' . $field['type'];
-		if (!class_exists($class_name)) {
-			fatal_error('Param "' . $field['type'] . '" not found for field "' . $field['name'] . '" at ID #' . $field['id_field'] . '.', false);
-		}
+		$class_name = '\\CustomForms\\Fields\\' . ucfirst($field['type']);
 		$param = new $class_name($field, $value, $exists);
 		$param->setHtml();
 		// Parse BBCode
