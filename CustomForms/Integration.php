@@ -19,7 +19,7 @@ class Integration
 		$admin_areas['layout']['areas']['customforms'] = array(
 			'label' => $txt['custom_forms'],
 			'icon' => 'settings.gif',
-			'function' => 'ManageCustomFormFields',
+			'function' => function() { ManageCustomFormFields::init(); },
 			'subsections' => array(
 				'index' => array($txt['custom_forms_menu_index']),
 				'edit' => array($txt['custom_forms_menu_edit']),

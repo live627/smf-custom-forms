@@ -10,9 +10,9 @@ if (!defined('SMF')) {
  * @package CustomForms
  * @since 1.0
  */
-class ManageCustomFormFields
+class ManageCustomFormFields extends ManageCustomForms
 {
-	public static function ManageCustomFormFields()
+	public function __construct()
 	{
 		global $context, $sourcedir, $txt;
 
@@ -35,13 +35,12 @@ class ManageCustomFormFields
 		}
 
 		$context['sub_template'] = $_GET['sa'];
-		require_once($sourcedir . '/ManageCustomForms.php');
 
 		// This area is reserved for admins only - do this here since the menu code does not.
 		isAllowedTo('asmin_forum');
 
 		// Calls a private function based on the sub-action
-		$sub_actions[$_GET['sa']]();
+		$this->$sub_actions[$_GET['sa']]();
 	}
 
 	private function ListManageCustomFormFields()
@@ -139,10 +138,10 @@ class ManageCustomFormFields
 			'no_items_label' => $txt['custom_forms_none'],
 			'items_per_page' => 25,
 			'get_items' => array(
-				'function' => 'list_getManageCustomFormFields',
+				'function' => ['\\CustomForms\\ManageCustomFormFields', 'list_getManageCustomFormFields'],
 			),
 			'get_count' => array(
-				'function' => 'list_getManageCustomFormFieldSize',
+				'function' => ['\\CustomForms\\ManageCustomFormFields', 'list_getManageCustomFormFieldSize'],
 			),
 			'columns' => array(
 				'name' => array(

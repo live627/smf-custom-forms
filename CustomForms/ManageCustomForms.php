@@ -10,9 +10,9 @@ if (!defined('SMF')) {
  * @package CustomForms
  * @since 1.0
  */
-class ManageCustomForms
+class ManageCustomForms extends \ModHelper\A
 {
-	private function ListManageCustomForms()
+	protected function ListManageCustomForms()
 	{
 		global $txt, $context, $sourcedir, $smcFunc, $scripturl;
 
@@ -107,10 +107,10 @@ class ManageCustomForms
 			'no_items_label' => $txt['custom_forms_none'],
 			'items_per_page' => 25,
 			'get_items' => array(
-				'function' => 'list_getManageCustomForms',
+				'function' => ['\\CustomForms\\ManageCustomForms', 'list_getManageCustomForms'],
 			),
 			'get_count' => array(
-				'function' => 'list_getNumManageCustomForms',
+				'function' => ['\\CustomForms\\ManageCustomForms', 'list_getNumManageCustomForms'],
 			),
 			'columns' => array(
 				'name' => array(
@@ -325,7 +325,7 @@ class ManageCustomForms
 		return $numProfileFields;
 	}
 
-	private function EditManageCustomForm()
+	protected function EditManageCustomForm()
 	{
 		global $txt, $scripturl, $context, $settings, $smcFunc;
 
