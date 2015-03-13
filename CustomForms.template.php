@@ -1,6 +1,6 @@
 <?php
 
-function template_view_form()
+function template_main()
 {
 	global $context, $txt;
 
