@@ -232,7 +232,7 @@ class ManageCustomForms
 		$context['default_list'] = 'custom_forms_fields';
 	}
 
-	private function list_getManageCustomForms($start, $items_per_page, $sort)
+	public static function list_getManageCustomForms($start, $items_per_page, $sort)
 	{
 		global $smcFunc;
 
@@ -256,7 +256,7 @@ class ManageCustomForms
 		return $list;
 	}
 
-	private function total_getManageCustomForms()
+	public static function total_getManageCustomForms()
 	{
 		global $smcFunc;
 
@@ -273,7 +273,7 @@ class ManageCustomForms
 		return $list;
 	}
 
-	private function total_getManageCustomFormsSearchable()
+	public static function total_getManageCustomFormsSearchable()
 	{
 		global $smcFunc;
 
@@ -291,7 +291,7 @@ class ManageCustomForms
 		return $list;
 	}
 
-	private function get_custom_forms_filtered3()
+	 function get_custom_forms_filtered3()
 	{
 		global $context, $user_info;
 
@@ -311,7 +311,7 @@ class ManageCustomForms
 		return $list;
 	}
 
-	private function list_getNumManageCustomForms()
+	public static function list_getNumManageCustomForms()
 	{
 		global $smcFunc;
 
