@@ -10,7 +10,7 @@ if (!defined('SMF')) {
  * @package CustomForms
  * @since 1.0
  */
-class CustomForms
+class CustomForms extends \ModHelper\A
 {
 	public function __construct()
 	{
