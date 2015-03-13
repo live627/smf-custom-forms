@@ -421,8 +421,8 @@ class ManageCustomForms
 			if (trim($_POST['name']) == '') {
 				fatal_lang_error('post_option_need_name');
 			}
-			$_POST['name'] = $smcFunc['htmlspecialchars($_POST['name']);
-			$_POST['description'] = $smcFunc['htmlspecialchars($_POST['description']);
+			$_POST['name'] = $smcFunc['htmlspecialchars']($_POST['name']);
+			$_POST['description'] = $smcFunc['htmlspecialchars']($_POST['description']);
 
 			$bbc = !empty($_POST['bbc']) ? 'yes' : 'no';
 			$active = !empty($_POST['active']) ? 'yes' : 'no';
