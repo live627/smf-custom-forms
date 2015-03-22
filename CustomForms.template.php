@@ -89,18 +89,7 @@ function template_view_form()
 	echo '
 						<dl class="settings">';
 
-	if (!empty($context['fields'])) {
-		foreach ($context['fields'] as $field) {
-			echo '
-							<dt>
-								<strong>', $field['name'], ': </strong>
-								<dfn>', $field['description'], '</dfn>
-							</dt>
-							<dd>
-								', $field['input_html'], '
-							</dd>';
-		}
-	}
+	template_input_custom_forms();
 
 	echo '
 						</dl>
@@ -113,4 +102,26 @@ function template_view_form()
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
 	</div>';
+}
+
+function template_input_custom_forms()
+{
+	global $context;
+
+	if (!empty($context['fields'])) {
+		foreach ($context['fields'] as $field) {			;
+			if (is_callable($call = 'template_custom_forms_' . strtr($field['name'], ' ', '_'))) {
+				call_user_func_array($call, array($field));
+			} else {
+				echo '
+							<dt>
+								<strong>', $field['name'], ': </strong><br />
+								<span class="smalltext">', $field['description'], '</span>
+							</dt>
+							<dd>
+								', $field['input_html'], '
+							</dd>';
+			}
+		}
+	}
 }

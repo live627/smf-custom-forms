@@ -328,31 +328,6 @@ function template_edit2()
 	<br class="clear">';
 }
 
-function template_input_custom_forms()
-{
-	global $context, $scripturl;
-
-	if (!empty($context['fields'])) {
-
-		foreach ($context['fields'] as $field) {
-			$call = strtr($field['name'], ' ', '_');
-
-			if (is_callable('template_custom_forms_' . $call)) {
-				call_user_func_array('template_custom_forms_' . $call, array($field));
-			} else {
-				echo '
-							<dt>
-								<strong>', $field['name'], ': </strong><br />
-								<span class="smalltext">', $field['description'], '</span>
-							</dt>
-							<dd>
-								', $field['input_html'], '
-							</dd>';
-			}
-		}
-	}
-}
-
 function template_search_custom_forms()
 {
 	global $context, $scripturl;
