@@ -76,7 +76,7 @@ class ManageCustomFormFields extends ManageCustomForms
 				)
 			);
 			call_integration_hook('integrate_delete_custom_forms', array($_POST['remove']));
-			redirectexit('action=admin;area=customforms');
+			redirectexit('action=admin;area=customforms;sa=index2');
 		}
 
 		// Changing the status?
@@ -123,17 +123,17 @@ class ManageCustomFormFields extends ManageCustomForms
 				}
 				call_integration_hook('integrate_update_post_field', array($field));
 			}
-			redirectexit('action=admin;area=customforms');
+			redirectexit('action=admin;area=customforms;sa=index2');
 		}
 
 		// New field?
 		if (isset($_POST['new'])) {
-			redirectexit('action=admin;area=customforms;sa=edit');
+			redirectexit('action=admin;area=customforms;sa=edit2');
 		}
 
 		$listOptions = array(
 			'id' => 'custom_forms_fields',
-			'base_href' => $scripturl . '?action=action=admin;area=customforms',
+			'base_href' => $scripturl . '?action=action=admin;area=customforms;sa=index2',
 			'default_sort_col' => 'name',
 			'no_items_label' => $txt['custom_forms_none'],
 			'items_per_page' => 25,
@@ -153,7 +153,7 @@ class ManageCustomFormFields extends ManageCustomForms
 						'function' => create_function('$rowData', '
 							global $scripturl;
 
-							return sprintf(\'<a href="%1$s?action=admin;area=customforms;sa=edit;fid=%2$d">%3$s</a><div class="smalltext">%4$s</div>\', $scripturl, $rowData[\'id_field\'], $rowData[\'name\'], $rowData[\'description\']);
+							return sprintf(\'<a href="%1$s?action=admin;area=customforms;sa=edit2;fid=%2$d">%3$s</a><div class="smalltext">%4$s</div>\', $scripturl, $rowData[\'id_field\'], $rowData[\'name\'], $rowData[\'description\']);
 						'),
 						'style' => 'width: 40%;',
 					),
@@ -237,7 +237,7 @@ class ManageCustomFormFields extends ManageCustomForms
 					),
 					'data' => array(
 						'sprintf' => array(
-							'format' => '<a href="' . $scripturl . '?action=admin;area=customforms;sa=edit;fid=%1$s">' . $txt['modify'] . '</a>',
+							'format' => '<a href="' . $scripturl . '?action=admin;area=customforms;sa=edit2;fid=%1$s">' . $txt['modify'] . '</a>',
 							'params' => array(
 								'id_field' => false,
 							),
@@ -263,7 +263,7 @@ class ManageCustomFormFields extends ManageCustomForms
 				),
 			),
 			'form' => array(
-				'href' => $scripturl . '?action=admin;area=customforms',
+				'href' => $scripturl . '?action=admin;area=customforms;sa=index2',
 				'name' => 'postProfileFields',
 			),
 			'additional_rows' => array(
@@ -320,11 +320,11 @@ class ManageCustomFormFields extends ManageCustomForms
 		$request = \ModHelper\Database::query('', '
 			SELECT id_form, id_field
 			FROM {db_prefix}custom_form_field_link');
-		while (list ($id_form, $id_field) = \ModHelper\Database::fetch_assoc($request)) {
+		while (list ($id_form, $id_field) = \ModHelper\Database::fetch_row($request)) {
 			if (!isset($list[$id_field]['forms'])) {
 				$list[$id_field]['forms'] = [];
 			}
-			$list[$id_field]['forms'][] = $id_form;
+			$list[$id_field]['forms'][$id_form] = $id_form;
 		}
 		\ModHelper\Database::free_result($request);
 		call_integration_hook('integrate_get_custom_forms', array(&$list));
@@ -357,7 +357,7 @@ class ManageCustomFormFields extends ManageCustomForms
 		$fields = self::total_getManageCustomFormFields();
 		$list = array();
 		foreach ($fields as $field) {
-			if (!isset($field['forms'][$form])) {
+			if (!isset($field['forms'], $field['forms'][$id_form])) {
 				continue;
 			}
 
@@ -369,7 +369,7 @@ class ManageCustomFormFields extends ManageCustomForms
 
 			$list[$field['id_field']] = $field;
 		}
-		call_integration_hook('integrate_get_custom_forms_filtered', array(&$list, $form));
+		call_integration_hook('integrate_get_custom_forms_filtered', array(&$list, $id_form));
 
 		return $list;
 	}
@@ -629,7 +629,7 @@ class ManageCustomFormFields extends ManageCustomForms
 					'db_error_skip' => true,
 				)
 			); */
-			redirectexit('action=admin;area=customforms');
+			redirectexit('action=admin;area=customforms;sa=index2');
 		} elseif (isset($_POST['delete']) && $context['field']['colname']) {
 			checkSession();
 
@@ -658,7 +658,7 @@ class ManageCustomFormFields extends ManageCustomForms
 				)
 			);
 			call_integration_hook('integrate_delete_post_field');
-			redirectexit('action=admin;area=customforms');
+			redirectexit('action=admin;area=customforms;sa=index2');
 		}
 	}
 }
