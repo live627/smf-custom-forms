@@ -109,7 +109,7 @@ function template_input_custom_forms()
 	global $context;
 
 	if (!empty($context['fields'])) {
-		foreach ($context['fields'] as $field) {			;
+		foreach ($context['fields'] as $field) {
 			if (is_callable($call = 'template_custom_forms_' . strtr($field['name'], ' ', '_'))) {
 				call_user_func_array($call, array($field));
 			} else {
