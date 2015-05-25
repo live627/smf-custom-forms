@@ -34,7 +34,7 @@ function template_edit()
 							<textarea name="description" rows="="10" cols="50">', $context['field']['description'], '</textarea>
 						</dd>
 						<dt>
-							<strong>', $txt['custom_forms_forms'], ':</strong>
+							<strong>', $txt['custom_forms_fields'], ':</strong>
 						</dt>
 						<dd>
 							<div class="information">';
