@@ -51,7 +51,7 @@ class ManageCustomForms extends A
 		// Deleting?
 		if (isset($_POST['delete'], $_POST['remove'])) {
 			checkSession();
-			deleteForms($_POST['remove']);
+			$this->deleteForms($_POST['remove']);
 			redirectexit('action=admin;area=customforms');
 		}
 
@@ -508,8 +508,8 @@ class ManageCustomForms extends A
 			redirectexit('action=admin;area=customforms');
 		} elseif (isset($_POST['delete']) && $context['field']['colname']) {
 			checkSession();
-			deleteForms($context['fid']);
+			$this->deleteForms($context['fid']);
 			redirectexit('action=admin;area=customforms');
 		}
-}
+	}
 }

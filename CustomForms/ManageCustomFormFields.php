@@ -45,6 +45,35 @@ class ManageCustomFormFields extends ManageCustomForms
 		$this->$sub_actions[$_GET['sa']]();
 	}
 
+	private function deleteFields($fields)
+	{
+		// Delete the user data first.
+		Database::query('', '
+			DELETE FROM {db_prefix}custom_form_field_data
+			WHERE id_field IN ({array_int:fields})',
+			array(
+				'fields' => $fields,
+			)
+		);
+		// Then the link.
+		Database::query('', '
+			DELETE FROM {db_prefix}custom_form_field_link
+			WHERE id_field IN ({array_int:fields})',
+			array(
+				'fields' => $fields,
+			)
+		);
+		// Finally - the fields themselves are gone!
+		Database::query('', '
+			DELETE FROM {db_prefix}custom_form_fields
+			WHERE id_field IN ({array_int:fields})',
+			array(
+				'fields' => $fields,
+			)
+		);
+		call_integration_hook('integrate_delete_custom_forms', array($fields));
+	}
+
 	private function ListManageCustomFormFields()
 	{
 		global $txt, $context, $sourcedir, $smcFunc, $scripturl;
@@ -52,32 +81,7 @@ class ManageCustomFormFields extends ManageCustomForms
 		// Deleting?
 		if (isset($_POST['delete'], $_POST['remove'])) {
 			checkSession();
-
-			// Delete the user data first.
-			Database::query('', '
-				DELETE FROM {db_prefix}custom_form_field_data
-				WHERE id_field IN ({array_int:fields})',
-				array(
-					'fields' => $_POST['remove'],
-				)
-			);
-			// Then the link.
-			Database::query('', '
-				DELETE FROM {db_prefix}custom_form_field_link
-				WHERE id_field IN ({array_int:fields})',
-				array(
-					'fields' => $_POST['remove'],
-				)
-			);
-			// Finally - the fields themselves are gone!
-			Database::query('', '
-				DELETE FROM {db_prefix}custom_form_fields
-				WHERE id_field IN ({array_int:fields})',
-				array(
-					'fields' => $_POST['remove'],
-				)
-			);
-			call_integration_hook('integrate_delete_custom_forms', array($_POST['remove']));
+			$this->deleteFields($_POST['remove']);
 			redirectexit('action=admin;area=customforms;sa=index2');
 		}
 
@@ -634,32 +638,7 @@ class ManageCustomFormFields extends ManageCustomForms
 			redirectexit('action=admin;area=customforms;sa=index2');
 		} elseif (isset($_POST['delete']) && $context['field']['colname']) {
 			checkSession();
-
-			// Delete the user data first.
-			Database::query('', '
-				DELETE FROM {db_prefix}custom_form_field_data
-				WHERE id_field = {int:current_field}',
-				array(
-					'current_field' => $context['fid'],
-				)
-			);
-			// Then the link.
-			Database::query('', '
-				DELETE FROM {db_prefix}custom_form_field_link
-				WHERE id_field = {int:current_field}',
-				array(
-					'current_field' => $context['fid'],
-				)
-			);
-			// Finally - the field itself is gone!
-			Database::query('', '
-				DELETE FROM {db_prefix}custom_form_fields
-				WHERE id_field = {int:current_field}',
-				array(
-					'current_field' => $context['fid'],
-				)
-			);
-			call_integration_hook('integrate_delete_post_field');
+			$this->deleteFields($context['fid']);
 			redirectexit('action=admin;area=customforms;sa=index2');
 		}
 	}
