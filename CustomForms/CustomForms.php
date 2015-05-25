@@ -10,9 +10,9 @@ if (!defined('SMF')) {
  * @package CustomForms
  * @since 1.0
  */
-class CustomForms extends \ModHelper\A
+class CustomForms
 {
-	public function __construct()
+	public function init()
 	{
 		global $boarddir, $context, $modSettings, $scripturl, $settings, $sourcedir, $txt;
 
@@ -35,6 +35,7 @@ class CustomForms extends \ModHelper\A
 
 			default:
 				$context['page_title'] = $forms[$context['current_page']][0];
+				$context['sub_template'] = 'view_form';
 				Integration::load_fields(ManageCustomFormFields::get_custom_forms_filtered($context['current_page']));
 		}
 
