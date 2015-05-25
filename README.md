@@ -12,5 +12,8 @@ Possible uses for this Mod could include, Support Forms, Staff Application Forms
 - SMF 2.0 or greater
 - PHP 5.5 or greater
 
+## Dependencies
+- [ModHelper](https://github.com/live627/ModHelper)
+
 ## License
 [ISC](http://opensource.org/licenses/ISC)
