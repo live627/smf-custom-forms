@@ -4,8 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
-##V1.7:
-- Updated: Due to conflicts with mod_security, the url syntax `index.php?action=form;id=#` has been changed to, "`ndex.php?action=form;n=#` Thanks to Galatea and Arantor for the fix.
+## v2.0-alpha
+- Complete rewrite that's looong overdue
+- Now using [Semantic Versioning](http://semver.org/).
+
+## V1.7:
+- Updated: Due to conflicts with mod_security, the url syntax `index.php?action=form;id=#` has been changed to, `index.php?action=form;n=#` Thanks to Galatea and Arantor for the fix.
 - Added: All posts created by a form are now attributed to a users post count. Unfortunately there is no way for a form not to be counted, however this one fix also fixes several other bugs. Thanks to ŦώεαЖзяŁ and FragaCampos.
 - Bugfix: Posts created by the form should now properly display under the "Show Posts" and "Board Notifications" sections of SMF.
 - Added: Selection and Radio boxes can now use the required option. When using the required option for a selection box, be sure to use "required" the first selection. Thanks to Tunga.
