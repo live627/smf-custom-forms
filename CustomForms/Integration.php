@@ -12,7 +12,7 @@ if (!defined('SMF')) {
  */
 class Integration
 {
-	public static function admin_areas(&$admin_areas)
+	public function admin_areas(&$admin_areas)
 	{
 		global $txt;
 		loadLanguage('ManageCustomForms');
@@ -29,7 +29,7 @@ class Integration
 		);
 	}
 
-	public static function load_theme()
+	public function load_theme()
 	{
 		loadLanguage('CustomForms');
 		global $sourcedir;
@@ -42,7 +42,7 @@ class Integration
 		$loader->addNamespace('CustomForms', $sourcedir . '/CustomForms');
 	}
 
-	public static function menu_buttons(&$menu_buttons)
+	public function menu_buttons(&$menu_buttons)
 	{
 		global $txt, $context, $modSettings, $scripturl;
 		$new_button = array(
@@ -60,7 +60,7 @@ class Integration
 		$menu_buttons = $new_menu_buttons;
 	}
 
-	public static function ModifyCustomFormsSettings($return_config = false)
+	public function ModifyCustomFormsSettings($return_config = false)
 	{
 		global $txt, $scripturl, $context, $settings, $sc;
 		$config_vars = array(
@@ -82,19 +82,19 @@ class Integration
 		prepareDBSettingContext($config_vars);
 	}
 
-	public static function actions(&$action_array)
+	public function actions(&$action_array)
 	{
 		$action_array['forms'] = array('CustomForms/CustomForms.php', '\CustomForms\CustomForms::init');
 	}
 
-	public static function load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
+	public function load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
 	{
 		$permissionList['membergroup'] += array(
 			'view_custom_forms' => array(false, 'general', 'view_basic_info'),
 		);
 	}
 
-	public static function load_fields($fields)
+	public function load_fields($fields)
 	{
 		global $form, $context, $options, $smcFunc;
 		if (empty($fields)) {
@@ -136,7 +136,7 @@ class Integration
 		}
 	}
 
-	public static function rennder_field($field, $value, $exists)
+	public function rennder_field($field, $value, $exists)
 	{
 		global $scripturl, $settings, $sourcedir;
 		$class_name = '\\CustomForms\\Fields\\' . ucfirst($field['type']);
@@ -172,16 +172,16 @@ class Integration
 		);
 	}
 
-	public static function post_form()
+	public function post_form()
 	{
 		global $form, $context, $options, $user_info;
 		\CustomForms\Integration::load_fields(get_\CustomForms\Integration::filtered($form));
 		loadLanguage('CustomFormFields');
 		loadTemplate('CustomFormFields');
-		$context['is_CustomForms\\Integration::collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['Fields']) : !empty($options['Fields']);
+		$context['is_\CustomForms\Integration::collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['Fields']) : !empty($options['Fields']);
 	}
 
-	public static function after($msgOptions, $topicOptions)
+	public function after($msgOptions, $topicOptions)
 	{
 		global $form, $context, $smcFunc, $topic, $user_info;
 		$field_list = get_\CustomForms\Integration::filtered($form);
@@ -261,7 +261,7 @@ class Integration
 		}
 	}
 
-	public static function post_post_validate(&$post_errors, $posterIsGuest)
+	public function post_post_validate(&$post_errors, $posterIsGuest)
 	{
 		global $form, $context, $sourcedir, $smcFunc, $topic;
 		// $context['post_error']['no_subject'] = false;
@@ -305,12 +305,12 @@ class Integration
 		}
 	}
 
-	public static function remove_message($message, $decreasePostCount)
+	public function remove_message($message, $decreasePostCount)
 	{
 		\CustomForms\Integration::remove_messages($message, $decreasePostCount);
 	}
 
-	public static function remove_messages($message, $decreasePostCount)
+	public function remove_messages($message, $decreasePostCount)
 	{
 		global $smcFunc;
 		if (!empty($messages)) {
@@ -324,7 +324,7 @@ class Integration
 		}
 	}
 
-	public static function remove_topics($topics, $decreasePostCount, $ignoreRecycling)
+	public function remove_topics($topics, $decreasePostCount, $ignoreRecycling)
 	{
 		global $smcFunc;
 		$messages = array();
@@ -345,7 +345,7 @@ class Integration
 		}
 	}
 
-	public static function display_topics($topic_ids)
+	public function display_topics($topic_ids)
 	{
 		global $smcFunc;
 		if (empty($topic_ids)) {
@@ -369,7 +369,7 @@ class Integration
 		}
 	}
 
-	public static function display_message_list($messages, $is_message_index = false)
+	public function display_message_list($messages, $is_message_index = false)
 	{
 		global $form, $context, $smcFunc;
 		$field_list = get_\CustomForms\Integration::filtered($form, $is_message_index);
