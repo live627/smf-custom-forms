@@ -12,13 +12,15 @@ if (!defined('SMF')) {
  */
 class CustomForms extends \Suki\Ohara
 {
-	public function init()
+	use \ModHelper\SingletonTrait;
+
 	public $name = __CLASS__;
 	protected static $_activity = array();
 
+	public function __construct()
 	{
-		global $boarddir, $context, $modSettings, $scripturl, $settings, $sourcedir, $txt;
 		$this->setRegistry();
+		global $boarddir, $context, $modSettings, $scripturl, $settings, $txt;
 
 		isAllowedTo('view_custom_forms');
 

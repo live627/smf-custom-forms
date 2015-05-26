@@ -84,7 +84,7 @@ class Integration
 
 	public static function actions(&$action_array)
 	{
-		$action_array['forms'] = array('CustomForms/CustomForms.php', '\CustomForms\CustomForms::init');
+		$action_array['forms'] = array('CustomForms/CustomForms.php', '\CustomForms\CustomForms::getInstance');
 	}
 
 	public static function load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
