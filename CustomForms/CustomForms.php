@@ -10,11 +10,15 @@ if (!defined('SMF')) {
  * @package CustomForms
  * @since 1.0
  */
-class CustomForms
+class CustomForms extends \Suki\Ohara
 {
 	public function init()
+	public $name = __CLASS__;
+	protected static $_activity = array();
+
 	{
 		global $boarddir, $context, $modSettings, $scripturl, $settings, $sourcedir, $txt;
+		$this->setRegistry();
 
 		isAllowedTo('view_custom_forms');
 
@@ -39,7 +43,7 @@ class CustomForms
 				Integration::load_fields(ManageCustomFormFields::get_custom_forms_filtered($context['current_page']));
 		}
 
-		require_once($sourcedir . '/Subs-Menu.php');
+		require_once($this->sourceDir . '/Subs-Menu.php');
 
 		// Define all the menu structure - see Subs-Menu.php for details!
 		$custom_forms_areas = array(
