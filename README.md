@@ -14,6 +14,7 @@ Possible uses for this Mod could include, Support Forms, Staff Application Forms
 
 ## Dependencies
 - [ModHelper](https://github.com/live627/ModHelper)
+- [Ohara](https://github.com/MissAllSunday/Ohara)
 
 ## License
 [ISC](http://opensource.org/licenses/ISC)
