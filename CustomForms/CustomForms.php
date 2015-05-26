@@ -42,7 +42,7 @@ class CustomForms extends \Suki\Ohara
 			default:
 				$context['page_title'] = $forms[$context['current_page']][0];
 				$context['sub_template'] = 'view_form';
-				Integration::load_fields(ManageCustomFormFields::get_custom_forms_filtered($context['current_page']));
+				Services\Fields::load_fields(ManageCustomFormFields::get_custom_forms_filtered($context['current_page']));
 		}
 
 		require_once($this->sourceDir . '/Subs-Menu.php');
