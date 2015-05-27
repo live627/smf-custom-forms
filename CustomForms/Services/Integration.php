@@ -43,6 +43,7 @@ class Integration
 		// register the base directories for the namespace prefix
 		$loader->addNamespace('ModHelper', $sourcedir . '/CustomForms/ModHelper');
 		$loader->addNamespace('CustomForms', $sourcedir . '/CustomForms');
+		$loader->addNamespace('Suki', $sourcedir . '/CustomForms/Suki');
 	}
 
 	public static function menu_buttons(&$menu_buttons)
