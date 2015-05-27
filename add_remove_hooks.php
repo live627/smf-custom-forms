@@ -20,12 +20,11 @@ $loader->register();
 $loader->addNamespace('ModHelper', __DIR__ . '/CustomForms/ModHelper');
 $loader->addNamespace('CustomForms', __DIR__ . '/CustomForms');
 
-(new \ModHelper\Hooks)->add('integrate_pre_include', '$sourcedir/CustomForms/ModHelper/Psr4AutoloaderClass.php')
-	->add('integrate_pre_include', '$sourcedir/CustomForms/Integration.php')
-	->add('integrate_load_theme', '\\CustomForms\\Integration::load_theme')
-	->add('integrate_actions', '\\CustomForms\\Integration::actions')
-	->add('integrate_menu_buttons', '\\CustomForms\\Integration::menu_buttons')
-	->add('integrate_admin_areas', '\\CustomForms\\Integration::admin_areas')
+(new \ModHelper\Hooks)->add('integrate_pre_include', '$sourcedir/CustomForms/Services/Integration.php')
+	->add('integrate_load_theme', '\\CustomForms\\Services\\Integration::load_theme')
+	->add('integrate_actions', '\\CustomForms\\Services\\Integration::actions')
+	->add('integrate_menu_buttons', '\\CustomForms\\Services\\Integration::menu_buttons')
+	->add('integrate_admin_areas', '\\CustomForms\\Services\\Integration::admin_areas')
 	->execute(empty($context['uninstalling']));
 
 if (!empty($ssi)) {
