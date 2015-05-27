@@ -11,7 +11,9 @@ if (file_exists(__DIR__ . '/SSI.php') && !defined('SMF')) {
 	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
 }
 
-require_once(__DIR__ . '/CustomForms/ModHelper/Psr4AutoloaderClass.php');
+if (!class_exists('ModHelper\Psr4AutoloaderClass')) {
+	require_once(__DIR__ . '/CustomForms/ModHelper/Psr4AutoloaderClass.php');
+}
 // instantiate the loader
 $loader = new \ModHelper\Psr4AutoloaderClass;
 // register the autoloader
