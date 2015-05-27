@@ -33,6 +33,9 @@ class Integration
 	{
 		loadLanguage('CustomForms');
 		global $sourcedir;
+		if (!class_exists('ModHelper\Psr4AutoloaderClass')) {
+			require_once(__DIR__ . '/CustomForms/ModHelper/Psr4AutoloaderClass.php');
+		}
 		// instantiate the loader
 		$loader = new \ModHelper\Psr4AutoloaderClass;
 		// register the autoloader
