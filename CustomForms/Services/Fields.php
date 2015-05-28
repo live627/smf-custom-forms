@@ -90,15 +90,6 @@ class Fields
 		);
 	}
 
-	public static function post_form()
-	{
-		global $form, $context, $options, $user_info;
-		\CustomForms\Integration::load_fields(get_\CustomForms\Integration::filtered($form));
-		loadLanguage('CustomFormFields');
-		loadTemplate('CustomFormFields');
-		$context['is_CustomForms\\Integration::collapsed'] = $user_info['is_guest'] ? !empty($_COOKIE['Fields']) : !empty($options['Fields']);
-	}
-
 	public static function after($msgOptions, $topicOptions)
 	{
 		global $form, $context, $smcFunc, $topic, $user_info;
@@ -220,100 +211,6 @@ class Fields
 					$post_errors[] = $err;
 				}
 			}
-		}
-	}
-
-	public static function remove_message($message, $decreasePostCount)
-	{
-		\CustomForms\Integration::remove_messages($message, $decreasePostCount);
-	}
-
-	public static function remove_messages($message, $decreasePostCount)
-	{
-		global $smcFunc;
-		if (!empty($messages)) {
-			\ModHelper\Database::query('', '
-					DELETE FROM {db_prefix}custom_form_field_data
-					WHERE id_msg IN ({array_int:message_list})',
-				array(
-					'message_list' => $messages,
-				)
-			);
-		}
-	}
-
-	public static function remove_topics($topics, $decreasePostCount, $ignoreRecycling)
-	{
-		global $smcFunc;
-		$messages = array();
-		$request = \ModHelper\Database::query('', '
-				SELECT id_msg
-				FROM {db_prefix}messages
-				WHERE id_topic IN ({array_int:topics})',
-			array(
-				'topics' => $topics,
-			)
-		);
-		while ($row = \ModHelper\Database::fetch_assoc($request)) {
-			$messages[] = $row['id_msg'];
-		}
-		\ModHelper\Database::free_result($request);
-		if (!empty($messages)) {
-			\CustomForms\Integration::remove_messages($messages, $decreasePostCount);
-		}
-	}
-
-	public static function display_topics($topic_ids)
-	{
-		global $smcFunc;
-		if (empty($topic_ids)) {
-			return;
-		}
-		$messages = array();
-		$request = \ModHelper\Database::query('', '
-				SELECT id_first_msg
-				FROM {db_prefix}topics
-				WHERE id_topic IN ({array_int:topics})',
-			array(
-				'topics' => $topic_ids,
-			)
-		);
-		while ($row = \ModHelper\Database::fetch_row($request)) {
-			$messages[] = $row[0];
-		}
-		\ModHelper\Database::free_result($request);
-		if (!empty($messages)) {
-			\CustomForms\Integration::display_message_list($messages, true);
-		}
-	}
-
-	public static function display_message_list($messages, $is_message_index = false)
-	{
-		global $form, $context, $smcFunc;
-		$field_list = get_\CustomForms\Integration::filtered($form, $is_message_index);
-		if (empty($field_list)) {
-			return;
-		}
-		$request = \ModHelper\Database::query('', '
-				SELECT *
-				FROM {db_prefix}custom_form_field_data
-				WHERE id_msg IN ({array_int:message_list})
-					AND id_field IN ({array_int:field_list})',
-			array(
-				'message_list' => $messages,
-				'field_list' => array_keys($field_list),
-			)
-		);
-		$context['fields'] = array();
-		while ($row = \ModHelper\Database::fetch_assoc($request)) {
-			$exists = isset($row['value']);
-			$value = $exists ? $row['value'] : '';
-			$context['fields'][$row['id_msg']][$row['id_field']] = rennder_field($field_list[$row['id_field']], $value, $exists);
-		}
-		\ModHelper\Database::free_result($request);
-		if (!empty($context['fields'])) {
-			loadLanguage('CustomFormFields');
-			loadTemplate('CustomFormFields');
 		}
 	}
 }
