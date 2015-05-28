@@ -23,7 +23,7 @@ class Fields
 		return $this;
 	}
 
-	public function ListManageCustomFormFields()
+	public function Index()
 	{
 		global $txt, $context, $sourcedir, $smcFunc, $scripturl;
 
@@ -236,7 +236,7 @@ class Fields
 		$context['default_list'] = 'custom_forms_fields';
 	}
 
-	public function EditManageCustomFormField()
+	public function Edit()
 	{
 		global $txt, $scripturl, $context, $settings, $smcFunc;
 

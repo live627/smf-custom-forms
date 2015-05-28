@@ -23,7 +23,7 @@ class Forms
 		return $this;
 	}
 
-	public function List()
+	public function Index()
 	{
 		global $txt, $context, $sourcedir, $smcFunc, $scripturl;
 

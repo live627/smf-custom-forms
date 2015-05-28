@@ -25,10 +25,10 @@ class Dispatcher
 		);
 
 		$sub_actions = [
-			'index' => ['Forms', 'ListManageCustomForms', 'admin_forum'],
-			'edit' => ['Forms', 'EditManageCustomForm', 'admin_forum'],
-			'index2' => ['Fields', 'ListManageCustomFormFields', 'admin_forum'],
-			'edit2' => ['CustomForms\Controllers\Fields', 'EditManageCustomFormField', 'admin_forum'],
+			'index' => ['Forms', 'Index', 'admin_forum'],
+			'edit' => ['Forms', 'Edit', 'admin_forum'],
+			'index2' => ['Fields', 'Index', 'admin_forum'],
+			'edit2' => ['CustomForms\Controllers\Fields', 'Edit', 'admin_forum'],
 		];
 
 		// Default to sub action 'index'
