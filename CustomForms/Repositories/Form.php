@@ -1,6 +1,6 @@
 <?php
-// Version: 1.0: ManageCustomForms.php
-namespace CustomForms;
+// Version: 1.0: Form.php
+namespace CustomForms\Repositories;
 
 use \ModHelper\Database;
 use \ModHelper\A;

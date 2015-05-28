@@ -1,6 +1,6 @@
 <?php
 // Version: 1.0: Field.php
-namespace CustomForms;
+namespace CustomForms\Repositories;
 
 use \ModHelper\Database;
 

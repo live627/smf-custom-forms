@@ -25,9 +25,9 @@ class Dispatcher
 		);
 
 		$sub_actions = [
-			'index' => ['Forms', 'Index', 'admin_forum'],
-			'edit' => ['Forms', 'Edit', 'admin_forum'],
-			'index2' => ['Fields', 'Index', 'admin_forum'],
+			'index' => ['CustomForms\Controllers\Forms', 'Index', 'admin_forum'],
+			'edit' => ['CustomForms\Controllers\Forms', 'Edit', 'admin_forum'],
+			'index2' => ['CustomForms\Controllers\Fields', 'Index', 'admin_forum'],
 			'edit2' => ['CustomForms\Controllers\Fields', 'Edit', 'admin_forum'],
 		];
 
