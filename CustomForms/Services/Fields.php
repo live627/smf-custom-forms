@@ -12,7 +12,7 @@ if (!defined('SMF')) {
  */
 class Fields
 {
-	public static function load_fields($fields)
+	public static function load($fields)
 	{
 		global $form, $context, $options, $smcFunc;
 		if (empty($fields)) {
@@ -50,11 +50,11 @@ class Fields
 				$value = $values[$field['id_field']];
 			}
 			$exists = !empty($value);
-			$context['fields'][] = self::rennder_field($field, $value, $exists);
+			$context['fields'][] = self::render($field, $value, $exists);
 		}
 	}
 
-	public static function rennder_field($field, $value, $exists)
+	public static function render($field, $value, $exists)
 	{
 		global $scripturl, $settings, $sourcedir;
 		$class_name = '\\CustomForms\\Fields\\' . ucfirst($field['type']);
@@ -170,7 +170,7 @@ class Fields
 		}
 	}
 
-	public static function post_post_validate(&$post_errors, $posterIsGuest)
+	public static function validate(&$post_errors, $posterIsGuest)
 	{
 		global $form, $context, $sourcedir, $smcFunc, $topic;
 		// $context['post_error']['no_subject'] = false;
