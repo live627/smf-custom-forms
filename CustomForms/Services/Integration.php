@@ -19,7 +19,7 @@ class Integration
 		$admin_areas['layout']['areas']['customforms'] = array(
 			'label' => $txt['custom_forms'],
 			'icon' => 'settings.gif',
-			'function' => function() { ManageCustomFormFields::init(); },
+			'function' => function() { \CustomForms\Controllers\Dispatcher::getInstance(); },
 			'subsections' => array(
 				'index' => array($txt['custom_forms_menu_index']),
 				'edit' => array($txt['custom_forms_menu_edit']),
