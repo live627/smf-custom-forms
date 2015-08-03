@@ -13,10 +13,12 @@ Possible uses for this Mod could include, Support Forms, Staff Application Forms
 - PHP 5.5 or greater
 
 ## Dependencies
-- [ModHelper](https://github.com/live627/ModHelper) >= 1.0
-- [Ohara](https://github.com/MissAllSunday/Ohara) >= 1.0.1
-- [SimpleCrud](https://github.com/oscarotero/simple-crud) >= 3.1
-- [FormManager](https://github.com/oscarotero/form-manager) >= 2.6.2
+                                                        | Minimmum version | Liccense
+------------------------------------------------------- | ---------------- | ---------
+[ModHelper](https://github.com/live627/ModHelper) | 1.0 | MIT
+[Ohara](https://github.com/MissAllSunday/Ohara) | 1.0.1 | MPL 2.0
+[SimpleCrud](https://github.com/oscarotero/simple-crud) | 3.1 | MIT
+[FormManager](https://github.com/oscarotero/form-manager) | 2.6.2 | MIT
 
 ## License
 [ISC](http://opensource.org/licenses/ISC)
