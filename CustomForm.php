@@ -11,19 +11,19 @@ global $txt, $context, $sourcedir, $modSettings;
    
    
    // Generate a visual verification code to make sure the user is no bot.
-      $context['require_verification'] = $user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
-      if ($context['require_verification'])
-      {
-         require_once($sourcedir . '/Subs-Editor.php');
-         $verificationOptions = array(
-            'id' => 'register',
-         );
-         $context['visual_verification'] = create_control_verification($verificationOptions);
-         $context['visual_verification_id'] = $verificationOptions['id'];
-      }
-      // Otherwise we have nothing to show.
-      else
-         $context['visual_verification'] = false;
+	  $context['require_verification'] = $user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
+	  if ($context['require_verification'])
+	  {
+		 require_once($sourcedir . '/Subs-Editor.php');
+		 $verificationOptions = array(
+			'id' => 'register',
+		 );
+		 $context['visual_verification'] = create_control_verification($verificationOptions);
+		 $context['visual_verification_id'] = $verificationOptions['id'];
+	  }
+	  // Otherwise we have nothing to show.
+	  else
+		 $context['visual_verification'] = false;
 
 		//	Are we looking for the thank you page.
 		if (isset($_REQUEST['thankyou']))
@@ -224,17 +224,17 @@ else
 				$vars[] = '/\{'.$field['title'].'\}/';
 				$replace[] = str_replace('$','\$',$value);
 
-                //    {{ }} Syntax: Setup REGEX for removing entire {{ }} string or just stripping the outermost { }, depending upon the replacement value being blank or not
-                if($value == '')
-                {
-                    $vars_blank[] = '/\{[^\{\}]*\{'.$field['title'].'\}[^\{\}]*\}/'; 
-                    $vars_non_blank[] = '//';
-                }
-                else
-                {
-                    $vars_blank[] = '//';
-                    $vars_non_blank[] = '/\{[^\{\}]*\{'.$field['title'].'\}[^\{\}]*\}/';
-                }				
+				//    {{ }} Syntax: Setup REGEX for removing entire {{ }} string or just stripping the outermost { }, depending upon the replacement value being blank or not
+				if($value == '')
+				{
+					$vars_blank[] = '/\{[^\{\}]*\{'.$field['title'].'\}[^\{\}]*\}/'; 
+					$vars_non_blank[] = '//';
+				}
+				else
+				{
+					$vars_blank[] = '//';
+					$vars_non_blank[] = '/\{[^\{\}]*\{'.$field['title'].'\}[^\{\}]*\}/';
+				}				
 
 				//	Also add this data back into the data array, just in case we can't actually submit the form.
 				$data[$i]['value'] = $value;
@@ -243,13 +243,13 @@ else
 				if($field['type'] == 'checkbox')
 					$data[$i]['value'] = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : false;
 
-                    if (($required) && (!$data[$i]['value']))
-                    {
-                        //   Do the 'fail form/field' stuff.
-                        $data[$i]['failed'] = true;
-                        $fail_submit = true;
-                        continue;
-                    }
+					if (($required) && (!$data[$i]['value']))
+					{
+						//   Do the 'fail form/field' stuff.
+						$data[$i]['failed'] = true;
+						$fail_submit = true;
+						continue;
+					}
 
 				//	Do a small fix for the last line, if this is a largetextbox.
 				if(($field['type'] == 'largetextbox'))
@@ -257,8 +257,8 @@ else
 			}
 
    // Check whether the visual verification code was entered correctly.
-      $context['require_verification'] = $user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
-      if ($context['require_verification'])
+	  $context['require_verification'] = $user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
+	  if ($context['require_verification'])
 	{
 			require_once($sourcedir . '/Subs-Editor.php');
 			$verificationOptions = array(
@@ -279,13 +279,13 @@ else
 			{
 				require_once($sourcedir.'/Subs-Post.php');
 
-                //    {{ }} Syntax: Strip out everything in {{ }} if value is blank
-                $output = preg_replace($vars_blank, '', $output);
-                $subject = preg_replace($vars_blank, '', $subject);
+				//    {{ }} Syntax: Strip out everything in {{ }} if value is blank
+				$output = preg_replace($vars_blank, '', $output);
+				$subject = preg_replace($vars_blank, '', $subject);
 
-                //    {{ }} Syntax: Remove outside brackets if value is not blank
-                $output = preg_replace_callback($vars_non_blank, create_function('$matches','return substr($matches[0],1,-1);'), $output);
-                $subject = preg_replace_callback($vars_non_blank, create_function('$matches','return substr($matches[0],1,-1);'), $subject);
+				//    {{ }} Syntax: Remove outside brackets if value is not blank
+				$output = preg_replace_callback($vars_non_blank, create_function('$matches','return substr($matches[0],1,-1);'), $output);
+				$subject = preg_replace_callback($vars_non_blank, create_function('$matches','return substr($matches[0],1,-1);'), $subject);
 
 				//	Replace all vars with their correct value, for both the message and the subject.
 				$output = preg_replace($vars, $replace, $output);
