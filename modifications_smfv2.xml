@@ -672,7 +672,7 @@ function list_CustomForms()
 }
 
 //	Fucntion to produce a list of custom form fields.
-function list_CustomForm_fields($nul, $nul, $nul, $id)
+function list_CustomForm_fields($nul0, $nul1, $nul2, $id)
 {
 	global $txt, $scripturl, $smcFunc;
 	
