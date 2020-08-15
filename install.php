@@ -17,27 +17,38 @@ $columns = array(
 	),
 	array(
 		'name' => 'title',
-		'type' => 'tinytext',
+		'type' => 'varchar',
+		'size' => 150,
+		'default' => '',
 	),
 	array(
 		'name' => 'subject',
-		'type' => 'tinytext',
+		'type' => 'varchar',
+		'size' => 150,
+		'default' => '',
 	),
 	array(
 		'name' => 'icon',
-		'type' => 'tinytext',
+		'type' => 'varchar',
+		'size' => 150,
+		'default' => '',
 	),
 	array(
 		'name' => 'form_exit',
-		'type' => 'tinytext',
+		'type' => 'varchar',
+		'size' => 150,
+		'default' => '',
 	),
 	array(
 		'name' => 'template_function',
-		'type' => 'tinytext',
+		'type' => 'varchar',
+		'size' => 150,
+		'default' => '',
 	),
 	array(
 		'name' => 'output',
 		'type' => 'text',
+		'default' => '',
 	),
 );
 
@@ -51,6 +62,10 @@ $indexes = array(
 
 //	Perform the table creation.
 $smcFunc['db_create_table']('{db_prefix}cf_forms', $columns, $indexes, array(), 'update_remove');
+
+foreach ($columns as $column)
+	if (stripos($column['type'], 'char') !== false || stripos($column['type'], 'text') !== false)
+		$smcFunc['db_change_column']('{db_prefix}cf_forms', $column['name'], $column);
 
 //	Set up the correct columns for the table.
 $columns = array(
@@ -67,19 +82,26 @@ $columns = array(
 	),
 	array(
 		'name' => 'title',
-		'type' => 'tinytext',
+		'type' => 'varchar',
+		'size' => 150,
+		'default' => '',
 	),
 	array(
 		'name' => 'text',
-		'type' => 'tinytext',
+		'type' => 'varchar',
+		'size' => 150,
+		'default' => '',
 	),
 	array(
 		'name' => 'type',
-		'type' => 'tinytext',
+		'type' => 'varchar',
+		'size' => 150,
+		'default' => '',
 	),
 	array(
 		'name' => 'type_vars',
 		'type' => 'text',
+		'default' => '',
 	),
 );
 
@@ -96,6 +118,10 @@ $indexes = array(
 );
 
 $smcFunc['db_create_table']('{db_prefix}cf_fields', $columns, $indexes, array(), 'update_remove');
+
+foreach ($columns as $column)
+	if (stripos($column['type'], 'char') !== false || stripos($column['type'], 'text') !== false)
+		$smcFunc['db_change_column']('{db_prefix}cf_fields', $column['name'], $column);
 
 //	Delete any field that has the ID 0, just for version compatibility reasons.
 $smcFunc['db_query']('', '
