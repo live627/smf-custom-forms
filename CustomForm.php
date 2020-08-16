@@ -254,7 +254,7 @@ function CustomForm()
 					}
 
 				//	Make sure that we have valid options, if this is a selectbox.
-				if (($field['type'] == 'selectbox' || ($field['type'] == 'radiobox') && empty($vars))
+				if (($field['type'] == 'selectbox' || $field['type'] == 'radiobox') && empty($vars))
 					continue;
 
 				$context['fields'][$field['title']] = array(
