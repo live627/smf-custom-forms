@@ -1,5 +1,5 @@
-[center][b][color=blue][size=14pt]Custom Form Mod Version 1.7[/size][/color][/b][/center] 
-[center]By [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=150164]Nathaniel[/url][/b] and [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=60251]Garou[/url][/b][/center]
+[center][b][color=blue][size=14pt]Custom Form Mod Version 1.8[/size][/color][/b][/center] 
+[center]By [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=150164]Nathaniel[/url][/b], [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=60251]Garou[/url][/b] and [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=154736]live627[/url][/b][/center]
 [hr]
 [center][url=http://www.simplemachines.org/community/index.php?topic=248871.0]Support topic[/url] | [url=http://custom.simplemachines.org/mods/index.php?mod=1279]Link to Mod[/url] | [url=https://sites.google.com/a/balancegames.org/smf/mods/forms/tutorial]Tutorial[/url][/center]
 [hr]
@@ -53,9 +53,13 @@ http://smf.balancegames.org/mods/forms/tutorial
 
 While it is highly recommended that you update to the most current versions of SMF... 
 [b]CustomFormMod_v1.7_SMF1.1.x:[/b] Supports most versions of SMF 1.1.
-[b]CustomFormMod_v1.7_SMF2.x:[/b] Supports most SMF 2.0 versions after 2.0 RC2.
+[b]CustomFormMod_v1.8_SMF2.x:[/b] Supports most SMF 2.0 versions after 2.0 RC2.
 
 [color=red][size=14pt]Version Changes:[/size][/color]
+[b]V1.8:[/b]
+Updated: Finally does away with file edits and uses integration functions instead
+Bugfix: Textual database fields now default to null
+Bugfix: Solved PHP fatal error (Redefinition of parameter [tt]$nul[/tt])
 [b]V1.7:[/b]
 Updated: Due to conflicts with mod_security, the url syntax "index.php?action=form;id=#" has been changed to, "index.php?action=form;n=#" Thanks to [url=http://www.simplemachines.org/community/index.php?action=profile;u=17752]Galatea[/url] and [url=http://www.simplemachines.org/community/index.php?action=profile;u=265135]Arantor[/url] for the fix.
 Added: All posts created by a form are now attributed to a users post count. Unfortunately there is no way for a form not to be counted, however this one fix also fixes several other bugs. Thanks to [url=http://www.simplemachines.org/community/index.php?action=profile;u=214356]????????[/url] and [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url].
