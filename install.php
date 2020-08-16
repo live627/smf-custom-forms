@@ -1,6 +1,11 @@
 <?php
-// Data Base Functions for the Custom Form Mod version 1.7
-//	File to create the Custom Form tables.
+
+add_integration_function('integrate_pre_include', '$sourcedir/Subs-CustomForm.php');
+add_integration_function('integrate_admin_include', '$sourcedir/ManageCustomForm.php');
+add_integration_function('integrate_actions', 'customform_actions');
+add_integration_function('integrate_menu_buttons', 'customform_menu_buttons');
+add_integration_function('integrate_modify_modifications', 'customform_modify_modifications');
+add_integration_function('integrate_admin_areas', 'customform_admin_areas');
 
 //	Set up the correct columns for the table.
 $columns = array(
@@ -19,36 +24,36 @@ $columns = array(
 		'name' => 'title',
 		'type' => 'varchar',
 		'size' => 150,
-		'default' => '',
+		'null' => true,
 	),
 	array(
 		'name' => 'subject',
 		'type' => 'varchar',
 		'size' => 150,
-		'default' => '',
+		'null' => true,
 	),
 	array(
 		'name' => 'icon',
 		'type' => 'varchar',
 		'size' => 150,
-		'default' => '',
+		'null' => true,
 	),
 	array(
 		'name' => 'form_exit',
 		'type' => 'varchar',
 		'size' => 150,
-		'default' => '',
+		'null' => true,
 	),
 	array(
 		'name' => 'template_function',
 		'type' => 'varchar',
 		'size' => 150,
-		'default' => '',
+		'null' => true,
 	),
 	array(
 		'name' => 'output',
 		'type' => 'text',
-		'default' => '',
+		'null' => true,
 	),
 );
 
@@ -84,24 +89,24 @@ $columns = array(
 		'name' => 'title',
 		'type' => 'varchar',
 		'size' => 150,
-		'default' => '',
+		'null' => true,
 	),
 	array(
 		'name' => 'text',
 		'type' => 'varchar',
 		'size' => 150,
-		'default' => '',
+		'null' => true,
 	),
 	array(
 		'name' => 'type',
 		'type' => 'varchar',
 		'size' => 150,
-		'default' => '',
+		'null' => true,
 	),
 	array(
 		'name' => 'type_vars',
 		'type' => 'text',
-		'default' => '',
+		'null' => true,
 	),
 );
 
@@ -124,7 +129,9 @@ foreach ($columns as $column)
 		$smcFunc['db_change_column']('{db_prefix}cf_fields', $column['name'], $column);
 
 //	Delete any field that has the ID 0, just for version compatibility reasons.
-$smcFunc['db_query']('', '
+$smcFunc['db_query'](
+	'',
+	'
 	DELETE 
 	FROM {db_prefix}cf_fields 
 	WHERE id_field = \'0\''

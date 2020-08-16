@@ -1,0 +1,7 @@
+[center][size=4][color=red]ATTENTION[/color][/size][/center]
+[hr]
+This action will deactivate all features of Custom Form.
+Check the checkbox below marked Remove all data associated with this modification to complely and irrevocably destroy all menu
+buttons created by this modification.
+
+Thank You for trying this modification :)
