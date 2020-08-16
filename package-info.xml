@@ -12,6 +12,7 @@
         <require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
         <require-file name="ManageCustomForm.php" destination="$sourcedir"/>
         <require-file name="CustomForm.english.php" destination="$languagedir"/>
+        <require-file name="Class-CustomForm.php" destination="$sourcedir"/>
         <require-file name="CustomForm.php" destination="$sourcedir"/>
         <require-file name="CustomForm.template.php" destination="$themedir"/>
     </install>
@@ -22,6 +23,7 @@
         <remove-file name="$sourcedir/Subs-CustomForm.php"/>
         <remove-file name="$sourcedir/ManageCustomForm.php"/>
         <remove-file name="$languagedir/CustomForm.english.php"/>
+        <remove-file name="$sourcedir/Class-CustomForm.php"/>
         <remove-file name="$sourcedir/CustomForm.php"/>
         <remove-file name="$themedir/CustomForm.template.php"/>
     </uninstall>

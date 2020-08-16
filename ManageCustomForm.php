@@ -469,6 +469,10 @@ function ModifyCustomFormSettings($return_config = false)
 			redirectexit("action=admin;area=modsettings;sa=customform;form_id=" . $data['id_form'] . ";");
 		}
 
+		$result = [];
+		foreach (customform_list_classes() as $cn)
+			$result[$cn] = $txt['customform_type_' . $cn];
+
 		//	Otherwise just show the settings for this field.
 		$config_vars = array(
 			array(
@@ -491,16 +495,7 @@ function ModifyCustomFormSettings($return_config = false)
 				'value' => $data['type'],
 				'text_label' => $txt['customform_type'],
 				'help' => 'customform_type',
-				array(
-					'textbox' => $txt['customform_textbox'],
-					'largetextbox' => $txt['customform_large_textbox'],
-					'checkbox' => $txt['customform_checkbox'],
-					'selectbox' => $txt['customform_selectionbox'],
-					'float' => $txt['customform_float'],
-					'int' => $txt['customform_int'],
-					'radiobox' => $txt['customform_radiobox'],
-					'infobox' => $txt['customform_infoboxa'],
-				),
+				$result
 			),
 			array(
 				'text',
