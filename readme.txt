@@ -60,6 +60,7 @@ While it is highly recommended that you update to the most current versions of S
 Updated: Finally does away with file edits and uses integration functions instead
 Bugfix: Textual database fields now default to null
 Bugfix: Solved PHP fatal error (Redefinition of parameter [tt]$nul[/tt])
+Bugfix: End usage of the deprecated function [tt]create_functioncreate_function()[/tt]
 [b]V1.7:[/b]
 Updated: Due to conflicts with mod_security, the url syntax "index.php?action=form;id=#" has been changed to, "index.php?action=form;n=#" Thanks to [url=http://www.simplemachines.org/community/index.php?action=profile;u=17752]Galatea[/url] and [url=http://www.simplemachines.org/community/index.php?action=profile;u=265135]Arantor[/url] for the fix.
 Added: All posts created by a form are now attributed to a users post count. Unfortunately there is no way for a form not to be counted, however this one fix also fixes several other bugs. Thanks to [url=http://www.simplemachines.org/community/index.php?action=profile;u=214356]????????[/url] and [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url].
