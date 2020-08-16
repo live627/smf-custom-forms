@@ -178,12 +178,18 @@ function CustomForm()
 					//    {{ }} Syntax: Remove outside brackets if value is not blank
 					$output = preg_replace_callback(
 						$vars_non_blank,
-						create_function('$matches', 'return substr($matches[0],1,-1);'),
+						function ($matches)
+						{
+							return substr($matches[0],1,-1);
+						},
 						$output
 					);
 					$subject = preg_replace_callback(
 						$vars_non_blank,
-						create_function('$matches', 'return substr($matches[0],1,-1);'),
+						function ($matches)
+						{
+							return substr($matches[0],1,-1);
+						},
 						$subject
 					);
 
@@ -260,7 +266,6 @@ function CustomForm()
 				$context['fields'][$field['title']] = array(
 					'text' => $field['text'],
 					'type' => $field['type'],
-					'data' => $vars,
 					'html' => isset($field['html']) ? $field['html'] : '',
 					'required' => $required,
 					'failed' => isset($field['failed']),
