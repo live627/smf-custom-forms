@@ -53,60 +53,14 @@ function form_template_submit_form()
 
 		if ($field_data['type'] == 'infobox')
 			echo '
-						<td colspan="2" valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>
-						';
+							<td colspan="2" valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>';
 		else
 
 			//	Show the display text for this field.
 			echo '
 							<td valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>
-							<td class="windowbg2" width="50%">';
-
-		// Show a check box.
-		if ($field_data['type'] == 'checkbox')
-			echo '
-								<input type="checkbox" name="', $field_name, '" id="', $field_name, '" ', (($field_data['value']) ? ' checked="checked"' : ''), ' value="1" class="check" />';
-
-		// Show a selection box.
-		elseif ($field_data['type'] == 'selectbox')
-		{
-			echo '
-								<select name="', $field_name, '" id="', $field_name, '" >';
-			foreach ($field_data['data'] as $option)
-				if ($option != 'required')
-					echo '
-									<option value="', $option, '"', ($option == $field_data['value'] ? ' selected="selected"' : ''), '>', $option, '</option>';
-				else
-					echo '
-									<option value=""></option>';
-
-			echo '
-								</select>';
-		}
-		// Show a radio box.
-		elseif ($field_data['type'] == 'radiobox')
-		{
-
-			foreach ($field_data['data'] as $option)
-				if ($option != 'required')
-
-					echo '
-                  
-                        <input type="radio" name="', $field_name, '" value="', $option, '">', $option, '<br />';
-				else
-					echo '
-                        <option value=""></option>';
-		}
-		// Large Text box?
-		elseif ($field_data['type'] == 'largetextbox')
-		{
-			echo '
-								<textarea rows="10" cols="50%" name="', $field_name, '" id="', $field_name, '">', $field_data['value'], '</textarea>';
-		}
-		// Int, Float or text box?
-		else
-			echo '
-								<input type="text" size="50%" name="', $field_name, '" id="', $field_name, '" value="', $field_data['value'], '" />';
+							<td class="windowbg2" width="50%">
+								', $field_data['html'];
 
 		//	Show the 'required' asterix if necessary.
 		if (!empty($field_data['required']))
@@ -121,11 +75,11 @@ function form_template_submit_form()
 
 	//    Show the "Required Fields" text down the bottom, show it in red if there was a failed submit.
 	echo '
-               <tr class="windowbg2">
-                  <td colspan="3" style="text-align:center;', !empty($context['failed_form_submit']) ? 'color:#FF0000;' : '', '">
-                     * ', $txt['customform_required'], '
-                  </td>
-               </tr>';
+						<tr class="windowbg2">
+							<td colspan="3" style="text-align:center;', !empty($context['failed_form_submit']) ? 'color:#FF0000;' : '', '">
+								* ', $txt['customform_required'], '
+							</td>
+						</tr>';
 
 	//	Here you can add rows to the end of the form, if you want to...
 	/* 	Like this:
@@ -139,8 +93,8 @@ function form_template_submit_form()
 	if ($context['visual_verification'])
 	{
 		echo '
-      <tr><td class="windowbg2" colspan="3" align="center" valign="middle"><b>', $txt['verification'], ':</b></td><tr>
-      <tr><td class="windowbg2" colspan="3" align="center" valign="middle">', template_control_verification(
+	  <tr><td class="windowbg2" colspan="3" align="center" valign="middle"><b>', $txt['verification'], ':</b></td><tr>
+	  <tr><td class="windowbg2" colspan="3" align="center" valign="middle">', template_control_verification(
 			$context['visual_verification_id'],
 			'all'
 		), '</td></tr>';
@@ -286,21 +240,21 @@ function template_customform_FormSettings()
 							</td>
 						</tr>
 						<tr>
-                     <td class="windowbg2" valign="top" width="16"><a name="setting_form_icon" href="', $scripturl, '?action=helpadmin;help=customform_icon" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a></td>
-                     <td class="windowbg2" valign="top"><label for="icon">', $txt['message_icon'], '</label></td>
-                     <td class="windowbg2" width="50%">
+					 <td class="windowbg2" valign="top" width="16"><a name="setting_form_icon" href="', $scripturl, '?action=helpadmin;help=customform_icon" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a></td>
+					 <td class="windowbg2" valign="top"><label for="icon">', $txt['message_icon'], '</label></td>
+					 <td class="windowbg2" width="50%">
 										   <select name="icon" id="icon" onchange="showimage()">';
 
 	// Loop through each message icon allowed, adding it to the drop down list.
 	foreach ($context['icons'] as $icon)
 		echo '
-                              <option value="', $icon['value'], '"', $icon['value'] == $context['custom_form_settings']['icon'] ? ' selected="selected"' : '', '>', $icon['name'], '</option>';
+							  <option value="', $icon['value'], '"', $icon['value'] == $context['custom_form_settings']['icon'] ? ' selected="selected"' : '', '>', $icon['name'], '</option>';
 
 	echo '
-                           </select>
-                           <img src="', $context['icon_url'], '" name="icons" hspace="15" alt="" />
-                     </td>
-                  </tr>
+						   </select>
+						   <img src="', $context['icon_url'], '" name="icons" hspace="15" alt="" />
+					 </td>
+				  </tr>
 						<tr>
 							<td class="windowbg2" valign="top" width="16"><a name="setting_template_function" href="', $scripturl, '?action=helpadmin;help=customform_template_function" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a></td>
 							<td class="windowbg2" valign="top"><label for="template_function">', $txt['customform_template_function'], '</label></td>

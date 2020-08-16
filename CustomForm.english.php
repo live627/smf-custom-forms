@@ -54,14 +54,32 @@ $txt['customform_thankyou'] =
 	'The information you entered has been submited.<br /><br />Thank you for taking the time to complete this form.<br /><br />You may now return to the Forum or view the Form List, if available.';
 
 //	Options for the selectbox on the field edit page.
-$txt['customform_checkbox'] = 'Check Box';
-$txt['customform_selectionbox'] = 'Selection Box';
-$txt['customform_textbox'] = 'Text Box (String)';
-$txt['customform_large_textbox'] = 'Large (Multiline) Text Box';
-$txt['customform_int'] = 'Text Box (Integer)';
-$txt['customform_float'] = 'Text Box (Float)';
-$txt['customform_radiobox'] = 'Radio Box';
-$txt['customform_infoboxa'] = 'Info Box';
+$txt['customform_type_text'] = 'Text';
+$txt['customform_type_textarea'] = 'Large Text';
+$txt['customform_type_select'] = 'Select Box';
+$txt['customform_type_radio'] = 'Radio Buttons';
+$txt['customform_type_check'] = 'Checkbox';
+$txt['customform_max_length'] = 'Maximum Length';
+$txt['customform_max_length_desc'] = '(0 for no limit)';
+$txt['customform_dimension'] = 'Dimensions';
+$txt['customform_dimension_row'] = 'Rows';
+$txt['customform_dimension_col'] = 'Columns';
+$txt['customform_size'] = 'Maximum number of characters';
+$txt['customform_bbc'] = 'Allow BBC';
+$txt['customform_options'] = 'Options';
+$txt['customform_options_desc'] = 'Leave option box blank to remove. Radio button selects default option.';
+$txt['customform_options_more'] = 'More';
+$txt['customform_default'] = 'Default State';
+$txt['customform_active'] = 'Active';
+$txt['customform_active_desc'] = 'This field will be turned off if unchecked.';
+$txt['customform_mask'] = 'Input Mask';
+$txt['customform_mask_desc'] = 'This validates the input supplied by the user.';
+$txt['customform_mask_number'] = 'Whole number (Scientific notation not allowed)';
+$txt['customform_mask_float'] = 'Floating point integer (Decimals allowed)';
+$txt['customform_mask_email'] = 'Email (Must be shorter than 255 characters)';
+$txt['customform_mask_regex'] = 'Regular Expression (Experts only!)';
+$txt['customform_regex'] = 'Regex';
+$txt['customform_regex_desc'] = 'Validate your own way.';
 
 //	Help text for the general settings page.
 $helptxt['customform_view_perms'] =

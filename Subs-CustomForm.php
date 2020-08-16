@@ -25,3 +25,10 @@ function customform_modify_modifications(&$sub_actions)
 {
 	$sub_actions['customform'] = 'ModifyCustomFormSettings';
 }
+
+function customform_list_classes()
+{
+	foreach (get_declared_classes() as $class)
+		if (is_subclass_of($class, 'CustomFormBase'))
+			yield trim(strpbrk($class, '_'), '_');
+}

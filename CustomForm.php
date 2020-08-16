@@ -71,7 +71,7 @@ function CustomForm()
 			$request = $smcFunc['db_query'](
 				'',
 				'
-			SELECT title, text, type, type_vars
+			SELECT id_field, title, text, type, type_vars
 			FROM {db_prefix}cf_fields
 			WHERE id_form = {int:id}
 			AND title != \'\'
@@ -96,6 +96,7 @@ function CustomForm()
 				redirectExit("action=form;");
 
 			$fail_submit = false;
+			require_once($sourcedir . '/Class-CustomForm.php');
 
 			//	Do we need to submit this form?
 			if (isset($_GET['submit']))
@@ -108,119 +109,17 @@ function CustomForm()
 				foreach ($data as $field)
 				{
 					$i++;
-					$value = '';
-					$size = '';
-					$default = '';
+					$value = isset($_POST['CustomFormField'][$field['id_field']]) ? $_POST['CustomFormField'][$field['id_field']] : '';
+					$class_name = 'CustomForm_' . $field['type'];
+					if (!class_exists($class_name))
+						fatal_error('Param "' . $field['type'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
 
-					$temp = ($field['type_vars'] != '') ? explode(',', $field['type_vars']) : array();
-					$type_vars = array();
-
-					//	Remove whitespace from temp, to avoid unwanted issues.
-					for ($p = 0; $p < count($temp); $p++)
-						$temp[$p] = trim($temp[$p]);
-
-					//	Go through all of the type_vars to format them correctly.
-					if (!empty($temp))
-						foreach ($temp as $var)
-						{
-							//	Check for a size value.
-							if (substr($var, 0, 5) == 'size=')
-								$size = intval(substr($var, 5));
-
-							//	Check for a default value
-							if (substr($var, 0, 8) == 'default=')
-								$default = substr($var, 8);
-
-							//	Add them to the vars list.
-							if ($var != '')
-								$type_vars[] = $var;
-						}
-
-					$required = in_array('required', $temp);
-
-					//	Go through each of the possible types of fields.
-					switch ($field['type'])
+					$type = new $class_name($field, $value, !empty($value));
+					$type->setOptions();
+					$type->validate();
+					if (false !== ($err = $type->getError()))
 					{
-						case 'checkbox':
-							$value = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : false;
-							//	Replace the normal true/false values if we have special type_var values.
-							if (isset($type_vars[0]) && ($value))
-								$value = $type_vars[0];
-							elseif (isset($type_vars[1]) && !($value))
-								$value = $type_vars[1];
-							elseif ($value)
-								$value = $txt['yes'];
-							else
-								$value = $txt['no'];
-							break;
-						case 'selectbox':
-							//	Skip this field, if there are no select values.
-							if (empty($type_vars))
-								continue 2;
-							$value = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : '';
-							//	Make sure that the selectbox value is in the array, otherwise stop those dodgy users from passing weird values. ;)
-							if (!in_array($value, $type_vars))
-								$value = '';
-							break;
-						case 'int':
-							$value = isset($_REQUEST[$field['title']]) ? intval($_REQUEST[$field['title']]) : '';
-							//	If value is empty then set it to the default.
-							if (($value == '')
-								&& !$required
-							)
-								$value = $default;
-							//	Restrict the length of value if necessary.
-							if (($size != ''))
-								$value = substr($value, 0, $size);
-							break;
-						case 'float':
-							$value = isset($_REQUEST[$field['title']]) ? floatval($_REQUEST[$field['title']]) : '';
-							//	If value is empty then set it to the default.
-							if (($value == '')
-								&& !$required
-							)
-								$value = $default;
-							//	Restrict the length of the float value if necessary.
-							if (($size != ''))
-								$value = rtrim(substr($value, 0, $size), '.');
-							break;
-						case 'radiobox':
-							//	Skip this field, if there are no radio select values.
-							if (empty($type_vars))
-								continue 2;
-							$value = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : '';
-							//	Make sure that the radiobox value is in the array, otherwise stop those dodgy users from passing weird values. ;)
-							if (!in_array($value, $type_vars))
-								$value = '';
-							break;
-						//	Do the formating for both large and normal textboxes.
-						default:
-							$value = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : '';
-							//	If value is empty then set it to the default.
-							if (($value == '')
-								&& !$required
-							)
-								$value = $default;
-							//	Only bother with further formating if there is now some text. - This avoids huge errors with the parse_bbc() function returning all bbc.
-							if (!($value == ''))
-							{
-								//	Remove all bbc code if we don't need to parse it.
-								if (!in_array('parse_bbc', $type_vars))
-									$value = strip_tags(parse_bbc($value, false), '<br>');
-								//	Restrict the length of value if necessary, can stuff up html, but hey...
-								if (($size != ''))
-									$value = substr($value, 0, $size);
-							}
-					}
-
-					//	Do we have an invalid value? Is this field required?
-					if (($required
-							&& (($value == '') || ($value == '0'))
-							&& ($field['type'] != 'checkbox'))
-						//	Failing for selectboxes is far more simple, If there is no valid value, it fails.
-						|| (($field['type'] == 'selectbox') && ($value == ''))
-					)
-					{
+						$post_errors[] = $err;
 						//	Do the 'fail form/field' stuff.
 						$data[$i]['failed'] = true;
 						$fail_submit = true;
@@ -244,23 +143,8 @@ function CustomForm()
 					}
 
 					//	Also add this data back into the data array, just in case we can't actually submit the form.
-					$data[$i]['value'] = $value;
-
-					//	Do a small fix for the last line, if this is a checkbox.
-					if ($field['type'] == 'checkbox')
-						$data[$i]['value'] = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : false;
-
-					if (($required) && (!$data[$i]['value']))
-					{
-						//   Do the 'fail form/field' stuff.
-						$data[$i]['failed'] = true;
-						$fail_submit = true;
-						continue;
-					}
-
-					//	Do a small fix for the last line, if this is a largetextbox.
-					if (($field['type'] == 'largetextbox'))
-						$data[$i]['value'] = isset($_REQUEST[$field['title']]) ? $_REQUEST[$field['title']] : '';
+					$data[$i]['value'] = $type->getValue();
+					$data[$i]['html'] = $type->getInputHtml();
 				}
 
 				// Check whether the visual verification code was entered correctly.
@@ -370,27 +254,14 @@ function CustomForm()
 					}
 
 				//	Make sure that we have valid options, if this is a selectbox.
-				if (($field['type'] == 'selectbox')
-					&& empty($vars)
-				)
+				if (($field['type'] == 'selectbox' || ($field['type'] == 'radiobox') && empty($vars))
 					continue;
 
-				//	Make sure that we have valid options, if this is a radiobox.
-				if (($field['type'] == 'radiobox')
-					&& empty($vars)
-				)
-					continue;
-
-				//	Store any previous values for the template to look after.
-				if (isset($field['value']))
-					$modSettings[$field['title']] = $field['value'];
-
-				//	Finally put the data for this field into the $context['field'] array for the 'submit form' template functions.
 				$context['fields'][$field['title']] = array(
 					'text' => $field['text'],
 					'type' => $field['type'],
 					'data' => $vars,
-					'value' => isset($field['value']) ? $field['value'] : '',
+					'html' => isset($field['html']) ? $field['html'] : '',
 					'required' => $required,
 					'failed' => isset($field['failed']),
 				);
