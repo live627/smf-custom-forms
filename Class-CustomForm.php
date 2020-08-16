@@ -21,7 +21,7 @@ interface CustomForm
 	 * @return void
 	 */
 	public function setHtml();
-	function validate();
+	public function validate();
 }
 
 abstract class CustomFormBase implements CustomForm
@@ -51,7 +51,7 @@ abstract class CustomFormBase implements CustomForm
 	 * @access public
 	 * @return mixed The error string or false for no error.
 	 */
-	function getError()
+	public function getError()
 	{
 		return $this->err;
 	}
@@ -62,7 +62,7 @@ abstract class CustomFormBase implements CustomForm
 	 * @access public
 	 * @return string
 	 */
-	function getValue()
+	public function getValue()
 	{
 		return $this->value;
 	}
@@ -116,18 +116,18 @@ abstract class CustomFormBase implements CustomForm
 
 class CustomForm_check extends CustomFormBase
 {
-	function setHtml()
+	public function setHtml()
 	{
 		global $txt;
 		$true = (!$this->exists && $this->default) || $this->value;
 		$this->input_html = '<input type="checkbox" name="CustomFormField[' . $this->field['id_field'] . ']"' . ($true ? ' checked' : '') . '>';
 		$this->output_html = $true ? $txt['yes'] : $txt['no'];
 	}
-	function validate()
+	public function validate()
 	{
 		// Nothing needed here, really. It's just a get out of jail free card. "This card may be kept until needed, or sold."
 	}
-	function getValue()
+	public function getValue()
 	{
 		return (!$this->exists && $this->default) || $this->value;
 	}
@@ -135,7 +135,7 @@ class CustomForm_check extends CustomFormBase
 
 class CustomForm_select extends CustomFormBase
 {
-	function setHtml()
+	public function setHtml()
 	{
 		$this->input_html = '<select name="CustomFormField[' . $this->field['id_field'] . ']" style="width: 90%;">';
 		foreach ($this->type_vars as $v)
@@ -148,7 +148,7 @@ class CustomForm_select extends CustomFormBase
 
 		$this->input_html .= '</select>';
 	}
-	function validate()
+	public function validate()
 	{
 		$found = false;
 		$opts = array_flip($this->type_vars);
@@ -158,7 +158,7 @@ class CustomForm_select extends CustomFormBase
 		if (!$found && $this->required)
 			$this->err = array('pf_invalid_value', $this->field['name']);
 	}
-	function getValue()
+	public function getValue()
 	{
 		$value = $this->default;
 		$opts = array_flip($this->type_vars);
@@ -171,7 +171,7 @@ class CustomForm_select extends CustomFormBase
 
 class CustomForm_radio extends CustomForm_select
 {
-	function setHtml()
+	public function setHtml()
 	{
 		$this->input_html = '<fieldset>';
 		foreach ($this->type_vars as $v)
@@ -187,12 +187,12 @@ class CustomForm_radio extends CustomForm_select
 
 class CustomForm_text extends CustomFormBase
 {
-	function setHtml()
+	public function setHtml()
 	{
 		$this->output_html = $this->value;
 		$this->input_html = '<input type="text" name="CustomFormField[' . $this->field['id_field'] . ']" style="width: 90%;" value="' . $this->value . '">';
 	}
-	function getValue()
+	public function getValue()
 	{
 		global $smcFunc;
 		if (!empty($this->size))
@@ -203,7 +203,7 @@ class CustomForm_text extends CustomFormBase
 
 		return $this->value;
 	}
-	function validate()
+	public function validate()
 	{
 		if ($this->exists && $this->required)
 			$this->err = array('pf_invalid_value', $this->field['name']);
@@ -221,7 +221,7 @@ class CustomForm_text extends CustomFormBase
 
 class CustomForm_textarea extends CustomForm_text
 {
-	function setHtml()
+	public function setHtml()
 	{
 		$this->output_html = $this->value;
 		@list ($rows, $cols) = @explode(',', $this->default);
@@ -231,8 +231,8 @@ class CustomForm_textarea extends CustomForm_text
 
 interface CustomFormFieldMask
 {
-	function __construct($value, $field);
-	function validate();
+	public function __construct($value, $field);
+	public function validate();
 }
 
 abstract class CustomFormFieldMaskBase implements CustomFormFieldMask
@@ -240,14 +240,14 @@ abstract class CustomFormFieldMaskBase implements CustomFormFieldMask
 	protected $value;
 	protected $field;
 	protected $err;
-	function __construct($value, $field)
+	public function __construct($value, $field)
 	{
 		$this->value = $value;
 		$this->field = $field;
 		$this->err = false;
 	}
 
-	function getError()
+	public function getError()
 	{
 		return $this->err;
 	}
@@ -255,7 +255,7 @@ abstract class CustomFormFieldMaskBase implements CustomFormFieldMask
 
 class CustomFormFieldMask_email extends CustomFormFieldMaskBase
 {
-	function validate()
+	public function validate()
 	{
 		if (!preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $this->value))
 			$this->err = array('pf_invalid_value', $this->field['name']);
@@ -264,7 +264,7 @@ class CustomFormFieldMask_email extends CustomFormFieldMaskBase
 
 class CustomFormFieldMask_regex extends CustomFormFieldMaskBase
 {
-	function validate()
+	public function validate()
 	{
 		if (!preg_match($this->field['regex'], $this->value))
 			if (!empty($this->field['err']))
@@ -276,7 +276,7 @@ class CustomFormFieldMask_regex extends CustomFormFieldMaskBase
 
 class CustomFormFieldMask_number extends CustomFormFieldMaskBase
 {
-	function validate()
+	public function validate()
 	{
 		if (!preg_match('/^\s*([0-9]+)\s*$/', $this->value))
 			$this->err = array('pf_invalid_value', $this->field['name']);
@@ -285,7 +285,7 @@ class CustomFormFieldMask_number extends CustomFormFieldMaskBase
 
 class CustomFormFieldMask_float extends CustomFormFieldMaskBase
 {
-	function validate()
+	public function validate()
 	{
 		if (!preg_match('/^\s*([0-9]+(\.[0-9]+)?)\s*$/', $this->value))
 			$this->err = array('pf_invalid_value', $this->field['name']);
@@ -294,7 +294,7 @@ class CustomFormFieldMask_float extends CustomFormFieldMaskBase
 
 class CustomFormFieldMask_nohtml extends CustomFormFieldMaskBase
 {
-	function validate()
+	public function validate()
 	{
 		if (strip_tags($this->value) != $this->value)
 			$this->err = array('pf_invalid_value', $this->field['name']);
