@@ -31,9 +31,7 @@ function CustomForm()
 		loadTemplate('CustomForm');
 	}
 	else //	Do we have a valid form id?
-		if (isset($_REQUEST['n'])
-			&& intval($_REQUEST['n'])
-		)
+		if (isset($_REQUEST['n']))
 		{
 			$form_id = intval($_REQUEST['n']);
 
@@ -141,10 +139,6 @@ function CustomForm()
 						$vars_blank[] = '//';
 						$vars_non_blank[] = '/\{[^\{\}]*\{' . $field['title'] . '\}[^\{\}]*\}/';
 					}
-
-					//	Also add this data back into the data array, just in case we can't actually submit the form.
-					$data[$i]['value'] = $type->getValue();
-					$data[$i]['html'] = $type->getInputHtml();
 				}
 
 				// Check whether the visual verification code was entered correctly.
@@ -239,6 +233,13 @@ function CustomForm()
 			//	Okay, lets format the field data.
 			foreach ($data as $field)
 			{
+				$value = isset($_POST['CustomFormField'][$field['id_field']]) ? $_POST['CustomFormField'][$field['id_field']] : '';
+				$class_name = 'CustomForm_' . $field['type'];
+				if (!class_exists($class_name))
+					fatal_error('Param "' . $field['type'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
+
+				$type = new $class_name($field, $value, !empty($value));
+				$type->setOptions();
 
 				$size = false;
 				$type_vars = ($field['type_vars'] != '') ? explode(',', $field['type_vars']) : array();
@@ -266,7 +267,7 @@ function CustomForm()
 				$context['fields'][$field['title']] = array(
 					'text' => $field['text'],
 					'type' => $field['type'],
-					'html' => isset($field['html']) ? $field['html'] : '',
+					'html' => $type->getInputHtml(),
 					'required' => $required,
 					'failed' => isset($field['failed']),
 				);
