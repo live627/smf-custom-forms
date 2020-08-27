@@ -290,74 +290,113 @@ function CustomForm()
 		}
 		//	If not then fall to the default view form page, with the list of forms.
 		else
-		{
-			//	Wait a second... Are you even allowed to view the form list?
-			if (!allowedTo('customform_view_perms'))
-				redirectExit();
-
-			//	Declare the array of data which we need to pass to the template.
-			$context['custom_forms_list'] = array();
-
-			//	Firstly get a list of all the fields from the cf_fields table.
-			$request = $smcFunc['db_query'](
-				'',
-				'
-			SELECT id_form
-			FROM {db_prefix}cf_fields
-			WHERE title != \'\'
-			AND text != \'\'
-			AND type != \'\''
-			);
-
-			$forms = array();
-
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$forms[] = $row['id_form'];
-			$smcFunc['db_free_result']($request);
-
-			//	Get the data from the cf_forms table.
-			$request = $smcFunc['db_query'](
-				'',
-				'
-			SELECT f.id_form, f.title, b.name, b.id_board
-			FROM {db_prefix}cf_forms f, {db_prefix}boards b
-			WHERE b.id_board = f.id_board
-			AND b.redirect = \'\''
-			);
-
-			//	Go through all of the forms and add them to the list.
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-			{
-				//	Wait. Are you allowed to view/use this form?
-				if (!allowedTo('custom_forms_' . $row['id_form']))
-					continue;
-
-				//	Did we get some fields from this form?
-				if (!in_array($row['id_form'], $forms))
-					continue;
-
-				//	Add this forms data, for the template to show.
-				$context['custom_forms_list'][] = array(
-					'id' => $row['id_form'],
-					'title' => $row['title'],
-					'id_board' => $row['id_board'],
-					'board' => $row['name'],
-				);
-			}
-
-			//	Free the db request.
-			$smcFunc['db_free_result']($request);
-
-			//	Finally load the necessary template for this action.
-			$context['sub_template'] = 'FormList';
-			loadTemplate('CustomForm');
-			loadLanguage('CustomForm');
-
-		}
+			listCustomForm();
 
 	//	Set the page title, just for lolz! :D
-	$context['page_title'] =
-		(isset($modSettings['customform_view_title']) && ($modSettings['customform_view_title'] != '')) ? $modSettings['customform_view_title'] : $txt['customform_tabheader'];
+	$context['page_title'] = !empty($modSettings['customform_view_title'])
+		? $modSettings['customform_view_title']
+		: $txt['customform_tabheader'];
 }
 
-?>
+//	Fucntion to produce a list of custom forms.
+function list_CustomForms()
+{
+	global $smcFunc;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_form
+		FROM {db_prefix}cf_fields
+		WHERE title != \'\'
+		AND text != \'\'
+		AND type != \'\''
+	);
+
+	$cf = array();
+	while (list ($id_form) = $smcFunc['db_fetch_row']($request))
+		if (allowedTo('custom_forms_' . $id_form) && !in_array($id_form, $cf))
+			$cf[] = $id_form;
+	$smcFunc['db_free_result']($request);
+
+	//	Get the data from the cf_forms table.
+	$request = $smcFunc['db_query']('', '
+		SELECT f.id_form, f.title, b.name, b.id_board
+		FROM {db_prefix}cf_forms f, {db_prefix}boards b
+		WHERE b.id_board = f.id_board
+		AND b.redirect = \'\''
+	);
+
+	//~ //	Go through all of the forms and add them to the list.
+	//~ $request = $smcFunc['db_query']('', '
+		//~ SELECT id_form, title
+		//~ FROM {db_prefix}cf_forms AS f
+		//~ WHERE title != {string:empty_string}
+		//~ WHERE NOT EXISTS
+		//~ (
+			//~ SELECT * FROM {db_prefix}cf_fields AS d
+			//~ WHERE d.id_form = f.id_form
+		//~ and title != \'\'
+		//~ AND text != \'\'
+		//~ AND type != \'\'
+		//~ )',
+		//~ array(
+			//~ 'empty_string' => '',
+		//~ )
+	//~ );
+	$forms = array();
+	while (list ($id_form, $title) = $smcFunc['db_fetch_row']($request))
+		if (allowedTo('custom_forms_' . $id_form) && in_array($id_form, $cf))
+			$forms[] = array(
+				'id' => $id_form,
+				'title' => $title,
+			);
+	$smcFunc['db_free_result']($request);
+
+	return $forms;
+}
+
+function listCustomForm()
+{
+	global $context, $modSettings, $scripturl, $smcFunc, $sourcedir, $txt;
+
+	if (!allowedTo('customform_view_perms'))
+		redirectExit();
+
+	loadLanguage('CustomForm');
+	$listOptions = array(
+		'id' => 'menu_list',
+		'title' => !empty($modSettings['customform_view_title'])
+			? $modSettings['customform_view_title']
+			: $txt['customform_tabheader'],
+		'base_href' => $scripturl . '?action=form',
+		'get_items' => array(
+			'function' => 'list_CustomForms',
+		),
+		'no_items_label' => $txt['customform_list_noelements'],
+		'columns' => array(
+			'name' => array(
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . strtr($scripturl, array('%' => '%%')) . '?action=form;n=%d">%s</a>',
+						'params' => array(
+							'id' => false,
+							'title' => true,
+						),
+					),
+					'style' => 'padding: 0.7em',
+				),
+			),
+		),
+	);
+	if (!empty($modSettings['customform_view_text']))
+		$listOptions['additional_rows'] = array(
+			array(
+				'position' => 'after_title',
+				'value' => $modSettings['customform_view_text']
+			),
+		);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'menu_list';
