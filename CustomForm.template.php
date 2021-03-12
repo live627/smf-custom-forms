@@ -53,14 +53,130 @@ function form_template_submit_form()
 
 		if ($field_data['type'] == 'infobox')
 			echo '
-							<td colspan="2" valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>';
+						<td colspan="2" valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>
+						';
 		else
 
 			//	Show the display text for this field.
 			echo '
 							<td valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>
-							<td class="windowbg2" width="50%">
-								', $field_data['html'];
+							<td class="windowbg2" width="50%">';
+
+		// Show a check box.
+		if ($field_data['type'] == 'checkbox')
+			echo '
+								<input type="checkbox" name="', $field_name, '" id="', $field_name, '" ', (($field_data['value']) ? ' checked="checked"' : ''), ' value="1" class="check" />';
+
+		// Show a selection box.
+		elseif ($field_data['type'] == 'selectbox')
+		{
+			echo '
+								<select name="', $field_name, '" id="', $field_name, '" >';
+			foreach ($field_data['data'] as $option)
+				if ($option != 'required')
+					echo '
+									<option value="', $option, '"', ($option == $field_data['value'] ? ' selected="selected"' : ''), '>', $option, '</option>';
+				else
+					echo '
+									<option value=""></option>';
+
+			echo '
+								</select>';
+		}
+		// Show a radio box.
+		elseif ($field_data['type'] == 'radiobox')
+		{
+
+			foreach ($field_data['data'] as $option)
+				if ($option != 'required')
+
+					echo '
+                  
+                        <input type="radio" name="', $field_name, '" value="', $option, '">', $option, '<br />';
+				else
+					echo '
+                        <option value=""></option>';
+		}
+		// Large Text box?
+		elseif ($field_data['type'] == 'largetextbox')
+		{
+			echo '
+								<textarea rows="10" cols="50%" name="', $field_name, '" id="', $field_name, '">', $field_data['value'], '</textarea>';
+		}
+		// Show a Info box.
+		elseif ($field_data['type'] == 'attach' && $context['can_post_attachment'])
+		{
+			echo '
+						<div class="smalltext">
+							<div class="lower_padding">
+								<input type="file" name="attachment[]" id="attachment1" class="input_text"><a href="#" class="padding" onclick="cleanFileInput(\'attachment1\');">(', $txt['clean_attach'], ')</a>
+							</div>';
+
+			// Show more boxes only if they aren't approaching their limit.
+			if ($context['num_allowed_attachments'] > 1)
+				echo '
+							<div class="lower_padding" id="moreAttachments">
+								<a href="#" onclick="return addAttachment(this)">(', $txt['more_attachments'], ')</a>
+							</div>
+							<script type="text/javascript"><!-- // --><![CDATA[
+								var allowed_attachments = ', $context['num_allowed_attachments'], ';
+								var current_attachment = 1;
+								var clean_attach = ', JavaScriptEscape($txt['clean_attach']), ';
+
+								function addAttachment(el)
+								{
+									allowed_attachments = allowed_attachments - 1;
+									current_attachment = current_attachment + 1;
+									if (allowed_attachments <= 0)
+										return alert("', $txt['more_attachments_error'], '");
+
+								var oParent = el.parentNode.parentNode;
+								var oChild = el.parentNode;
+								var oDiv = document.createElement("div");
+								oDiv.className = "lower_padding";
+								oParent.insertBefore(oDiv, oChild);
+
+								var newElement = document.createElement("input");
+								newElement.type = "file";
+								newElement.name = "attachment[]";
+								newElement.id = "attachment" + current_attachment;
+								newElement.className = "input_text";
+								oDiv.appendChild(newElement);
+
+								var newElement = document.createElement("a");
+								newElement.href = "#";
+								newElement.className = "padding";
+								newElement.innerText = "(" + clean_attach + ")";
+								newElement.onclick = function() {
+									cleanFileInput(this.previousSibling.id);
+
+									return false;
+								};
+								oDiv.appendChild(newElement);
+
+								return false;
+							}
+							// ]]></script>';
+
+			// Show some useful information such as allowed extensions, maximum size and amount of attachments allowed.
+			if (!empty($modSettings['attachmentCheckExtensions']))
+				echo '
+							', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
+
+			if (!empty($context['attachment_restrictions']))
+				echo '
+							', $txt['attach_restrictions'], ' ', implode(
+					', ',
+					$context['attachment_restrictions']
+				), '<br />';
+
+			echo '
+						</div>';
+		}
+		// Int, Float or text box?
+		else
+			echo '
+								<input type="text" size="50%" name="', $field_name, '" id="', $field_name, '" value="', $field_data['value'], '" />';
 
 		//	Show the 'required' asterix if necessary.
 		if (!empty($field_data['required']))
@@ -75,11 +191,11 @@ function form_template_submit_form()
 
 	//    Show the "Required Fields" text down the bottom, show it in red if there was a failed submit.
 	echo '
-						<tr class="windowbg2">
-							<td colspan="3" style="text-align:center;', !empty($context['failed_form_submit']) ? 'color:#FF0000;' : '', '">
-								* ', $txt['customform_required'], '
-							</td>
-						</tr>';
+               <tr class="windowbg2">
+                  <td colspan="3" style="text-align:center;', !empty($context['failed_form_submit']) ? 'color:#FF0000;' : '', '">
+                     * ', $txt['customform_required'], '
+                  </td>
+               </tr>';
 
 	//	Here you can add rows to the end of the form, if you want to...
 	/* 	Like this:
@@ -93,8 +209,8 @@ function form_template_submit_form()
 	if ($context['visual_verification'])
 	{
 		echo '
-	  <tr><td class="windowbg2" colspan="3" align="center" valign="middle"><b>', $txt['verification'], ':</b></td><tr>
-	  <tr><td class="windowbg2" colspan="3" align="center" valign="middle">', template_control_verification(
+      <tr><td class="windowbg2" colspan="3" align="center" valign="middle"><b>', $txt['verification'], ':</b></td><tr>
+      <tr><td class="windowbg2" colspan="3" align="center" valign="middle">', template_control_verification(
 			$context['visual_verification_id'],
 			'all'
 		), '</td></tr>';
@@ -126,6 +242,70 @@ function template_submit_form()
 	//	Call the default template for the submit form page if we have to...
 	else
 		form_template_submit_form();
+}
+
+//	The main template function for viewing the form action, which shows a list of forms.
+function template_FormList()
+{
+	global $context, $modSettings, $txt, $scripturl;
+
+	//	Show the Starting part of the template.
+	echo '
+	<table style="width:100%;">
+		<tr>
+			<td style="width:20%;"></td>
+			<td class="tborder" style="margin-top: 1ex;width:50%;">
+				<div class="titlebg" style="padding: 4px;">', (isset($modSettings['customform_view_title']) && ($modSettings['customform_view_title'] != '')) ? $modSettings['customform_view_title'] : $txt['customform_tabheader'], '</div>
+				<div style="padding: 2ex;" class="windowbg2">
+				', (isset($modSettings['customform_view_text']) && ($modSettings['customform_view_text'] != '')) ? $modSettings['customform_view_text'] . '<br /><br />' : '', '
+					<table style="width:100%;background-color:#000000;" align="center">
+						<tr class="titlebg" >
+							<td style="width:45%;" >', $txt['title'], '</td>
+							<td style="width:45%;" >', $txt['board'], '</td>
+							<td style="width:10%;text-align:center;" >', $txt['view'], '</td>
+						</tr>';
+
+	//	If we can then show the list of forms.
+	if (!empty($context['custom_forms_list']))
+	{
+		//	Show the list of forms.
+		foreach ($context['custom_forms_list'] as $form)
+		{
+			echo '
+						<tr class="windowbg">
+							<td style="padding:4px;" >
+								<a href="', $scripturl, '?action=form;n=', $form['id'], '">', $form['title'], '</a>
+							</td>
+							<td style="padding:4px;" >
+								<a href="', $scripturl, '?board=', $form['id_board'], '">', $form['board'], '</a>
+							</td>
+							<td style="padding:4px;text-align:center;" >
+								<a href="', $scripturl, '?action=form;n=', $form['id'], '">', $txt['view'], '</a>
+							</td>
+						</tr>';
+		}
+	}
+	//	Otherwise show a message saying that there are no forms present.
+	else
+	{
+		echo '
+						<tr class="windowbg">
+							<td style="padding:4px;" colspan="3">
+								', $txt['customform_list_noelements'], '
+							</td>
+						</tr>';
+	}
+
+
+	//	Finsh off the template.
+	echo '
+					</table>
+				</div>
+			</td>
+			<td style="width:20%;"></td>
+		<tr>
+	</table>
+	';
 }
 
 //	 Template Function to show the Custom Form Mod Admin Settings section.
@@ -176,21 +356,21 @@ function template_customform_FormSettings()
 							</td>
 						</tr>
 						<tr>
-					 <td class="windowbg2" valign="top" width="16"><a name="setting_form_icon" href="', $scripturl, '?action=helpadmin;help=customform_icon" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a></td>
-					 <td class="windowbg2" valign="top"><label for="icon">', $txt['message_icon'], '</label></td>
-					 <td class="windowbg2" width="50%">
+                     <td class="windowbg2" valign="top" width="16"><a name="setting_form_icon" href="', $scripturl, '?action=helpadmin;help=customform_icon" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a></td>
+                     <td class="windowbg2" valign="top"><label for="icon">', $txt['message_icon'], '</label></td>
+                     <td class="windowbg2" width="50%">
 										   <select name="icon" id="icon" onchange="showimage()">';
 
 	// Loop through each message icon allowed, adding it to the drop down list.
 	foreach ($context['icons'] as $icon)
 		echo '
-							  <option value="', $icon['value'], '"', $icon['value'] == $context['custom_form_settings']['icon'] ? ' selected="selected"' : '', '>', $icon['name'], '</option>';
+                              <option value="', $icon['value'], '"', $icon['value'] == $context['custom_form_settings']['icon'] ? ' selected="selected"' : '', '>', $icon['name'], '</option>';
 
 	echo '
-						   </select>
-						   <img src="', $context['icon_url'], '" name="icons" hspace="15" alt="" />
-					 </td>
-				  </tr>
+                           </select>
+                           <img src="', $context['icon_url'], '" name="icons" hspace="15" alt="" />
+                     </td>
+                  </tr>
 						<tr>
 							<td class="windowbg2" valign="top" width="16"><a name="setting_template_function" href="', $scripturl, '?action=helpadmin;help=customform_template_function" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a></td>
 							<td class="windowbg2" valign="top"><label for="template_function">', $txt['customform_template_function'], '</label></td>
@@ -325,3 +505,508 @@ function template_ThankYou()
 	</table>
 	';
 }
+
+// Begin: Custom Forms Template Centered
+
+function form_template_center()
+{
+	global $context, $txt, $settings, $scripturl;
+
+	//	Starting text for the form and tables. Don't muck with this unless you need to change the style!!!  ;)
+	echo '
+	<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '">
+		<table width="80%" border="0" cellspacing="0" cellpadding="0" class="tborder" align="center">
+			<tr>
+				<td>
+					<table border="0" cellspacing="0" cellpadding="4" width="100%">
+						<tr class="titlebg">
+							<td colspan="3">', $context['settings_title'], '</td>
+						</tr>';
+
+	// End of information in the top section.
+
+	//	Documentation for the contents of each $field_data array, or entry into the $context['fields'] array.
+	/*
+	$field_name = The name of the field, straight from the value stored by the admin in the admin settings area;
+	 $field_data = array(
+		'text' => This is the text which needs to be displayed next to the setting.,
+		'type' => The type of input which the field is ,
+		'value' => The value of the field, if this is not the first attempt at submitting the form,
+		'data' => The list of options - only for the selection box type,
+		'required' => A boolean value telling us wether or not its necessary to have a valid value for this field in order to submit the form,
+		'failed' => A boolean value which tells us wether or not this field caused the form to fail to submit,
+	 );
+	*/
+
+	// Now actually loop through all the fields.
+	foreach ($context['fields'] as $field_name => $field_data)
+	{
+		//	Output the start of the row, as well as a spacer column.
+		echo '
+						<tr class="windowbg2">
+							<td class="windowbg2"></td>';
+
+		//	Show the display text for this field.
+		echo '
+							<tr class="windowbg2"><td style="text-align:center" valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td></tr>
+							<td class="windowbg2" style="text-align:center" width="100%">';
+
+		// Show a check box.
+		if ($field_data['type'] == 'checkbox')
+			echo '
+								<input type="checkbox" name="', $field_name, '" id="', $field_name, '" ', (($field_data['value']) ? ' checked="checked"' : ''), ' value="1" class="check" />';
+
+		// Show a selection box.
+		elseif ($field_data['type'] == 'selectbox')
+		{
+			echo '
+								<select name="', $field_name, '" id="', $field_name, '" >';
+			foreach ($field_data['data'] as $option)
+				if ($option != 'required')
+					echo '
+									<option value="', $option, '"', ($option == $field_data['value'] ? ' selected="selected"' : ''), '>', $option, '</option>';
+				else
+					echo '
+									<option value=""></option>';
+
+			echo '
+								</select>';
+		}
+		// Show a radio box.
+		elseif ($field_data['type'] == 'radiobox')
+		{
+
+			foreach ($field_data['data'] as $option)
+				if ($option != 'required')
+
+					echo '
+                  
+                        <input type="radio" name="', $field_name, '" value="', $option, '">', $option, '<br />';
+				else
+					echo '
+                        <option value=""></option>';
+		}
+		// Large Text box?
+		elseif ($field_data['type'] == 'largetextbox')
+		{
+			echo '
+								<textarea rows="10" cols="100%" name="', $field_name, '" id="', $field_name, '">', $field_data['value'], '</textarea>';
+		}
+		// Show a Info box.
+		elseif ($field_data['type'] == 'infobox')
+		{
+			echo '
+			';
+		}
+		// Int, Float or text box?
+		else
+			echo '
+								<input type="text" size="100%" name="', $field_name, '" id="', $field_name, '" value="', $field_data['value'], '" />';
+
+		//	Show the 'required' asterix if necessary.
+		if (!empty($field_data['required']))
+			echo '
+								<span ', !empty($field_data['failed']) ? 'style="color:#FF0000;"' : '', '> *</span>';
+
+		//	End the input column and the entire row.
+		echo '
+							</td>
+						</tr>';
+	}
+
+	//    Show the "Required Fields" text down the bottom, show it in red if there was a failed submit.
+	echo '
+               <tr class="windowbg2">
+                  <td colspan="3" style="text-align:center;', !empty($context['failed_form_submit']) ? 'color:#FF0000;' : '', '">
+                     * ', $txt['customform_required'], '
+                  </td>
+               </tr>';
+
+	// Display visual verification on the form      
+	if ($context['visual_verification'])
+	{
+		echo '
+      <tr><td class="windowbg2" colspan="3" align="center" valign="middle"><b>', $txt['verification'], ':</b></td><tr>
+      <tr><td class="windowbg2" colspan="3" align="center" valign="middle">', template_control_verification(
+			$context['visual_verification_id'],
+			'all'
+		), '</td></tr>';
+	}
+
+	//  Here you can add information before the submit button.
+	/*echo '
+	  <tr>
+			   <td colspan="3"  class="windowbg2">
+			  <b><span style="color:red">Example of something before the submit button.</span></b>
+			  </td>
+	</tr>';*/
+
+
+	//	Output the save button, the end of the tables and the form.	
+	echo '
+						<tr>
+							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
+						</tr>';
+
+	echo '
+					
+					</table>
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
+}
+
+// End: Custom Forms Template Centered
+
+// Begin: Custom Forms Template Left
+
+function form_template_left()
+{
+	global $context, $txt, $settings, $scripturl;
+
+	//	Starting text for the form and tables. Don't muck with this unless you need to change the style!!!  ;)
+	echo '
+	<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '">
+		<table width="80%" border="0" cellspacing="0" cellpadding="0" class="tborder" align="center">
+			<tr>
+				<td>
+					<table border="0" cellspacing="0" cellpadding="4" width="100%">
+						<tr class="titlebg">
+							<td colspan="3">', $context['settings_title'], '</td>
+						</tr>';
+
+	//	Documentation for the contents of each $field_data array, or entry into the $context['fields'] array.
+	/*
+	$field_name = The name of the field, straight from the value stored by the admin in the admin settings area;
+	 $field_data = array(
+		'text' => This is the text which needs to be displayed next to the setting.,
+		'type' => The type of input which the field is ,
+		'value' => The value of the field, if this is not the first attempt at submitting the form,
+		'data' => The list of options - only for the selection box type,
+		'required' => A boolean value telling us wether or not its necessary to have a valid value for this field in order to submit the form,
+		'failed' => A boolean value which tells us wether or not this field caused the form to fail to submit,
+	 );
+	*/
+
+	// Now actually loop through all the fields.
+	foreach ($context['fields'] as $field_name => $field_data)
+	{
+		//	Output the start of the row, as well as a spacer column.
+		echo '
+						<tr class="windowbg2">
+							<td class="windowbg2"></td>';
+
+		if ($field_data['type'] == 'infobox')
+			echo '
+						<td colspan="2" style="text-align:center" valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>
+						';
+		else
+
+			//	Show the display text for this field.
+			echo '
+							<td style="text-align:right" class="windowbg2" width="50%">';
+
+		//	Show the 'required' asterix on the left side if necessary.
+		if (!empty($field_data['required']))
+			echo '
+								<span style="text-align:center" ', !empty($field_data['failed']) ? 'style="color:#FF0000;"' : '', '> *</span>';
+
+		// Show a check box.
+		if ($field_data['type'] == 'checkbox')
+			echo '
+								<input type="checkbox" name="', $field_name, '" id="', $field_name, '" ', (($field_data['value']) ? ' checked="checked"' : ''), ' value="1" class="check" />';
+
+		// Show a selection box.
+		elseif ($field_data['type'] == 'selectbox')
+		{
+			echo '
+								<select name="', $field_name, '" id="', $field_name, '" >';
+			foreach ($field_data['data'] as $option)
+				if ($option != 'required')
+					echo '
+									<option value="', $option, '"', ($option == $field_data['value'] ? ' selected="selected"' : ''), '>', $option, '</option>';
+				else
+					echo '
+									<option value=""></option>';
+
+			echo '
+								</select>';
+		}
+		// Show a radio box.
+		elseif ($field_data['type'] == 'radiobox')
+		{
+
+			foreach ($field_data['data'] as $option)
+				if ($option != 'required')
+
+					echo '
+                  
+                        <input type="radio" name="', $field_name, '" value="', $option, '">', $option, '<br />';
+				else
+					echo '
+                        <option style="text-align:right" value=""></option>';
+		}
+		// Large Text box?
+		elseif ($field_data['type'] == 'largetextbox')
+		{
+			echo '
+								<textarea rows="10" cols="48%" name="', $field_name, '" id="', $field_name, '">', $field_data['value'], '</textarea>';
+		}
+		// Show a Info box.
+		elseif ($field_data['type'] == 'infobox')
+		{
+			echo '
+			';
+		}
+		// Int, Float or text box?
+		else
+			echo '
+								<input type="text" size="50%" name="', $field_name, '" id="', $field_name, '" value="', $field_data['value'], '" />';
+
+		//	End the input column and the entire row.
+
+		if ($field_data['type'] == 'infobox')
+			echo '
+						';
+		else
+
+			//	Show the display text for this field.
+			echo '
+							<td valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>
+							</td>
+						</tr>';
+	}
+
+	//    Show the "Required Fields" text down the bottom, show it in red if there was a failed submit.
+	echo '
+               <tr class="windowbg2">
+                  <td colspan="3" style="text-align:center;', !empty($context['failed_form_submit']) ? 'color:#FF0000;' : '', '">
+                     * ', $txt['customform_required'], '
+                  </td>
+               </tr>';
+
+	// Display visual verification on the form      
+	if ($context['visual_verification'])
+	{
+		echo '
+      <tr><td class="windowbg2" colspan="3" align="center" valign="middle"><b>', $txt['verification'], ':</b></td><tr>
+      <tr><td class="windowbg2" colspan="3" align="center" valign="middle">', template_control_verification(
+			$context['visual_verification_id'],
+			'all'
+		), '</td></tr>';
+	}
+
+	//	Output the save button, the end of the tables and the form.	
+	echo '
+						<tr>
+							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
+						</tr>';
+
+	echo '
+					
+					</table>
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
+}
+
+// End: Custom Forms Template Left
+
+/* Example: How to edit the custom forms template.
+For a preview of how you can use custom templates enter "example" in the Custom Template Function field of a form.
+
+Copy the entire Custom Forms Template Example from beginning to end.
+
+Every where you see "Example of Something..." you can alter however you want. You can even use HTML tags to give it a little more style.
+It is recommended that you have a decent knowledge of HTML, XML, and PHP before you do anything too drastic.
+
+Re-name "function form_template_example_form()" to "function form_your_name()"
+
+Note that your name should be something short, all lower case, and do not use special characters like # & * @ [ etc.
+
+Paste your edited form before the ?> at the end of the CustomForm.template.php
+
+Enter your_name in the Custom Template Function field of the form you want to use your template in. 
+
+View your form.*/
+
+// Begin: Custom Forms Template Example
+
+function form_template_example()
+{
+	global $context, $txt, $settings, $scripturl;
+
+	//	Starting text for the form and tables. Don't muck with this unless you need to change the style!!!  ;)
+	echo '
+	<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '">
+		<table width="80%" border="0" cellspacing="0" cellpadding="0" class="tborder" align="center">
+			<tr>
+				<td>
+					<table border="0" cellspacing="0" cellpadding="4" width="100%">
+						<tr class="titlebg">
+							<td colspan="3">', $context['settings_title'], '</td>
+						</tr>';
+
+	//   Here you can add information at the top of your form, if you want to...
+	echo '
+	 <tr class="windowbg2">
+	 <b><span style="color:red">Example of something above the form title area.</span></b>
+	 </tr>
+	 <tr>
+	 		 <td colspan="3"  class="windowbg2">
+			 <b><span style="color:red">Example of something at the top of the form.</span></b>
+			 </td>
+	 </tr>';
+	// End of information in the top section.
+
+	//	Documentation for the contents of each $field_data array, or entry into the $context['fields'] array.
+	/*
+	$field_name = The name of the field, straight from the value stored by the admin in the admin settings area;
+	 $field_data = array(
+		'text' => This is the text which needs to be displayed next to the setting.,
+		'type' => The type of input which the field is ,
+		'value' => The value of the field, if this is not the first attempt at submitting the form,
+		'data' => The list of options - only for the selection box type,
+		'required' => A boolean value telling us wether or not its necessary to have a valid value for this field in order to submit the form,
+		'failed' => A boolean value which tells us wether or not this field caused the form to fail to submit,
+	 );
+	*/
+
+	// Now actually loop through all the fields.
+	foreach ($context['fields'] as $field_name => $field_data)
+	{
+		//	Output the start of the row, as well as a spacer column.
+		echo '
+						<tr class="windowbg2">
+							<td class="windowbg2"></td>';
+
+		if ($field_data['type'] == 'infobox')
+			echo '
+						<td colspan="2" valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>
+						';
+		else
+
+			//	Show the display text for this field.
+			echo '
+							<td valign="top"><label for="', $field_name, '">', $field_data['text'], '</label></td>
+							<td class="windowbg2" width="50%">';
+
+		// Show a check box.
+		if ($field_data['type'] == 'checkbox')
+			echo '
+								<input type="checkbox" name="', $field_name, '" id="', $field_name, '" ', (($field_data['value']) ? ' checked="checked"' : ''), ' value="1" class="check" />';
+
+		// Show a selection box.
+		elseif ($field_data['type'] == 'selectbox')
+		{
+			echo '
+								<select name="', $field_name, '" id="', $field_name, '" >';
+			foreach ($field_data['data'] as $option)
+				if ($option != 'required')
+					echo '
+									<option value="', $option, '"', ($option == $field_data['value'] ? ' selected="selected"' : ''), '>', $option, '</option>';
+				else
+					echo '
+									<option value=""></option>';
+
+			echo '
+								</select>';
+		}
+		// Show a radio box.
+		elseif ($field_data['type'] == 'radiobox')
+		{
+
+			foreach ($field_data['data'] as $option)
+				if ($option != 'required')
+
+					echo '
+                  
+                        <input type="radio" name="', $field_name, '" value="', $option, '">', $option, '<br />';
+				else
+					echo '
+                        <option value=""></option>';
+		}
+		// Large Text box?
+		elseif ($field_data['type'] == 'largetextbox')
+		{
+			echo '
+								<textarea rows="10" cols="50%" name="', $field_name, '" id="', $field_name, '">', $field_data['value'], '</textarea>';
+		}
+		// Show a Info box.
+		elseif ($field_data['type'] == 'infobox')
+		{
+			echo '
+			';
+		}
+		// Int, Float or text box?
+		else
+			echo '
+								<input type="text" size="50%" name="', $field_name, '" id="', $field_name, '" value="', $field_data['value'], '" />';
+
+		//	Show the 'required' asterix if necessary.
+		if (!empty($field_data['required']))
+			echo '
+								<span ', !empty($field_data['failed']) ? 'style="color:#FF0000;"' : '', '> *</span>';
+
+		//	End the input column and the entire row.
+		echo '
+							</td>
+						</tr>';
+	}
+
+	//    Show the "Required Fields" text down the bottom, show it in red if there was a failed submit.
+	echo '
+               <tr class="windowbg2">
+                  <td colspan="3" style="text-align:center;', !empty($context['failed_form_submit']) ? 'color:#FF0000;' : '', '">
+                     * ', $txt['customform_required'], '
+                  </td>
+               </tr>';
+
+	// Display visual verification on the form      
+	if ($context['visual_verification'])
+	{
+		echo '
+      <tr><td class="windowbg2" colspan="3" align="center" valign="middle"><b>', $txt['verification'], ':</b></td><tr>
+      <tr><td class="windowbg2" colspan="3" align="center" valign="middle">', template_control_verification(
+			$context['visual_verification_id'],
+			'all'
+		), '</td></tr>';
+	}
+
+	//  Here you can add information before the submit button.
+	echo '
+	 <tr>
+	 		 <td colspan="3"  class="windowbg2">
+			 <b><span style="color:red">Example of something before the submit button.</span></b>
+			 </td>
+   </tr>';
+
+
+	//	Output the save button, the end of the tables and the form.	
+	echo '
+						<tr>
+							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
+						</tr>';
+
+	//   Here you can add information below the submit button.
+	echo '
+	<tr>
+			<td colspan="3"  class="windowbg2">
+			<b><span style="color:red">Example of something after the submit button.</span></b>
+			</td>
+	</tr>
+							
+					</table>
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
+}
+
+// End: Custom Forms Template Example
+?>

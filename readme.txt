@@ -53,14 +53,13 @@ http://smf.balancegames.org/mods/forms/tutorial
 
 While it is highly recommended that you update to the most current versions of SMF... 
 [b]CustomFormMod_v1.7_SMF1.1.x:[/b] Supports most versions of SMF 1.1.
-[b]CustomFormMod_v1.8_SMF2.x:[/b] Supports most SMF 2.0 versions after 2.0 RC2.
+[b]CustomFormMod_v1.7_SMF2.x:[/b] Supports most SMF 2.0 versions after 2.0 RC2.
 
 [color=red][size=14pt]Version Changes:[/size][/color]
 [b]V1.8:[/b]
 Updated: Finally does away with file edits and uses integration functions instead
 Bugfix: Textual database fields now default to null
 Bugfix: Solved PHP fatal error (Redefinition of parameter [tt]$nul[/tt])
-Bugfix: End usage of the deprecated function [tt]create_functioncreate_function()[/tt]
 [b]V1.7:[/b]
 Updated: Due to conflicts with mod_security, the url syntax "index.php?action=form;id=#" has been changed to, "index.php?action=form;n=#" Thanks to [url=http://www.simplemachines.org/community/index.php?action=profile;u=17752]Galatea[/url] and [url=http://www.simplemachines.org/community/index.php?action=profile;u=265135]Arantor[/url] for the fix.
 Added: All posts created by a form are now attributed to a users post count. Unfortunately there is no way for a form not to be counted, however this one fix also fixes several other bugs. Thanks to [url=http://www.simplemachines.org/community/index.php?action=profile;u=214356]????????[/url] and [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url].
