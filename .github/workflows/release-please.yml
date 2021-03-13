@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - master
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: 1
+      MOD_NAME: custom-forms
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: php-yoshi
+          package-name: ${{ env.MOD_NAME }}
+      - uses: actions/checkout@v2
+        if: ${{ steps.release.outputs.release_created }}
+      - run: zip -r -j myfile.zip src/
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: ./myfile.zip
+          asset_name: ${{ env.MOD_NAME }}_${{ steps.release.outputs.major }}-${{ steps.release.outputs.minor }}-${{ steps.release.outputs.patch }}.zip
+          asset_content_type: application/zip
+        if: ${{ steps.release.outputs.release_created }}
