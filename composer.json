@@ -6,6 +6,7 @@
     }
   ],
   "require-dev": {
-    "simplemachines/smf2.1": "dev-unittest"
+    "simplemachines/smf2.1": "dev-unittest",
+    "phpunit/phpunit": "^8.5"
   }
 }
