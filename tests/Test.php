@@ -78,7 +78,8 @@ final class Test extends TestCase
 	{
 		return [
 			['gold,silver,bronze,default=silver', '', 'silver'],
-			['gold,silver,bronze,default=', 'silver', 'silver']
+			['gold,silver,bronze,default=', 'silver', 'silver'],
+			['gold,silver,bronze,default=silver', 'titanium', 'silver']
 		];
 	}
 
