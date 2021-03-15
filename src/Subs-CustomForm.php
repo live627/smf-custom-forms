@@ -8,12 +8,14 @@
  * @license   http://opensource.org/licenses/MIT MIT
  */
 
-function customform_actions(&$action_array)
+declare(strict_types=1);
+
+function customform_actions(array &$action_array)
 {
 	$action_array['form'] = array('CustomForm.php', 'CustomForm');
 }
 
-function customform_admin_areas(&$admin_areas)
+function customform_admin_areas(array &$admin_areas)
 {
 	global $txt;
 
@@ -21,7 +23,7 @@ function customform_admin_areas(&$admin_areas)
 	$admin_areas['config']['areas']['modsettings']['subsections']['customform'] = array($txt['customform_tabheader']);
 }
 
-function customform_modify_modifications(&$sub_actions)
+function customform_modify_modifications(array &$sub_actions)
 {
 	$sub_actions['customform'] = 'ModifyCustomFormSettings';
 }
