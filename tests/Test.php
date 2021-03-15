@@ -6,6 +6,49 @@ use PHPUnit\Framework\TestCase;
 
 final class Test extends TestCase
 {
+	/**
+	 * @dataProvider replaceProvider
+	 */
+	public function testReplace(string $test, string $expected): void
+	{
+		$result = customform_replace_vars($test, []);
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * @return string[][]
+	 */
+	public function replaceProvider(): array
+	{
+		return [
+			['abc{{def}}ghi', 'abcdefghi'],
+			['abc{{def }}ghi', 'abcdefghi'],
+			['abc{{def  }}ghi', 'abcdefghi'],
+			['abc{{ def}}ghi', 'abcdefghi'],
+			['abc{{  def}}ghi', 'abcdefghi'],
+			['abc{{ def }}ghi', 'abcdefghi'],
+			['abc{{  def  }}ghi', 'abcdefghi'],
+			['abc{def}ghi', 'abcdefghi'],
+			['abc{def }ghi', 'abcdefghi'],
+			['abc{def  }ghi', 'abcdefghi'],
+			['abc{ def}ghi', 'abcdefghi'],
+			['abc{  def}ghi', 'abcdefghi'],
+			['abc{ def }ghi', 'abcdefghi'],
+			['abc{  def  }ghi', 'abcdefghi']
+		];
+	}
+
+	public function testReplaceVar(): void
+	{
+		$this->assertSame(
+			'Hello world',
+			customform_replace_vars(
+				'Hello {{ term }}',
+				['term' => 'world']
+			)
+		);
+	}
+
 	public function testFindClasses(): void
 	{
 		$classes = iterator_to_array(customform_list_classes());

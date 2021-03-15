@@ -34,3 +34,13 @@ function customform_list_classes()
 		if (is_subclass_of($class, 'CustomFormBase'))
 			yield trim(strpbrk($class, '_'), '_');
 }
+
+function customform_replace_vars(string $text, array $array): string
+{
+	return preg_replace_callback('~{{1,2}\s*?([a-zA-Z0-9\-_\.]+)\s*?}{1,2}~',
+		function($matches) use ($array)
+		{
+			return $array[$matches[1]] ?? $matches[1];
+		},
+		$text);
+}
