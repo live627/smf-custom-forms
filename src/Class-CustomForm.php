@@ -170,7 +170,7 @@ class CustomForm_select extends CustomFormBase
 	}
 	public function validate(): bool
 	{
-		$found = isset(array_flip($this->type_vars)[$this->value]);
+		$found = isset(array_flip($this->type_vars)[$this->value]) || !empty($this->default);
 
 		if (!$found && $this->required)
 			$this->err = array('pf_invalid_value', $this->field['name']);
