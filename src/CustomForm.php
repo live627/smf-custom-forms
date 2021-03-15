@@ -114,10 +114,9 @@ function CustomForm()
 
 					$type = new $class_name($field, $value, !empty($value));
 					$type->setOptions();
-					$type->validate();
-					if (false !== ($err = $type->getError()))
+					if (!$type->validate())
 					{
-						$post_errors[] = $err;
+						$post_errors[] = $type->getError();
 						//	Do the 'fail form/field' stuff.
 						$data[$i]['failed'] = true;
 						$fail_submit = true;

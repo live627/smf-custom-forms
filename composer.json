@@ -8,5 +8,8 @@
   "require-dev": {
     "simplemachines/smf2.1": "dev-unittest",
     "phpunit/phpunit": "^8.5"
+  },
+  "require": {
+    "php": ">=7.4"
   }
 }
