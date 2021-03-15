@@ -401,3 +401,4 @@ function listCustomForm()
 
 	$context['sub_template'] = 'show_list';
 	$context['default_list'] = 'menu_list';
+}

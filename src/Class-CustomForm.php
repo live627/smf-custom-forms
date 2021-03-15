@@ -8,8 +8,8 @@ interface CustomForm
 	 * @param array $field The field as returned by {@link total_getCustomForm()}.
 	 * @param string $value Field value.
 	 * @param bool $exists Whether the value exists/is not empty.
+	 *
 	 * @access public
-	 * @return void
 	 */
 	public function __construct($field, $value, $exists);
 
@@ -18,7 +18,6 @@ interface CustomForm
 	 * Sets the output.
 	 *
 	 * @access public
-	 * @return void
 	 */
 	public function setHtml();
 	public function validate();
@@ -29,7 +28,6 @@ abstract class CustomFormBase implements CustomForm
 	public $input_html;
 	public $output_html;
 	protected $field;
-	protected $value;
 	protected $err = false;
 	protected $exists = false;
 	protected $type_vars = array();
