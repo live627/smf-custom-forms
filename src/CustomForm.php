@@ -124,20 +124,7 @@ function CustomForm()
 					}
 
 					//	Add this fields value to the list of variables for the output post.
-					$vars[] = '/\{' . $field['title'] . '\}/';
-					$replace[] = str_replace('$', '\$', $value);
-
-					//    {{ }} Syntax: Setup REGEX for removing entire {{ }} string or just stripping the outermost { }, depending upon the replacement value being blank or not
-					if ($value == '')
-					{
-						$vars_blank[] = '/\{[^\{\}]*\{' . $field['title'] . '\}[^\{\}]*\}/';
-						$vars_non_blank[] = '//';
-					}
-					else
-					{
-						$vars_blank[] = '//';
-						$vars_non_blank[] = '/\{[^\{\}]*\{' . $field['title'] . '\}[^\{\}]*\}/';
-					}
+					$vars[$field['title']] = $value;
 				}
 
 				// Check whether the visual verification code was entered correctly.
@@ -163,39 +150,11 @@ function CustomForm()
 				if (!$fail_submit)
 				{
 					require_once($sourcedir . '/Subs-Post.php');
-
-					//    {{ }} Syntax: Strip out everything in {{ }} if value is blank
-					$output = preg_replace($vars_blank, '', $output);
-					$subject = preg_replace($vars_blank, '', $subject);
-
-					//    {{ }} Syntax: Remove outside brackets if value is not blank
-					$output = preg_replace_callback(
-						$vars_non_blank,
-						function ($matches)
-						{
-							return substr($matches[0],1,-1);
-						},
-						$output
-					);
-					$subject = preg_replace_callback(
-						$vars_non_blank,
-						function ($matches)
-						{
-							return substr($matches[0],1,-1);
-						},
-						$subject
-					);
-
-					//	Replace all vars with their correct value, for both the message and the subject.
-					$output = preg_replace($vars, $replace, $output);
-					$subject = preg_replace($vars, $replace, $subject);
-
-					// Collect all necessary parameters for the creation of the post.
 					$msgOptions = array(
 						'id' => 0,
-						'subject' => $subject,
+						'subject' => customform_replace_vars($subject, $vars),
 						'icon' => $icon,
-						'body' => $output,
+						'body' => customform_replace_vars($output, $vars),
 						'smileys_enabled' => true,
 					);
 
