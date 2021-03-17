@@ -16,6 +16,32 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: simple
           package-name: ${{ env.MOD_NAME }}
+      - uses: actions/github-script@v3
+        id: vars
+        with:
+          script: |
+            const response = await github.pulls.get({
+              pull_number: ${{ steps.release.outputs.pr }},
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            core.info("\u001B[32m✔\u001B[39mBranch: \u001B[1;32m" + response.data.head.ref);
+            core.setOutput("branch", response.data.head.ref);
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.vars.outputs.branch }}
+        if: ${{ steps.release.outputs.pr }}
+      - if: ${{ steps.release.outputs.pr }}
+        run: |
+          version=$(cat ./version.txt)
+          for f in src/*.php; do
+            sed -i "/@version/c \ * @version   $version" "$f"
+          done
+          sed -i "/<version>/c \	<version>$version</version>" src/package-info.xml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -am "build: Update versions in mod files"
+          git push
       - uses: actions/checkout@v2
         if: ${{ steps.release.outputs.release_created }}
       - run: zip -r -j myfile.zip src/
