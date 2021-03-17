@@ -99,6 +99,7 @@ function CustomForm()
 			//	Do we need to submit this form?
 			if (isset($_GET['submit']))
 			{
+				checkSession();
 				$vars = array();
 				$replace = array();
 				$i = -1;
