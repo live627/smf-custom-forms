@@ -469,6 +469,7 @@ function ModifyCustomFormSettings($return_config = false)
 			redirectexit("action=admin;area=modsettings;sa=customform;form_id=" . $data['id_form'] . ";");
 		}
 
+		require_once($sourcedir . '/Class-CustomForm.php');
 		$result = [];
 		foreach (customform_list_classes() as $cn)
 			$result[$cn] = $txt['customform_type_' . $cn];
