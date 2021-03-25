@@ -27,17 +27,18 @@ jobs:
             });
             core.info("\u001B[32m✔\u001B[39mBranch: \u001B[1;32m" + response.data.head.ref);
             core.setOutput("branch", response.data.head.ref);
+        if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
       - uses: actions/checkout@v2
         with:
           ref: ${{ steps.vars.outputs.branch }}
-        if: ${{ steps.release.outputs.pr }}
-      - if: ${{ steps.release.outputs.pr }}
+        if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
+      - if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
         run: |
           version=$(cat ./version.txt)
           for f in src/*.php; do
             sed -i "/@version/c \ * @version   $version" "$f"
           done
-          sed -i "/<version>/c \	<version>$version</version>" src/package-info.xml
+          sed -i "/<version>/c \    <version>$version</version>" src/package-info.xml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git commit -am "build: Update versions in mod files"
