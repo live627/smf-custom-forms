@@ -93,62 +93,48 @@ function CustomForm()
 			if (empty($data))
 				redirectExit("action=form;");
 
-			$fail_submit = false;
 			require_once($sourcedir . '/Class-CustomForm.php');
 
 			//	Do we need to submit this form?
 			if (isset($_GET['submit']))
 			{
-				checkSession();
 				$vars = array();
 				$replace = array();
-				$i = -1;
-
-				//	Check for valid post data from the forms fields.
-				foreach ($data as $field)
-				{
-					$i++;
-					$value = isset($_POST['CustomFormField'][$field['id_field']]) ? $_POST['CustomFormField'][$field['id_field']] : '';
-					$class_name = 'CustomForm_' . $field['type'];
-					if (!class_exists($class_name))
-						fatal_error('Param "' . $field['type'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
-
-					$type = new $class_name($field, $value, !empty($value));
-					$type->setOptions();
-					if (!$type->validate())
-					{
-						$post_errors[] = $type->getError();
-						//	Do the 'fail form/field' stuff.
-						$data[$i]['failed'] = true;
-						$fail_submit = true;
-						continue;
-					}
-
-					//	Add this fields value to the list of variables for the output post.
-					$vars[$field['title']] = $value;
-				}
-
-				// Check whether the visual verification code was entered correctly.
-				$context['require_verification'] =
-					$user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
+				$post_errors = array();
+				if ('' != ($sc_error = checkSession('post', '', false)))
+					$post_errors[] = array(['error_' . $sc_error, '']);
 				if ($context['require_verification'])
 				{
 					require_once($sourcedir . '/Subs-Editor.php');
 					$verificationOptions = array(
-						'id' => 'register',
+						'id' => 'customform',
 					);
-					$context['visual_verification'] = create_control_verification($verificationOptions, true);
+					if (true !== ($verification_errors = create_control_verification($verificationOptions, true)))
+						foreach ($verification_errors as $verification_error)
+							$post_errors[] = ['error_' . $verification_error, ''];
+				}
 
-					if (is_array($context['visual_verification']))
+				//	Check for valid post data from the forms fields.
+				foreach ($data as $field)
+				{
+					$class_name = 'CustomForm_' . $field['type2'];
+					if (!class_exists($class_name))
+						fatal_error('Param "' . $field['type2'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
+
+					$type = new $class_name($field, $_POST['CustomFormField'][$field['id_field']] ?? '');
+					$type->setOptions();
+					if (!$type->validate())
 					{
-						loadLanguage('Errors');
-						foreach ($context['visual_verification'] as $error)
-							fatal_error($txt['error_' . $error], false);
+						$post_errors['id_field_' . $field['id_field']] = $type->getError();
+						continue;
 					}
+
+					//	Add this fields value to the list of variables for the output post.
+					$vars[$field['title']] = $type->getValue();
 				}
 
 				//	Do we have completly valid field data?
-				if (!$fail_submit)
+				if ($post_errors === [])
 				{
 					require_once($sourcedir . '/Subs-Post.php');
 					$msgOptions = array(
@@ -184,6 +170,7 @@ function CustomForm()
 					else
 						redirectexit("$exit");
 				}
+				$context['post_errors'] = $post_errors;
 			}
 
 			//	Otherwise we shall show the submit form page.
@@ -228,7 +215,7 @@ function CustomForm()
 					'type' => $field['type'],
 					'html' => $type->getInputHtml(),
 					'required' => $required,
-					'failed' => isset($field['failed']),
+					'failed' => isset($post_errors['id_field_' . $field['id_field']]),
 				);
 			}
 
@@ -237,12 +224,12 @@ function CustomForm()
 				redirectExit("action=form;");
 
 			//	Load the language files.
-			loadLanguage('CustomForm+Post');
+			loadLanguage('CustomForm+Post+Errors');
 
 			//	Setup and load the necessary template related stuff.
 			$context['settings_title'] =
 				'<a href="' . $scripturl . '?action=form;">' . ((isset($modSettings['customform_view_title']) && ($modSettings['customform_view_title'] != '')) ? $modSettings['customform_view_title'] : $txt['customform_tabheader']) . '</a> : ' . $form_title;
-			$context['failed_form_submit'] = $fail_submit;
+			$context['failed_form_submit'] = empty($post_errors);
 			$context['template_function'] = $form_data['template_function'];
 			$context['post_url'] = $scripturl . '?action=form;n=' . $form_id . ';submit;';
 			$context['sub_template'] = 'submit_form';

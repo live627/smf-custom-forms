@@ -173,7 +173,7 @@ class CustomForm_select extends CustomFormBase
 		$found = isset(array_flip($this->type_vars)[$this->value]) || !empty($this->default);
 
 		if (!$found && $this->required)
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('customform_invalid_value', $this->field['text']);
 
 		return $found;
 	}
@@ -233,8 +233,8 @@ class CustomForm_text extends CustomFormBase
 	}
 	public function validate(): bool
 	{
-		if ($this->exists && $this->required)
-			$this->err = array('pf_invalid_value', $this->field['name']);
+		if (!$this->exists && $this->required)
+			$this->err = array('customform_invalid_value', $this->field['text']);
 
 		//~ $class_name = 'CustomFormFieldMask_' . $this->field['mask'];
 		//~ if (!class_exists($class_name))
@@ -244,6 +244,8 @@ class CustomForm_text extends CustomFormBase
 		//~ $mask->validate(): bool;
 		//~ if (false !== ($err = $mask->getError()))
 			//~ $this->err = $err;
+
+		return empty($this->err);
 	}
 }
 
@@ -286,7 +288,7 @@ class CustomFormFieldMask_email extends CustomFormFieldMaskBase
 	public function validate(): bool
 	{
 		if (!preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $this->value))
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('customform_invalid_value', $this->field['text']);
 	}
 }
 
@@ -298,7 +300,7 @@ class CustomFormFieldMask_regex extends CustomFormFieldMaskBase
 			if (!empty($this->field['err']))
 				$this->err = $this->field['err'];
 			else
-				$this->err = array('pf_invalid_value', $this->field['name']);
+				$this->err = array('customform_invalid_value', $this->field['text']);
 	}
 }
 
@@ -307,7 +309,7 @@ class CustomFormFieldMask_number extends CustomFormFieldMaskBase
 	public function validate(): bool
 	{
 		if (!preg_match('/^\s*([0-9]+)\s*$/', $this->value))
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('customform_invalid_value', $this->field['text']);
 	}
 }
 
@@ -316,7 +318,7 @@ class CustomFormFieldMask_float extends CustomFormFieldMaskBase
 	public function validate(): bool
 	{
 		if (!preg_match('/^\s*([0-9]+(\.[0-9]+)?)\s*$/', $this->value))
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('customform_invalid_value', $this->field['text']);
 	}
 }
 
@@ -325,7 +327,7 @@ class CustomFormFieldMask_nohtml extends CustomFormFieldMaskBase
 	public function validate(): bool
 	{
 		if (strip_tags($this->value) != $this->value)
-			$this->err = array('pf_invalid_value', $this->field['name']);
+			$this->err = array('customform_invalid_value', $this->field['text']);
 	}
 }
 

@@ -21,7 +21,24 @@ function form_template_submit_form()
 						<tr class="titlebg">
 							<td colspan="3">', $context['settings_title'], '</td>
 						</tr>';
+	if (!empty($context['post_errors']))
+	{
+		echo '
+						<tr class="windowbg2">
+							<td colspan="3">
+					<div class="errorbox">
+						<strong>', $txt['customform_error_title'], '</strong>
+						<ul class="error">';
 
+		foreach ($context['post_errors'] as $error)
+			if (!empty($error))
+				echo '
+							<li>', sprintf($txt[$error[0]], $error[1]), '</li>';
+
+		echo '
+						</ul></td>
+						</tr>';
+	}
 	//	Here you can add rows to the beginning of the table, if you want to...
 	/* 	Like this:
 	echo '

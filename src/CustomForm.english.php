@@ -81,6 +81,10 @@ $txt['customform_mask_regex'] = 'Regular Expression (Experts only!)';
 $txt['customform_regex'] = 'Regex';
 $txt['customform_regex_desc'] = 'Validate your own way.';
 
+// Validation errors
+$txt['customform_error_title'] = 'Oops, there were errors!';
+$txt['customform_invalid_value'] = 'The value you chose for %1$s is invalid.';
+
 //	Help text for the general settings page.
 $helptxt['customform_view_perms'] =
 	'This setting allows you to restrict the member groups that can see the list of the forms which they can access (At &quot;index.php?action=form&quot;). Note that even if they can see they list, they cannot see or use any forms which they do not have the permissions for.';
