@@ -15,14 +15,10 @@ function CustomForm()
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 		$verificationOptions = array(
-			'id' => 'register',
+			'id' => 'customform',
 		);
 		$context['visual_verification'] = create_control_verification($verificationOptions);
-		$context['visual_verification_id'] = $verificationOptions['id'];
 	}
-	// Otherwise we have nothing to show.
-	else
-		$context['visual_verification'] = false;
 
 	//	Are we looking for the thank you page.
 	if (isset($_REQUEST['thankyou']))
@@ -198,35 +194,13 @@ function CustomForm()
 
 				$type = new $class_name($field, $value, !empty($value));
 				$type->setOptions();
-
-				$size = false;
-				$type_vars = ($field['type_vars'] != '') ? explode(',', $field['type_vars']) : array();
-				$vars = array();
-				$required = false;
-
-				//	Go through all of the type_vars to format them correctly.
-				if (!empty($type_vars))
-					foreach ($type_vars as $var)
-					{
-						//	Remove whitespace from vars, to avoid unwanted issues.
-						$var = trim($var);
-						//	Add them to the vars list, in the correct format for the template.
-						if ($var != '')
-							$vars[] = $var;
-						//	Check to see if this field is required.
-						if ($var == 'required')
-							$required = true;
-					}
-
-				//	Make sure that we have valid options, if this is a selectbox.
-				if (($field['type'] == 'selectbox' || $field['type'] == 'radiobox') && empty($vars))
-					continue;
+				$type->setHtml();
 
 				$context['fields'][$field['title']] = array(
 					'text' => $field['text'],
 					'type' => $field['type'],
 					'html' => $type->getInputHtml(),
-					'required' => $required,
+					'required' => $type->isRequired(),
 					'failed' => isset($post_errors['id_field_' . $field['id_field']]),
 				);
 			}

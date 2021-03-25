@@ -107,12 +107,12 @@ function form_template_submit_form()
 	*/
 
 	// Display visual verification on the form      
-	if ($context['visual_verification'])
+	if ($context['require_verification'])
 	{
 		echo '
 	  <tr><td class="windowbg2" colspan="3" align="center" valign="middle"><b>', $txt['verification'], ':</b></td><tr>
 	  <tr><td class="windowbg2" colspan="3" align="center" valign="middle">', template_control_verification(
-			$context['visual_verification_id'],
+			'customform',
 			'all'
 		), '</td></tr>';
 	}

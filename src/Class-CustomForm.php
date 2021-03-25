@@ -38,6 +38,7 @@ interface CustomForm
 	 */
 	public function getValue(): string;
 	public function validate(): bool;
+	public function isRequired(): bool;
 }
 
 abstract class CustomFormBase implements CustomForm
@@ -58,6 +59,11 @@ abstract class CustomFormBase implements CustomForm
 		$this->field = $field;
 		$this->value = $value;
 		$this->exists = !empty($value);
+	}
+
+	public function isRequired(): bool
+	{
+		return $this->required;
 	}
 
 	/*
