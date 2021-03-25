@@ -6,6 +6,14 @@
     <type>modification</type>
     <version>1.8</version>
     <install for="2.0 - 2.99.99">
+        <code type="inline"><![CDATA[<?php
+            define('REQUIRED_PHP_VERSION', '7.4.0');
+            if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
+                fatal_error(
+                    'This mod requires a minimum of PHP %s in order to function. (You are currently running PHP %s)',
+                    false,
+                    array(REQUIRED_PHP_VERSION, PHP_VERSION));
+        ?>]]></code>
         <redirect url="?action=admin;area=modsettings;sa=customform">redirect.txt</redirect>
         <readme parsebbc="true">readme.txt</readme>
         <database>install.php</database>
