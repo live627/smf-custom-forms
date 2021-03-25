@@ -84,7 +84,19 @@ function CustomForm()
 			$data = array();
 			//	Get all of data from the db query.
 			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				$row['type2'] = strtr($row['type'], [
+					'largetextbox' =>'textarea',
+					'textbox' =>'text',
+					'checkbox' =>'check',
+					'selectbox' =>'select',
+					'float' =>'text',
+					'int' =>'text',
+					'radiobox' =>'radio',
+					'infobox' =>'info'
+				]);
 				$data[] = $row;
+			}
 
 			//	Free the db request.
 			$smcFunc['db_free_result']($request);
@@ -180,9 +192,9 @@ function CustomForm()
 			foreach ($data as $field)
 			{
 				$value = isset($_POST['CustomFormField'][$field['id_field']]) ? $_POST['CustomFormField'][$field['id_field']] : '';
-				$class_name = 'CustomForm_' . $field['type'];
+				$class_name = 'CustomForm_' . $field['type2'];
 				if (!class_exists($class_name))
-					fatal_error('Param "' . $field['type'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
+					fatal_error('Param "' . $field['type2'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
 
 				$type = new $class_name($field, $value, !empty($value));
 				$type->setOptions();

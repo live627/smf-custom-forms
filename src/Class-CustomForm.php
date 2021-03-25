@@ -118,14 +118,31 @@ abstract class CustomFormBase implements CustomForm
 	}
 }
 
+class CustomForm_info extends CustomFormBase
+{
+	public function setHtml()
+	{
+		$this->input_html = $this->getValue();
+		$this->output_html = '';
+	}
+	public function validate(): bool
+	{
+		return true;
+	}
+	public function getValue(): string
+	{
+		return $this->value;
+	}
+}
+
 class CustomForm_check extends CustomFormBase
 {
 	public function setHtml()
 	{
 		global $txt;
 		$true = (!$this->exists && $this->default) || $this->value;
-		$this->input_html .= sprintf(
-			'<input type="checkbox" name="%s[$s]"%s>',
+		$this->input_html = sprintf(
+			'<input type="checkbox" text="%s[$s]"%s>',
 			'CustomFormField',
 			$this->field['id_field'],
 			$true ? ' checked' : ''

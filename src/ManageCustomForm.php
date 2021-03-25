@@ -493,7 +493,16 @@ function ModifyCustomFormSettings($return_config = false)
 			array(
 				'select',
 				'field_type',
-				'value' => $data['type'],
+				'value' => strtr($data['type'], [
+					'largetextbox' =>'textarea',
+					'textbox' =>'text',
+					'checkbox' =>'check',
+					'selectbox' =>'select',
+					'float' =>'text',
+					'int' =>'text',
+					'radiobox' =>'radio',
+					'infobox' =>'info'
+				]),
 				'text_label' => $txt['customform_type'],
 				'help' => 'customform_type',
 				$result
@@ -708,7 +717,7 @@ function list_CustomForms()
 //	Fucntion to produce a list of custom form fields.
 function list_customform_fields($nul0, $nul1, $nul2, $id)
 {
-	global $txt, $scripturl, $smcFunc;
+	global $txt, $scripturl, $sourcedir, $smcFunc;
 
 	//	Get the data from the cf_fields table.
 	$request = $smcFunc['db_query'](
@@ -732,32 +741,26 @@ function list_customform_fields($nul0, $nul1, $nul2, $id)
 	$i = 1;
 	$end = count($data);
 
-	//	Go through every field.
+	require_once($sourcedir . '/Class-CustomForm.php');
+	$result = [];
+	foreach (customform_list_classes() as $cn)
+		$result[$cn] = $txt['customform_type_' . $cn];
+	$result += [
+		'largetextbox' =>$result['textarea'],
+		'textbox' =>$result['text'],
+		'checkbox' =>$result['check'],
+		'selectbox' =>$result['select'],
+		'float' =>$result['text'],
+		'int' =>$result['text'],
+		'radiobox' =>$result['radio'],
+		'infobox' =>$result['info']
+	];
 	foreach ($data as $field)
 	{
-		//	Convert the field type into the proper text strings.
-		$type = str_replace(
-		//	Search array.
-			array('largetextbox', 'textbox', 'checkbox', 'selectbox', 'float', 'int', 'radiobox', 'infobox'),
-			//	Replace array.
-			array(
-				$txt['customform_large_textbox'],
-				$txt['customform_textbox'],
-				$txt['customform_checkbox'],
-				$txt['customform_selectionbox'],
-				$txt['customform_float'],
-				$txt['customform_int'],
-				$txt['customform_radiobox'],
-				$txt['customform_infoboxa'],
-			),
-			$field['type']
-		);
-
-		//	Add the current entry into the list.
 		$list[] = array(
 			'title' => $field['title'],
 			'text' => $field['text'],
-			'type' => $type,
+			'type' => $result[$field['type']]??$field['type'],
 			'modify' => '
 			<table width="100%">
 				<tr>

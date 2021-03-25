@@ -59,6 +59,7 @@ $txt['customform_type_textarea'] = 'Large Text';
 $txt['customform_type_select'] = 'Select Box';
 $txt['customform_type_radio'] = 'Radio Buttons';
 $txt['customform_type_check'] = 'Checkbox';
+$txt['customform_type_info'] = 'Information';
 $txt['customform_max_length'] = 'Maximum Length';
 $txt['customform_max_length_desc'] = '(0 for no limit)';
 $txt['customform_dimension'] = 'Dimensions';
