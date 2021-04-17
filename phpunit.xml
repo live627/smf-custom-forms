@@ -16,9 +16,9 @@
         <log type="coverage-text" target="php://stdout" />
     </logging>
 
-    <filter>
+    <coverage>
         <whitelist>
             <directory suffix=".php">./src/</directory>
         </whitelist>
-    </filter>
+    </coverage>
 </phpunit>

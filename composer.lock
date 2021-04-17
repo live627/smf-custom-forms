@@ -1917,12 +1917,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/live627/SMF2.1.git",
-                "reference": "7c9a29eef594fb2118d2cf1cfbb76cd4fc57447b"
+                "reference": "1fdf397dbabc1088b95f03a309a2e4a2939d0465"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/live627/SMF2.1/zipball/7c9a29eef594fb2118d2cf1cfbb76cd4fc57447b",
-                "reference": "7c9a29eef594fb2118d2cf1cfbb76cd4fc57447b",
+                "url": "https://api.github.com/repos/live627/SMF2.1/zipball/1fdf397dbabc1088b95f03a309a2e4a2939d0465",
+                "reference": "1fdf397dbabc1088b95f03a309a2e4a2939d0465",
                 "shasum": ""
             },
             "require-dev": {
@@ -1938,7 +1938,7 @@
             "support": {
                 "source": "https://github.com/live627/SMF2.1/tree/unittest"
             },
-            "time": "2021-03-24T05:30:45+00:00"
+            "time": "2021-04-02T23:06:20+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
