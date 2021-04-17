@@ -1,19 +1,18 @@
 # Custom Form
 [![MIT license](http://img.shields.io/badge/license-MIT-009999.svg)](http://opensource.org/licenses/MIT)
-[![GitHub issues](https://img.shields.io/github/issues/live627/smf-ultimate-menu.svg)](https://github.com/live627/smf-ultimate-menu/issues)
-[![Latest Version](https://img.shields.io/github/release/live627/smf-ultimate-menu.svg)](https://github.com/live627/smf-ultimate-menu/releases) [![Support](http://img.shields.io/badge/PayPal-$-009966.svg)](https://www.paypal.me/JohnRayes)
+[![GitHub issues](https://img.shields.io/github/issues/live627/smf-custom-forms.svg)](https://github.com/live627/smf-ultimate-menu/issues)
+[![Latest Version](https://img.shields.io/github/release/live627/smf-custom-forms.svg)](https://github.com/live627/smf-ultimate-menu/releases) [![Support](http://img.shields.io/badge/PayPal-$-009966.svg)](https://www.paypal.me/JohnRayes)
 
-Add custom buttons to the main menu within SMF
-## Introduction:
-This is a tool for configuring the main menu within SMF, allowing custom buttons to be added at will, complete with children and grandchildren menus (so, a main menu item, a dropdown and a follow-on dropdown)
 
-## Known issues:
--  Grandchild butons cannot be added using 'before'  or 'after'; not sure how to fix this
+This Mod allows you to create custom forms for your forum which your users can access at "index.php?action=form", these forms are essentially a structured way of allowing your users to submit posts to certain boards, meaning that you can get them to enter certain information into a form and then you can chose how you want that information to be presented within the final outputted post.
 
-### Future plans:
--  Complete rewrite using objects
--  Follow PSR-2 and PSR-4
--  Use generators (PHP 5.5+)
--  Use closures (PHP 5.3+)
--  Use late statiic bindigs (PHP 5.3+)
--  any suggestion that would come up in the topic
+You can access a list of your forms and the links to the actual forms themselves by going to "index.php?action=form".
+
+Possible uses for this Mod could include, Support Forms, Staff Application Forms, Error Reporting Forms and etc.
+
+**Settings are found in the Admin panel:** "Configuration"-> "Modifications" -> "Custom Form"  or `index.php?action=admin;area=modsettings;sa=customform`
+
+## Requirements:
+
+- SMF 2.0 or greater
+- PHP 7.4 or greater
