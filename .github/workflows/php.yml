@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      XDEBUG_MODE: coverage
     steps:
     - uses: actions/checkout@v2
     - name: Cache Composer packages
@@ -16,9 +18,8 @@ jobs:
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
-
     - name: Install dependencies
-      run: composer install --no-progress
-
+      if: steps.composer-cache.outputs.cache-hit != 'true'
+      run: composer install --prefer-dist --no-progress
     - name: Run test suite
-      run: php vendor/bin/phpunit
+      run: php vendor/bin/phpunit --colors
