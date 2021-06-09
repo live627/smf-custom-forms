@@ -1,38 +1,42 @@
 <?xml version="1.0"?>
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info">
-    <name>Custom Form Mod</name>
-    <id>LHVWB:CustomFormMod</id>
-    <type>modification</type>
+	<name>Custom Form Mod</name>
+	<id>LHVWB:CustomFormMod</id>
+	<type>modification</type>
 	<version>2.0.0</version>
-    <install for="2.0 - 2.99.99">
-        <code type="inline"><![CDATA[<?php
-            define('REQUIRED_PHP_VERSION', '7.4.0');
-            if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
-                fatal_error(
-                    'This mod requires a minimum of PHP %s in order to function. (You are currently running PHP %s)',
-                    false,
-                    array(REQUIRED_PHP_VERSION, PHP_VERSION));
-        ?>]]></code>
-        <redirect url="?action=admin;area=modsettings;sa=customform">redirect.txt</redirect>
-        <readme parsebbc="true">readme.txt</readme>
-        <database>install.php</database>
-        <require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
-        <require-file name="ManageCustomForm.php" destination="$sourcedir"/>
-        <require-file name="CustomForm.english.php" destination="$languagedir"/>
-        <require-file name="Class-CustomForm.php" destination="$sourcedir"/>
-        <require-file name="CustomForm.php" destination="$sourcedir"/>
-        <require-file name="CustomForm.template.php" destination="$themedir"/>
-    </install>
-    <uninstall for="2.0 - 2.99.99">
-        <readme type="file" parsebbc="true">uninstall.txt</readme>
-        <database>uninstall-optional.php</database>
-        <code>uninstall-required.php</code>
-        <remove-file name="$sourcedir/Subs-CustomForm.php"/>
-        <remove-file name="$sourcedir/ManageCustomForm.php"/>
-        <remove-file name="$languagedir/CustomForm.english.php"/>
-        <remove-file name="$sourcedir/Class-CustomForm.php"/>
-        <remove-file name="$sourcedir/CustomForm.php"/>
-        <remove-file name="$themedir/CustomForm.template.php"/>
-    </uninstall>
+	<install for="2.0 - 2.0.99">
+		<code type="inline"><![CDATA[<?php
+			define('REQUIRED_PHP_VERSION', '7.4.0');
+			if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
+				fatal_error(
+					sprintf(
+						'This mod requires a minimum of PHP %s in order to function. (You are currently running PHP %s)',
+						REQUIRED_PHP_VERSION,
+						PHP_VERSION
+					),
+					false
+				);
+		?>]]></code>
+		<redirect url="?action=admin;area=modsettings;sa=customform"/>
+		<readme parsebbc="true">readme.txt</readme>
+		<database>install.php</database>
+		<require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
+		<require-file name="ManageCustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.english.php" destination="$languagedir"/>
+		<require-file name="Class-CustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.template.php" destination="$themedir"/>
+	</install>
+	<uninstall for="2.0 - 2.0.99">
+		<readme type="file" parsebbc="true">uninstall.txt</readme>
+		<database>uninstall-optional.php</database>
+		<code>uninstall-required.php</code>
+		<remove-file name="$sourcedir/Subs-CustomForm.php"/>
+		<remove-file name="$sourcedir/ManageCustomForm.php"/>
+		<remove-file name="$languagedir/CustomForm.english.php"/>
+		<remove-file name="$sourcedir/Class-CustomForm.php"/>
+		<remove-file name="$sourcedir/CustomForm.php"/>
+		<remove-file name="$themedir/CustomForm.template.php"/>
+	</uninstall>
 </package-info>
