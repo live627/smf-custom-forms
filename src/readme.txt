@@ -1,4 +1,4 @@
-[center][b][color=blue][size=14pt]Custom Form Mod Version 2.0.0[/size][/color][/b][/center] 
+[center][b][color=blue][size=14pt]Custom Form Mod Version 2.0.1[/size][/color][/b][/center] 
 [center]By [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=150164]Nathaniel[/url][/b] and [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=60251]Garou[/url][/b][/center]
 [hr]
 [center][url=http://www.simplemachines.org/community/index.php?topic=248871.0]Support topic[/url] | [url=http://custom.simplemachines.org/mods/index.php?mod=1279]Link to Mod[/url][/center]
