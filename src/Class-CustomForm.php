@@ -148,7 +148,7 @@ class CustomForm_check extends CustomFormBase
 		global $txt;
 		$true = (!$this->exists && $this->default) || $this->value;
 		$this->input_html = sprintf(
-			'<input type="checkbox" text="%s[$s]"%s>',
+			'<input type="checkbox" text="%s[%d]"%s>',
 			'CustomFormField',
 			$this->field['id_field'],
 			$true ? ' checked' : ''
@@ -172,7 +172,7 @@ class CustomForm_select extends CustomFormBase
 	public function setHtml()
 	{
 		$this->input_html = sprintf(
-			'<select name="%s[$s]" style="width: 90%;">',
+			'<select name="%s[%d]" style="width: 90%%;">',
 			'CustomFormField',
 			$this->field['id_field']
 		);
@@ -216,7 +216,7 @@ class CustomForm_radio extends CustomForm_select
 		foreach ($this->type_vars as $v)
 		{
 			$this->input_html .= sprintf(
-				'<label><input type="radio" name="%s[$s]"%s> %s</label><br>',
+				'<label><input type="radio" name="%s[%d]"%s> %s</label><br>',
 				'CustomFormField',
 				$this->field['id_field'],
 				(!$this->exists && $this->default == $v) || $this->value == $v
@@ -237,7 +237,7 @@ class CustomForm_text extends CustomFormBase
 	{
 		$this->output_html = $this->value;
 		$this->input_html = sprintf(
-			'<input type="text" name="%s[$s]" style="width: 90%;" value="%s">',
+			'<input type="text" name="%s[%d]" style="width: 90%%;" value="%s">',
 			'CustomFormField',
 			$this->field['id_field'],
 			$this->value
@@ -278,7 +278,7 @@ class CustomForm_textarea extends CustomForm_text
 	{
 		$this->output_html = $this->value;
 		@list ($rows, $cols) = @explode(',', $this->default);
-		$this->input_html = '<textarea name="%s[$s]" ' . (!empty($rows) ? 'rows="' . $rows . '"' : '') . ' ' . (!empty($cols) ? 'cols="' . $cols . '"' : '') . '>' . $this->value . '</textarea>';
+		$this->input_html = '<textarea name="%s[%d]" ' . (!empty($rows) ? 'rows="' . $rows . '"' : '') . ' ' . (!empty($cols) ? 'cols="' . $cols . '"' : '') . '>' . $this->value . '</textarea>';
 	}
 }
 
