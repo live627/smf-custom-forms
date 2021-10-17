@@ -19,7 +19,7 @@
 				);
 		?>]]></code>
 		<redirect url="?action=admin;area=modsettings;sa=customform"/>
-		<readme parsebbc="true">readme.txt</readme>
+		<readme parsebbc="true">install.txt</readme>
 		<database>install.php</database>
 		<require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
 		<require-file name="ManageCustomForm.php" destination="$sourcedir"/>
