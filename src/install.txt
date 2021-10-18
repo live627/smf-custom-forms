@@ -1,5 +1,5 @@
 [center][b][color=blue][size=14pt]Custom Form Mod Version 2.0.1[/size][/color][/b][/center] 
-[center]By [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=150164]Nathaniel[/url][/b] and [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=60251]Garou[/url][/b][/center]
+[center]By [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=150164]Nathaniel[/url][/b], [b][url=http://custom.simplemachines.org/mods/index.php?action=profile;u=60251]Garou[/url][/b], and [b][url=https://custom.simplemachines.org/index.php?action=profile;u=154736]Garou[/url][/b][/center]
 [hr]
 [center][url=http://www.simplemachines.org/community/index.php?topic=248871.0]Support topic[/url] | [url=http://custom.simplemachines.org/mods/index.php?mod=1279]Link to Mod[/url][/center]
 [hr]
@@ -46,6 +46,3 @@ Further explanation of a settings functionality can be found by clicking on the 
 
 Linked below is a step by step tutorial on how to make the 'New Topic' Button re-direct to the form you wish the user to use for posting in that forum.
 http://www.simplemachines.org/community/index.php?topic=248871.msg3726297#msg3726297
-
-[color=red][size=14pt]Version Changes:[/size][/color]
-https://github.com/live627/smf-custom-forms/blob/development/CHANGELOG.md
