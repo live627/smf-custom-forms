@@ -1,15 +1,16 @@
 {
-  "repositories": [
-    {
-      "url": "https://github.com/live627/SMF2.1.git",
-      "type": "vcs"
-    }
-  ],
-  "require-dev": {
-    "simplemachines/smf2.1": "dev-unittest",
-    "phpunit/phpunit": "^9.5"
-  },
-  "require": {
-    "php": ">=7.4"
-  }
+    "repositories": [
+        {
+            "url": "https://github.com/live627/SMF2.1.git",
+            "type": "vcs"
+        }
+    ],
+    "require-dev": {
+        "simplemachines/smf2.1": "dev-unittest",
+        "phpunit/phpunit": "^9.5"
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "version": "2.0.2"
 }
