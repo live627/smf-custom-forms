@@ -249,8 +249,8 @@ class CustomForm_text extends CustomFormBase
 		if (!empty($this->size))
 			$this->value = $smcFunc['substr']($this->value, 0, $this->size);
 
-		if (!in_array('parse_bbc', $this->type_vars))
-			$this->value = '[nobbc]' . $this->value . '[/nobbc]';
+		//if (!in_array('parse_bbc', $this->type_vars))
+		//	$this->value = '[nobbc]' . $this->value . '[/nobbc]';
 
 		return $this->value;
 	}
@@ -278,7 +278,14 @@ class CustomForm_textarea extends CustomForm_text
 	{
 		$this->output_html = $this->value;
 		@list ($rows, $cols) = @explode(',', $this->default);
-		$this->input_html = '<textarea name="%s[%d]" ' . (!empty($rows) ? 'rows="' . $rows . '"' : '') . ' ' . (!empty($cols) ? 'cols="' . $cols . '"' : '') . '>' . $this->value . '</textarea>';
+		$this->input_html = sprintf(
+			'<textarea name="%s[%d]" %s%s>%s</textarea>',
+			'CustomFormField',
+			$this->field['id_field'],
+			!empty($rows) ? 'rows="' . $rows . '"' : '',
+			!empty($cols) ? 'cols="' . $cols . '"' : '',
+			$this->value
+		);
 	}
 }
 
