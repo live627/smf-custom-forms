@@ -21,7 +21,7 @@ $txt['customform_view_perms'] = 'Form View Page Permissions';
 
 //	Stuff for the forms action
 $txt['customform_submit'] = 'Submit Form';
-$txt['customform_required'] = 'Required Fields';
+$txt['customform_required'] = 'Fields marked with an asterisk (*) are required';
 
 //	Junk for the list areas.
 $txt['customform_listheading_fields'] = 'Form Fields';
