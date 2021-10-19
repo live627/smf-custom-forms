@@ -104,7 +104,7 @@ function CustomForm()
 			require_once($sourcedir . '/Class-CustomForm.php');
 
 			//	Do we need to submit this form?
-			if (isset($_GET['submit']))
+			if (isset($_POST['n']))
 			{
 				$vars = array();
 				$replace = array();
@@ -213,28 +213,31 @@ function CustomForm()
 			loadLanguage('CustomForm+Post+Errors');
 
 			//	Setup and load the necessary template related stuff.
-			$context['settings_title'] =
-				'<a href="' . $scripturl . '?action=form;">' . ((isset($modSettings['customform_view_title']) && ($modSettings['customform_view_title'] != '')) ? $modSettings['customform_view_title'] : $txt['customform_tabheader']) . '</a> : ' . $form_title;
-			$context['failed_form_submit'] = empty($post_errors);
-			$context['template_function'] = $form_data['template_function'];
-			$context['post_url'] = $scripturl . '?action=form;n=' . $form_id . ';submit;';
+			$context['page_title'] = $form_title;
+			$context['form_id'] = $form_id;
+			$context['failed_form_submit'] = !empty($post_errors);
+			$template_function = 'template_' . $form_data['template_function'];
+			$context['template_function'] = function_exists('form_' . $template_function) ? $template_function : 'template_submit_form';
 			$context['sub_template'] = 'submit_form';
 			loadTemplate('CustomForm');
+			$context['template_layers'][] = function_exists($template_function . '_above') && function_exists($template_function . '_below') ? $context['template_function'] : 'form';
+			if (!empty($post_errors))
+				$context['template_layers'][] = 'errors';
 		}
 		//	If not then fall to the default view form page, with the list of forms.
 		else
 			listCustomForm();
-
-	//	Set the page title, just for lolz! :D
-	$context['page_title'] = !empty($modSettings['customform_view_title'])
-		? $modSettings['customform_view_title']
-		: $txt['customform_tabheader'];
 }
 
-//	Fucntion to produce a list of custom forms.
-function list_CustomForms()
+function listCustomForm()
 {
-	global $smcFunc;
+	global $context, $modSettings, $scripturl, $smcFunc, $sourcedir, $txt;
+
+	if (!allowedTo('customform_view_perms'))
+		redirectExit();
+
+	loadLanguage('CustomForm');
+	loadTemplate('CustomForm');
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_form
@@ -275,62 +278,15 @@ function list_CustomForms()
 			//~ 'empty_string' => '',
 		//~ )
 	//~ );
-	$forms = array();
+	$context['forms'] = array();
 	while (list ($id_form, $title) = $smcFunc['db_fetch_row']($request))
 		if (allowedTo('custom_forms_' . $id_form) && in_array($id_form, $cf))
-			$forms[] = array(
-				'id' => $id_form,
-				'title' => $title,
-			);
+			$context['forms'][] = [$id_form, $title, ''];
 	$smcFunc['db_free_result']($request);
 
-	return $forms;
-}
-
-function listCustomForm()
-{
-	global $context, $modSettings, $scripturl, $smcFunc, $sourcedir, $txt;
-
-	if (!allowedTo('customform_view_perms'))
-		redirectExit();
-
-	loadLanguage('CustomForm');
-	$listOptions = array(
-		'id' => 'menu_list',
-		'title' => !empty($modSettings['customform_view_title'])
-			? $modSettings['customform_view_title']
-			: $txt['customform_tabheader'],
-		'base_href' => $scripturl . '?action=form',
-		'get_items' => array(
-			'function' => 'list_CustomForms',
-		),
-		'no_items_label' => $txt['customform_list_noelements'],
-		'columns' => array(
-			'name' => array(
-				'data' => array(
-					'sprintf' => array(
-						'format' => '<a href="' . strtr($scripturl, array('%' => '%%')) . '?action=form;n=%d">%s</a>',
-						'params' => array(
-							'id' => false,
-							'title' => true,
-						),
-					),
-					'style' => 'padding: 0.7em',
-				),
-			),
-		),
-	);
-	if (!empty($modSettings['customform_view_text']))
-		$listOptions['additional_rows'] = array(
-			array(
-				'position' => 'after_title',
-				'value' => $modSettings['customform_view_text']
-			),
-		);
-
-	require_once($sourcedir . '/Subs-List.php');
-	createList($listOptions);
-
-	$context['sub_template'] = 'show_list';
-	$context['default_list'] = 'menu_list';
+	$context['template_layers'][] = 'main';
+	$context['page_title'] = !empty($modSettings['customform_view_title'])
+		? $modSettings['customform_view_title']
+		: $txt['customform_tabheader'];
+	$context['customform_view_text'] = $modSettings['customform_view_text'] ?? '';
 }
