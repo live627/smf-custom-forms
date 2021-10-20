@@ -161,7 +161,7 @@ function form_template_submit_form()
 	// Now actually loop through all the fields.
 	foreach ($context['fields'] as $field_name => $field_data)
 	{
-		if ($field_data['type'] == 'infobox')
+		if ($field_data['type'] == 'info')
 			echo '
 				<span class="lower_padding">', $field_data['text'], '</span>';
 		else
