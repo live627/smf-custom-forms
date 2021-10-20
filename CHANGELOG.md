@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.3](https://www.github.com/live627/smf-custom-forms/compare/v2.0.2...v2.0.3) (2021-10-20)
+
+
+### Bug Fixes
+
+* Make info fields show correctly ([cfdb62c](https://www.github.com/live627/smf-custom-forms/commit/cfdb62c8e96b32195bf35f20efd4a0c137527a85))
+
 ### [2.0.2](https://www.github.com/live627/smf-custom-forms/compare/v2.0.1...v2.0.2) (2021-10-18)
 
 
