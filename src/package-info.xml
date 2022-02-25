@@ -5,7 +5,7 @@
 	<id>LHVWB:CustomFormMod</id>
 	<type>modification</type>
 	<version>2.0.3</version>
-	<install for="2.0 - 2.0.99">
+	<install for="2.*">
 		<code type="inline"><![CDATA[<?php
 			define('REQUIRED_PHP_VERSION', '7.4.0');
 			if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
@@ -28,7 +28,7 @@
 		<require-file name="CustomForm.php" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
 	</install>
-	<uninstall for="2.0 - 2.0.99">
+	<uninstall for="2.*">
 		<readme type="file" parsebbc="true">uninstall.txt</readme>
 		<database>uninstall-optional.php</database>
 		<code>uninstall-required.php</code>

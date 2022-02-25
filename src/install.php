@@ -70,7 +70,7 @@ $smcFunc['db_create_table']('{db_prefix}cf_forms', $columns, $indexes, array(), 
 
 foreach ($columns as $column)
 	if (stripos($column['type'], 'char') !== false || stripos($column['type'], 'text') !== false)
-		$smcFunc['db_change_column']('{db_prefix}cf_forms', $column['name'], $column);
+		$smcFunc['db_change_column']('{db_prefix}cf_forms', $column['name'], $column + ['default' => '']);
 
 //	Set up the correct columns for the table.
 $columns = array(
@@ -126,7 +126,7 @@ $smcFunc['db_create_table']('{db_prefix}cf_fields', $columns, $indexes, array(),
 
 foreach ($columns as $column)
 	if (stripos($column['type'], 'char') !== false || stripos($column['type'], 'text') !== false)
-		$smcFunc['db_change_column']('{db_prefix}cf_fields', $column['name'], $column);
+		$smcFunc['db_change_column']('{db_prefix}cf_fields', $column['name'], $column + ['default' => '']);
 
 //	Delete any field that has the ID 0, just for version compatibility reasons.
 $smcFunc['db_query'](
@@ -136,4 +136,3 @@ $smcFunc['db_query'](
 	FROM {db_prefix}cf_fields 
 	WHERE id_field = \'0\''
 );
-?>

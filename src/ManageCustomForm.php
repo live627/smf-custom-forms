@@ -11,7 +11,7 @@
 //	Fucntion to handle the settings for the Custom Form Mod.
 function ModifyCustomFormSettings($return_config = false)
 {
-	global $modSettings, $sourcedir, $txt, $scripturl, $context, $smcFunc;
+	global $modSettings, $sourcedir, $txt, $scripturl, $context, $settings, $smcFunc;
 
 	$config_vars = array();
 
@@ -113,12 +113,12 @@ function ModifyCustomFormSettings($return_config = false)
 				WHERE id_form = {int:id_form}',
 				array(
 					'id_form' => $form_id,
-					'id_board' => intval($_REQUEST['form_board_id']),
+					'id_board' => intval($_REQUEST['board_id']),
 					'icon' => $_REQUEST['icon'],
-					'title' => $_REQUEST['form_title'],
+					'title' => $_REQUEST['title'],
 					'output' => $_REQUEST['output'],
 					'subject' => $_REQUEST['subject'],
-					'form_exit' => $_REQUEST['form_exit'],
+					'form_exit' => $_REQUEST['exit'],
 					'template_function' => $_REQUEST['template_function'],
 				)
 			);
@@ -173,7 +173,7 @@ function ModifyCustomFormSettings($return_config = false)
 
 		//	Create the list of fields.
 		$list = array(
-			'id' => 'customfield_list',
+			'id' => 'customform_list_fields',
 			'title' => $txt['customform_listheading_fields'],
 			'no_items_label' => $txt['customform_list_noelements'],
 			'get_items' => array(
@@ -230,6 +230,8 @@ function ModifyCustomFormSettings($return_config = false)
 		//	Call the function to setup the inline permissions for the template.
 		require_once($sourcedir . '/ManagePermissions.php');
 		init_inline_permissions(array('custom_forms_' . $form_id));
+		if (function_exists('createToken'))
+			createToken('admin-mp');
 
 		//	Set up the variables needed by the template.
 		$context['settings_title'] =
@@ -239,6 +241,8 @@ function ModifyCustomFormSettings($return_config = false)
 			$scripturl . '?action=admin;area=modsettings;sa=customform;form_id=' . $form_id . ';update;';
 		$context['page_title'] = $txt['customform_tabheader'];
 		$context['sub_template'] = 'customform_FormSettings';
+		$context['default_list'] = 'customform_list_fields';
+		$context['sub_template'] = 'customform_GeneralSettings';
 
 		// Load the boards and categories for adding or editing a Form.
 		$request = $smcFunc['db_query'](
@@ -270,7 +274,6 @@ function ModifyCustomFormSettings($return_config = false)
 
 		if (empty($context['categories']))
 			fatal_lang_error('Invalid Board', false);
-
 
 		$context['icon'] = !empty($context['cf_forms']['icon']) ? $context['cf_forms']['icon'] : 'xx';
 
@@ -306,17 +309,102 @@ function ModifyCustomFormSettings($return_config = false)
 				)
 			);
 		}
+	$request = $smcFunc['db_query']('order_by_board_order', '
+		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
+		FROM {db_prefix}boards AS b
+			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+		WHERE redirect = {string:empty_string}',
+		array(
+			'empty_string' => '',
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$boards[$row['id_board']] = $row['cat_name'] . ' - ' . $row['board_name'];
+	$smcFunc['db_free_result']($request);
+
+	if (!empty($boards))
+	{
+		require_once($sourcedir . '/Subs-Boards.php');
+		sortBoards($boards);
+		$boards = array('') + $boards;
+	}
+	else
+		$boards = array('');
+		$config_vars = array(
+			array(
+				'text',
+				'title',
+				'value' => $data['title'],
+				'text_label' => $txt['title'],
+				'help' => 'customform_field_title',
+			),
+			array(
+				'select',
+				'board_id',
+				$boards,
+				$data['id_board'],
+				'text_label' => $txt['customform_board_id'],
+				'help' => 'customform_board_id',
+			),
+			array(
+				'select',
+				'icon',
+				array_column($context['icons'], 'name', 'value'),
+				$data['icon'],
+				'text_label' => $txt['message_icon'],
+				'help' => 'customform_icon',
+			),
+			array(
+				'text',
+				'template_function',
+				'value' => $data['template_function'],
+				'text_label' => $txt['customform_template_function'],
+				'help' => 'customform_template_function',
+			),
+			array(
+				'permissions',
+				'custom_forms_' . $form_id,
+				'value' => 'custom_forms_' . $form_id,
+				'text_label' => $txt['edit_permissions'],
+				'help' => 'customform_permissions',
+			),
+			array(
+				'text',
+				'subject',
+				'value' => $data['subject'],
+				'text_label' => $txt['subject'],
+				'help' => 'customform_subject',
+			),
+			array(
+				'text',
+				'exit',
+				'value' => $data['form_exit'],
+				'text_label' => $txt['customform_exit'],
+				'help' => 'customform_exit',
+			),
+			array(
+				'callback',
+				'output',
+			),
+		);
+
 
 		//	Load all of the templates that we need.
 		loadTemplate('CustomForm');
 		loadTemplate('GenericControls');
 		loadTemplate('GenericList');
+		//	Finally prepare the settings array to be shown by the 'show_settings' template.
+		prepareDBSettingContext($config_vars);
+		if (function_exists('createToken'))
+		{
+			// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
+			createToken('admin-mp');
+			createToken('admin-dbsc');
+		}
 	}
 	//	Do we need to deal with showing specific field settings?
 	elseif (isset($field_id))
 	{
-
-		//	Get some information about this field.
 		$request = $smcFunc['db_query'](
 			'',
 			'
@@ -528,6 +616,8 @@ function ModifyCustomFormSettings($return_config = false)
 
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
+		if (function_exists('createToken'))
+			createToken('admin-dbsc');
 	}
 	//	Do we need to add a new form?
 	elseif (isset($_GET['add_form']))
@@ -561,12 +651,6 @@ function ModifyCustomFormSettings($return_config = false)
 		{
 			//	Make sure that an admin is doing the updating.
 			checkSession();
-
-			//	Save the inline permissions.
-			require_once($sourcedir . '/ManagePermissions.php');
-			save_inline_permissions(array('customform_view_perms'));
-
-			//	Save the config vars.
 			saveDBSettings($config_vars);
 			redirectexit("action=admin;area=modsettings;sa=customform;");
 		}
@@ -637,6 +721,12 @@ function ModifyCustomFormSettings($return_config = false)
 
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
+		if (function_exists('createToken'))
+		{
+			// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
+			createToken('admin-mp');
+			createToken('admin-dbsc');
+		}
 	}
 }
 

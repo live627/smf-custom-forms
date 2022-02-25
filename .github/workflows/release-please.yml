@@ -14,6 +14,7 @@ jobs:
         id: release
         with:
           release-type: php
+          draft: true
           package-name: ${{ env.MOD_NAME }}
       - uses: actions/github-script@v3
         id: vars
