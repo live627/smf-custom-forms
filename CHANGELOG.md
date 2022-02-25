@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://www.github.com/live627/smf-custom-forms/compare/v2.0.3...v2.1.0) (2022-02-25)
+
+
+### Features
+
+* Add support for SMF 2.1 ([3a7f063](https://www.github.com/live627/smf-custom-forms/commit/3a7f063a6d4ea1eb130827aab977f98638994f6e))
+
 ### [2.0.3](https://www.github.com/live627/smf-custom-forms/compare/v2.0.2...v2.0.3) (2021-10-20)
 
 
