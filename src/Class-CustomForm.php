@@ -185,7 +185,7 @@ class CustomForm_select extends CustomFormBase
 					: '',
 				$v
 			);
-			if ($true)
+			if (!$this->exists && $this->default == $v) || $this->value == $v)
 				$this->output_html = $v;
 		}
 
@@ -224,7 +224,7 @@ class CustomForm_radio extends CustomForm_select
 					: '',
 				$v
 			);
-			if ($true)
+			if (!$this->exists && $this->default == $v) || $this->value == $v)
 				$this->output_html = $v;
 		}
 		$this->input_html .= '</fieldset>';
