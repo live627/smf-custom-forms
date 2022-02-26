@@ -28,6 +28,14 @@ function customform_modify_modifications(array &$sub_actions)
 	$sub_actions['customform'] = 'ModifyCustomFormSettings';
 }
 
+function customform_load_theme()
+{
+	global $context;
+
+	if ($context['current_action'] == 'helpadmin')
+		loadLanguage('CustomForm');
+}
+
 function customform_list_classes()
 {
 	foreach (get_declared_classes() as $class)
