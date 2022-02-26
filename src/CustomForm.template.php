@@ -249,24 +249,28 @@ function template_ThankYou()
 	echo '
 	<div class="cat_bar">
 		<h3 class="catbg">
-			', isset($modSettings['customform_view_title']) && ($modSettings['customform_view_title'] != '')) ? $modSettings['customform_view_title'] : $txt['customform_tabheader'], '
+			', isset($modSettings['customform_view_title']) && $modSettings['customform_view_title'] != '' ? $modSettings['customform_view_title'] : $txt['customform_tabheader'], '
 		</h3>
 	</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 					<table style="width:100%;background-color:#000000;" align="center">
-						<tr class="windowbg">
+						<tr>
 							<td style="padding:4px;" colspan="3" align="center">
 							<b>	', $txt['customform_thankyou'], '</b>
 							</td>
 						</tr>
 
-						<tr class="titlebg">
+						<tr>
 							<td style="padding:4px;" style="width:45%;" align="center">
-							<a href="' . $scripturl . '">	', $txt['customform_forum'], '</a>
+								<a href="' . $scripturl . '">
+									', $txt['customform_forum'], '
+								</a>
 							</td>
 							<td style="padding:4px;" style="width:45%;" align="center">
-							<a href="' . $scripturl . '?action=form;">	', $txt['customform_list'], '</a>
+								<a href="' . $scripturl . '?action=form">
+									', $txt['customform_list'], '
+								</a>
 							</td>
 						</tr>
 					</table>
