@@ -25,6 +25,7 @@ function CustomForm()
 	{
 		$context['sub_template'] = 'ThankYou';
 		loadTemplate('CustomForm');
+		loadLanguage('CustomForm');
 	}
 	else //	Do we have a valid form id?
 		if (isset($_REQUEST['n']))

@@ -254,7 +254,7 @@ function template_ThankYou()
 	</div>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
-					<table style="width:100%;background-color:#000000;" align="center">
+					<table style="width:100%;" align="center">
 						<tr>
 							<td style="padding:4px;" colspan="3" align="center">
 							<b>	', $txt['customform_thankyou'], '</b>
