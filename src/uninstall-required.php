@@ -19,8 +19,5 @@ elseif (!defined('SMF'))
 remove_integration_function('integrate_pre_include', '$sourcedir/Subs-CustomForm.php');
 remove_integration_function('integrate_admin_include', '$sourcedir/ManageCustomForm.php');
 remove_integration_function('integrate_actions', 'customform_actions');
-remove_integration_function('integrate_menu_buttons', 'customform_menu_buttons');
 remove_integration_function('integrate_modify_modifications', 'customform_modify_modifications');
 remove_integration_function('integrate_admin_areas', 'customform_admin_areas');
-
-?>
