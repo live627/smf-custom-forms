@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.1.1](https://www.github.com/live627/smf-custom-forms/compare/v2.1.0...v2.1.1) (2022-02-26)
+
+
+### Bug Fixes
+
+* Do not define a default value for BLOB/TEXT column 'output' ([4a4f8f7](https://www.github.com/live627/smf-custom-forms/commit/4a4f8f7e55ffae5bb54118391a87b826698ca324))
+* Do not define a hook for integrate_menu_buttons that leads to nowhere ([4b310da](https://www.github.com/live627/smf-custom-forms/commit/4b310da0c8f57689f88cbb1086831ab73e40c4a2))
+
 ## [2.1.0](https://www.github.com/live627/smf-custom-forms/compare/v2.0.3...v2.1.0) (2022-02-25)
 
 
