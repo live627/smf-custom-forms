@@ -68,7 +68,7 @@ $indexes = array(
 $smcFunc['db_create_table']('{db_prefix}cf_forms', $columns, $indexes, array(), 'update_remove');
 
 foreach ($columns as $column)
-	if (stripos($column['type'], 'char') !== false || stripos($column['type'], 'text') !== false)
+	if (stripos($column['type'], 'char') !== false)
 		$smcFunc['db_change_column']('{db_prefix}cf_forms', $column['name'], $column + ['default' => '']);
 
 //	Set up the correct columns for the table.
@@ -124,7 +124,7 @@ $indexes = array(
 $smcFunc['db_create_table']('{db_prefix}cf_fields', $columns, $indexes, array(), 'update_remove');
 
 foreach ($columns as $column)
-	if (stripos($column['type'], 'char') !== false || stripos($column['type'], 'text') !== false)
+	if (stripos($column['type'], 'char') !== false)
 		$smcFunc['db_change_column']('{db_prefix}cf_fields', $column['name'], $column + ['default' => '']);
 
 //	Delete any field that has the ID 0, just for version compatibility reasons.
