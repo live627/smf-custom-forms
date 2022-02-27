@@ -6,6 +6,7 @@ add_integration_function('integrate_actions', 'customform_actions');
 add_integration_function('integrate_modify_modifications', 'customform_modify_modifications');
 add_integration_function('integrate_admin_areas', 'customform_admin_areas');
 add_integration_function('integrate_load_theme', 'customform_load_theme');
+add_integration_function('integrate_whos_online', 'customform_whos_online');
 
 //	Set up the correct columns for the table.
 $columns = array(

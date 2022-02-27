@@ -86,6 +86,11 @@ $txt['customform_regex_desc'] = 'Validate your own way.';
 $txt['customform_error_title'] = 'Oops, there were errors!';
 $txt['customform_invalid_value'] = 'The value you chose for %1$s is invalid.';
 
+// argument(s): $scripturl
+$txt['whoall_form'] = 'Viewing the <a href="%s?action=form">list of forms</a>.';
+// argument(s): $scripturl, $id_form, $title
+$txt['customform_who'] = 'Viewing <a href="%s?action=form;n=%s">%s</a>.';
+
 //	Help text for the general settings page.
 $helptxt['customform_view_perms'] =
 	'This setting allows you to restrict the member groups that can see the list of the forms which they can access (At &quot;index.php?action=form&quot;). Note that even if they can see they list, they cannot see or use any forms which they do not have the permissions for.';

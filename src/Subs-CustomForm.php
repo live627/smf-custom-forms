@@ -30,10 +30,34 @@ function customform_modify_modifications(array &$sub_actions)
 
 function customform_load_theme()
 {
-	global $context;
+	global $context, $scripturl, $smcFunc, $txt;
+
+	if ($context['current_action'] == 'who')
+	{
+		$request = $smcFunc['db_query']('', 'SELECT id_form, title FROM {db_prefix}cf_forms');
+		while ([$id_form, $title] = $smcFunc['db_fetch_row']($result))
+			if (allowedTo('custom_forms_' . $form_id))
+				$txt['customform_whoallow_' . $id_form] = sprintf(
+					$txt['customform_who'],
+					$scripturl,
+					$id_form,
+					$title,
+				);
+		$smcFunc['db_free_result']($result);
+	}
 
 	if ($context['current_action'] == 'helpadmin')
 		loadLanguage('CustomForm');
+}
+
+function customform_whos_online(array $actions)
+{
+	global $txt;
+
+	if (isset($txt['customform_whoallow_' . $actions['n']]))
+		return $txt['customform_whoallow_' . $actions['n']];
+
+	return $txt['who_hidden'];
 }
 
 function customform_list_classes()
