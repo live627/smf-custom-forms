@@ -5,9 +5,6 @@ function CustomForm()
 {
 	global $smcFunc, $context, $txt, $scripturl, $sourcedir, $user_info, $modSettings;
 
-	global $txt, $context, $sourcedir, $modSettings, $board;
-
-
 	// Generate a visual verification code to make sure the user is no bot.
 	$context['require_verification'] =
 		$user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
