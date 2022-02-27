@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.2.0](https://www.github.com/live627/smf-custom-forms/compare/v2.1.1...v2.2.0) (2022-02-27)
+
+
+### Features
+
+* Make the input box for the field text a textarea ([2690700](https://www.github.com/live627/smf-custom-forms/commit/269070036bce87d2a4b16ab27faf5fe20620fcb9))
+* Show form activity in the who's online page ([76ca0ea](https://www.github.com/live627/smf-custom-forms/commit/76ca0ea98da05cb55f720f8333ad47b941f1952b))
+
+
+### Bug Fixes
+
+* Actually show help text when clicking on icon ([dfc59fa](https://www.github.com/live627/smf-custom-forms/commit/dfc59fae66275264f240ba9984fd7a2abe05533b))
+* Don't write the global $board because it confuses SMF into looking up undefined variables (parent_boards) ([3c074ab](https://www.github.com/live627/smf-custom-forms/commit/3c074ab46d3ebd1277d2c3951e1d04ef3fedc446))
+* Parse error ([9517398](https://www.github.com/live627/smf-custom-forms/commit/9517398e46ce0470b0a24e7400897c75ffe3d3f6))
+* Select correct board value for dropdown ([ef9d571](https://www.github.com/live627/smf-custom-forms/commit/ef9d5712c1dd1fed469db506ed4ebf33f012022c))
+* Thankyou page was blank and generated errors ([a0333a4](https://www.github.com/live627/smf-custom-forms/commit/a0333a4384331b09ff22ea947ea54afe976488e8))
+* Undefined variable $true ([fd61441](https://www.github.com/live627/smf-custom-forms/commit/fd614414947648cf2ea6da49b5f857a2a616d956))
+
 ### [2.1.1](https://www.github.com/live627/smf-custom-forms/compare/v2.1.0...v2.1.1) (2022-02-26)
 
 
