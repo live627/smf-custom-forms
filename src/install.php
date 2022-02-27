@@ -94,7 +94,7 @@ $columns = array(
 	array(
 		'name' => 'text',
 		'type' => 'varchar',
-		'size' => 150,
+		'size' => 4096,
 		'null' => true,
 	),
 	array(

@@ -572,7 +572,7 @@ function ModifyCustomFormSettings($return_config = false)
 				'help' => 'customform_field_title',
 			),
 			array(
-				'text',
+				'large_text',
 				'field_text',
 				'value' => $data['text'],
 				'text_label' => $txt['customform_text'],
@@ -613,6 +613,35 @@ function ModifyCustomFormSettings($return_config = false)
 			$scripturl . '?action=admin;area=modsettings;sa=customform;field_id=' . $field_id . ';update;';
 		$context['page_title'] = $txt['customform_tabheader'];
 		$context['sub_template'] = 'show_settings';
+		$context['html_headers'] .= '
+			<script>
+				window.addEventListener("DOMContentLoaded", function()
+				{
+					var
+						el = document.createElement("div"),
+						textarea = document.getElementById("field_text"),
+						textareaLengthCheck = () =>
+						{
+							var charactersLeft = 4096 - textarea.value.length;
+							el.innerHTML = "Max characters: <b>4096</b>; characters remaining: <b>" + charactersLeft + "</b>";
+							if (charactersLeft < 0)
+							{
+								el.className = "error";
+								textarea.style.border = "1px solid red";
+							}
+							else
+							{
+								el.className = "";
+								textarea.style.border = "";
+							}
+						};
+					el.className = "smalltext";
+					textarea.parentNode.appendChild(el);
+					textarea.addEventListener("keyup", textareaLengthCheck, false);
+
+					textareaLengthCheck.call(textarea);
+				});
+			</script>';
 
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
