@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.2.1](https://www.github.com/live627/smf-custom-forms/compare/v2.2.0...v2.2.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* Parse error ([dfd9bd0](https://www.github.com/live627/smf-custom-forms/commit/dfd9bd0405f7423e14eece9f0baa97ad01f0ab5f))
+* Show missing description on form list ([cca43c8](https://www.github.com/live627/smf-custom-forms/commit/cca43c81966cdc1881d10d52948e29446a1125a3))
+
 ## [2.2.0](https://www.github.com/live627/smf-custom-forms/compare/v2.1.1...v2.2.0) (2022-02-27)
 
 
