@@ -286,5 +286,5 @@ function listCustomForm()
 	$context['page_title'] = !empty($modSettings['customform_view_title'])
 		? $modSettings['customform_view_title']
 		: $txt['customform_tabheader'];
-	$context['customform_view_text'] = $modSettings['customform_view_text'] ?? '';
+	$context['page_message'] = $modSettings['customform_view_text'] ?? '';
 }

@@ -15,27 +15,43 @@ function template_main_above()
 	global $context, $scripturl;
 
 	echo '
-	<style>
-		li.padding
-		{
-			padding: 0.4em 0.7em !important;
-		}
-		li.padding a
-		{
-			font-size: 1.1em;
-		}
-		li.padding div.d
-		{
-			font-style: italic;
-			opacity: 0.4;
-			padding: 0.4em 0.7em;
-		}
-	</style>
-	<div class="cat_bar">
-		<h3 class="catbg">
-			', $context['page_title'], '
-		</h3>
-	</div>
+			<style>
+				ul.reset, ul.reset li
+				{
+					padding: 0;
+					margin: 0;
+					list-style: none;
+				}
+				.reset li:not(:last-child)
+				{
+					padding-bottom: 0.5em;
+				}
+				.reset a
+				{
+					font-size: 1.1em;
+				}
+				li.padding div.d
+				{
+					font-style: italic;
+					opacity: 0.4;
+					padding: 0.4em 0.7em;
+				}
+			</style>
+			<div class="cat_bar">
+				<h3 class="catbg">
+					', $context['page_title'], '
+				</h3>
+			</div>';
+
+	if (!empty($context['page_message']))
+		echo '
+			<div class="information noup">'
+				, $context['page_message'], '
+			</div>';
+
+		echo '
+				<div class="windowbg noup">
+					<span class="topslice"><span></span></span>
 		<ul class="reset">';
 }
 
@@ -45,11 +61,8 @@ function template_main(): void
 
 	foreach ($context['forms'] as [$id_form, $title, $description])
 	{
-		$col = empty($col) ? 2 : '';
-		$color_class = 'windowbg' . $col;
-
 		echo '
-			<li class="padding ', $color_class, '">
+			<li>
 				<a href="' . $scripturl . '?action=form;n=' . $id_form . '">' . $title . '</a>';
 
 		if (!empty($description))
@@ -64,7 +77,9 @@ function template_main(): void
 function template_main_below(): void
 {
 	echo '
-		</ul>';
+		</ul>
+					<span class="botslice"><span></span></span>
+			</div>';
 }
 
 function template_form_above(): void
@@ -82,6 +97,10 @@ function template_form_above(): void
 		{
 			grid-column: span 2;
 		}
+		.main_section, .lower_padding
+		{
+			padding-bottom: 0.5em;
+		}
 	</style>
 		<form action="', $scripturl, '?action=form" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
 			<div class="cat_bar">
@@ -90,7 +109,7 @@ function template_form_above(): void
 				</h3>
 			</div>
 			<span class="upperframe"><span></span></span>
-			<div class="roundframe">';
+			<div class="roundframe noup">';
 }
 
 function template_errors_above(): void
