@@ -35,7 +35,7 @@ function customform_load_theme()
 	if ($context['current_action'] == 'who')
 	{
 		$request = $smcFunc['db_query']('', 'SELECT id_form, title FROM {db_prefix}cf_forms');
-		while ([$id_form, $title] = $smcFunc['db_fetch_row']($result))
+		while ([$id_form, $title] = $smcFunc['db_fetch_row']($request))
 			if (allowedTo('custom_forms_' . $form_id))
 				$txt['customform_whoallow_' . $id_form] = sprintf(
 					$txt['customform_who'],
@@ -43,7 +43,7 @@ function customform_load_theme()
 					$id_form,
 					$title,
 				);
-		$smcFunc['db_free_result']($result);
+		$smcFunc['db_free_result']($request);
 	}
 
 	if ($context['current_action'] == 'helpadmin')
