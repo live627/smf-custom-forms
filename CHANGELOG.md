@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.2.2](https://www.github.com/live627/smf-custom-forms/compare/v2.2.1...v2.2.2) (2022-03-19)
+
+
+### Bug Fixes
+
+* Naming mixup on Whv's Online page ([bb65db8](https://www.github.com/live627/smf-custom-forms/commit/bb65db8df84100b684ca61c379a41cdf8b81211d))
+
 ### [2.2.1](https://www.github.com/live627/smf-custom-forms/compare/v2.2.0...v2.2.1) (2022-02-28)
 
 

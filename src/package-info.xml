@@ -4,7 +4,7 @@
 	<name>Custom Form Mod</name>
 	<id>LHVWB:CustomFormMod</id>
 	<type>modification</type>
-	<version>2.2.1</version>
+	<version>2.2.2</version>
 	<install for="2.*">
 		<code type="inline"><![CDATA[<?php
 			define('REQUIRED_PHP_VERSION', '7.4.0');
