@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.2.3](https://www.github.com/live627/smf-custom-forms/compare/v2.2.2...v2.2.3) (2022-03-20)
+
+
+### Bug Fixes
+
+* Load language file for the Who's Online page ([81ab2b0](https://www.github.com/live627/smf-custom-forms/commit/81ab2b081dcbf2cfbdbe03e4a5a8179be38f5310))
+* Typo in the help text for the tittle setting ([4943ec7](https://www.github.com/live627/smf-custom-forms/commit/4943ec71da021001e9ab11f561f4530c11a975b9))
+
 ### [2.2.2](https://www.github.com/live627/smf-custom-forms/compare/v2.2.1...v2.2.2) (2022-03-19)
 
 
