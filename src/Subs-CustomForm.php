@@ -34,9 +34,10 @@ function customform_load_theme()
 
 	if ($context['current_action'] == 'who')
 	{
+		loadLanguage('CustomForm');
 		$request = $smcFunc['db_query']('', 'SELECT id_form, title FROM {db_prefix}cf_forms');
 		while ([$id_form, $title] = $smcFunc['db_fetch_row']($request))
-			if (allowedTo('custom_forms_' . $form_id))
+			if (allowedTo('custom_forms_' . $id_form))
 				$txt['customform_whoallow_' . $id_form] = sprintf(
 					$txt['customform_who'],
 					$scripturl,
@@ -54,7 +55,7 @@ function customform_whos_online(array $actions)
 {
 	global $txt;
 
-	if (isset($txt['customform_whoallow_' . $actions['n']]))
+	if (isset($actions['n'], $txt['customform_whoallow_' . $actions['n']]))
 		return $txt['customform_whoallow_' . $actions['n']];
 
 	return $txt['who_hidden'];
