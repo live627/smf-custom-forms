@@ -95,9 +95,9 @@ $txt['customform_who'] = 'Viewing <a href="%s?action=form;n=%s">%s</a>.';
 $helptxt['customform_view_perms'] =
 	'This setting allows you to restrict the member groups that can see the list of the forms which they can access (At &quot;index.php?action=form&quot;). Note that even if they can see they list, they cannot see or use any forms which they do not have the permissions for.';
 $helptxt['customform_view_title'] =
-	'This setting allows you to chose the title for the action/page that shows the list of forms to a user (at &quot;index.php?action=forms&quot;).  By default \'Custom Forms\' will be the title.';
+	'This setting allows you to chose the title for the action/page that shows the list of forms to a user (at &quot;index.php?action=form&quot;).  By default \'Custom Forms\' will be the title.';
 $helptxt['customform_view_text'] =
-	'This setting allows you to chose the explanation text shown for the action/page that shows the list of forms to a user (at &quot;index.php?action=forms&quot;). By default nothing will be shown.';
+	'This setting allows you to chose the explanation text shown for the action/page that shows the list of forms to a user (at &quot;index.php?action=form&quot;). By default nothing will be shown.';
 
 //	Help text for the edit form page.
 $helptxt['customform_form_title'] =
