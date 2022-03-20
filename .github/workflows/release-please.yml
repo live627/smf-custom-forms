@@ -2,6 +2,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'src/*'
 name: release-please
 jobs:
   release-please:
@@ -34,12 +36,18 @@ jobs:
         if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
       - if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
         run: |
-          version=$(cat ./composer.json | jq -r '.version')
+          VERSION=$(cat ./composer.json | jq -r '.version')
+          RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)\([0-9A-Za-z-]*\)'
+          MAJOR=`echo $VERSION | sed -e "s#$RE#\1#"`
+          MINOR=`echo $VERSION | sed -e "s#$RE#\2#"`
+          PATCH=`echo $VERSION | sed -e "s#$RE#\3#"`
           for f in src/*.php; do
-            sed -i "/@version/c \ * @version   $version" "$f"
+            sed -i "/@version/c \ * @version   $VERSION" "$f"
           done
-          sed -i "/<version>/c \	<version>$version</version>" src/package-info.xml
-          sed -i -E "1s/[0-9]+\.[0-9]+\.[0-9]+/$version/" src/install.txt
+          sed -i "/<version>/c \	<version>$VERSION</version>" src/package-info.xml
+          sed -i -E "1s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/" src/install.txt
+          sed -i -E "10s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/g" README.md
+          sed -i -E "10s/[0-9]+-[0-9]+-[0-9]+/${MAJOR}-${MINOR}-${PATCH}/" README.md
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git commit -am "build: Update versions in mod files"
