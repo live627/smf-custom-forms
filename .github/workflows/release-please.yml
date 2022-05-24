@@ -12,7 +12,7 @@ jobs:
       FORCE_COLOR: 1
       MOD_NAME: custom-forms
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v2
+      - uses: live627/release-please-action@main
         id: release
         with:
           release-type: php
