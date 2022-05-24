@@ -12,7 +12,7 @@ jobs:
       FORCE_COLOR: 1
       MOD_NAME: custom-forms
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v2
+      - uses: live627/release-please-action@main
         id: release
         with:
           release-type: php
@@ -61,10 +61,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const release = await github.repos.getReleaseByTag({
-              ...context.repo,
-              tag: "${{ steps.release.outputs.tag_name }}",
-            });
+            const str = "${{ steps.release.outputs.upload_url }}";
             await github.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               url: "${{ steps.release.outputs.upload_url }}",
@@ -76,9 +73,10 @@ jobs:
               name: "${{ env.MOD_NAME }}_${{ steps.release.outputs.major }}-${{ steps.release.outputs.minor }}-${{ steps.release.outputs.patch }}.tgz",
               data: fs.readFileSync("./myfile.tgz")
             });
+            console.log(str.substring(str.lastIndexOf('/', str.lastIndexOf('/assets') - 1) + 1, str.lastIndexOf('/assets')))
             await github.repos.updateRelease({
               ...context.repo,
-              release_id: release.data.id,
+              release_id: str.substring(str.lastIndexOf('/', str.lastIndexOf('/assets') - 1) + 1, str.lastIndexOf('/assets')),
               draft: false,
               name: "${{ steps.release.outputs.tag_name }}",
             });
