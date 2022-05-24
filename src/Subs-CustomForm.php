@@ -57,8 +57,6 @@ function customform_whos_online(array $actions)
 
 	if (isset($actions['n'], $txt['customform_whoallow_' . $actions['n']]))
 		return $txt['customform_whoallow_' . $actions['n']];
-
-	return $txt['who_hidden'];
 }
 
 function customform_list_classes()
