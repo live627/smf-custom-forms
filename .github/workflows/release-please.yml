@@ -61,9 +61,8 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const release = await github.repos.getReleaseByTag({
-              ...context.repo,
-              tag: "${{ steps.release.outputs.tag_name }}",
+            const release = await github.repos.getLatestRelease({
+              ...context.repo
             });
             await github.repos.uploadReleaseAsset({
               owner: context.repo.owner,
