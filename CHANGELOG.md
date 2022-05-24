@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.2.4](https://www.github.com/live627/smf-custom-forms/compare/v2.2.3...v2.2.4) (2022-05-24)
+
+
+### Bug Fixes
+
+* Naming mixup on Who's Online page ([6edca83](https://www.github.com/live627/smf-custom-forms/commit/6edca830e7d5532cb660173d0c351bda52c4e34a))
+
 ### [2.2.3](https://www.github.com/live627/smf-custom-forms/compare/v2.2.2...v2.2.3) (2022-03-20)
 
 
