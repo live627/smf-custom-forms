@@ -1,16 +1,24 @@
 <?php
 
-//	This function shows the custom forms and submits them.
+declare(strict_types=1);
+
+/**
+ * @package   Ultimate Menu mod
+ * @version   2.2.4
+ * @author    John Rayes <live627@gmail.com>
+ * @copyright Copyright (c) 2014, John Rayes
+ * @license   http://opensource.org/licenses/MIT MIT
+ */
+
 function CustomForm()
 {
-	global $smcFunc, $context, $txt, $scripturl, $sourcedir, $user_info, $modSettings;
+	global $smcFunc, $context, $txt, $scripturl, $user_info, $modSettings;
 
 	// Generate a visual verification code to make sure the user is no bot.
-	$context['require_verification'] =
-		$user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
+	$context['require_verification'] = require_verification();
 	if ($context['require_verification'])
 	{
-		require_once($sourcedir . '/Subs-Editor.php');
+		require_once __DIR__ . '/Subs-Editor.php';
 		$verificationOptions = array(
 			'id' => 'customform',
 		);
@@ -31,15 +39,22 @@ function CustomForm()
 
 			//	Wait a second... Are you even allowed to use this form?
 			if (!allowedTo('custom_forms_' . $form_id))
-				redirectExit("action=form");
+				redirectexit('action=form');
 
 			//	Get the data about the current form.
-			$request = $smcFunc['db_query'](
-				'',
-				'
-			SELECT title, output, subject, id_board, icon, form_exit, template_function
-			FROM {db_prefix}cf_forms
-			WHERE id_form = {int:id}',
+			$request = $smcFunc['db_query']('', '
+				SELECT title, output, subject, id_board, icon, form_exit, template_function
+				FROM {db_prefix}cf_forms AS f
+				WHERE title != \'\'
+					AND EXISTS
+					(
+						SELECT * FROM {db_prefix}cf_fields AS d
+						WHERE d.id_form = f.id_form
+							AND title != \'\'
+							AND text != \'\'
+							AND type != \'\'
+					)
+					AND id_form = {int:id}',
 				array(
 					'id' => $form_id,
 				)
@@ -47,7 +62,7 @@ function CustomForm()
 
 			//	Did we get some form data? If not then redirect the user to the form view page.
 			if (!($form_data = $smcFunc['db_fetch_assoc']($request)))
-				redirectExit("action=form;");
+				redirectexit('action=form;');
 
 			$output = $form_data['output'];
 			$exit = $form_data['form_exit'];
@@ -60,16 +75,14 @@ function CustomForm()
 			$smcFunc['db_free_result']($request);
 
 			//	Get a list of the current fields attached to this form.
-			$request = $smcFunc['db_query'](
-				'',
-				'
-			SELECT id_field, title, text, type, type_vars
-			FROM {db_prefix}cf_fields
-			WHERE id_form = {int:id}
-			AND title != \'\'
-			AND text != \'\'
-			AND type != \'\'
-			ORDER BY ID_FIELD',
+			$request = $smcFunc['db_query']('', '
+				SELECT id_field, title, text, type, type_vars
+				FROM {db_prefix}cf_fields
+				WHERE id_form = {int:id}
+				AND title != \'\'
+				AND text != \'\'
+				AND type != \'\'
+				ORDER BY id_field',
 				array(
 					'id' => $form_id,
 				)
@@ -91,27 +104,25 @@ function CustomForm()
 				]);
 				$data[] = $row;
 			}
-
-			//	Free the db request.
 			$smcFunc['db_free_result']($request);
 
 			//	Do we have fields attached to this form? If not then redirect the user to the form view page.
 			if (empty($data))
-				redirectExit("action=form;");
+				redirectexit('action=form;');
 
-			require_once($sourcedir . '/Class-CustomForm.php');
+			require_once __DIR__ . '/Class-CustomForm.php';
 
 			//	Do we need to submit this form?
+			$post_errors = array();
 			if (isset($_POST['n']))
 			{
 				$vars = array();
 				$replace = array();
-				$post_errors = array();
 				if ('' != ($sc_error = checkSession('post', '', false)))
 					$post_errors[] = array(['error_' . $sc_error, '']);
 				if ($context['require_verification'])
 				{
-					require_once($sourcedir . '/Subs-Editor.php');
+					require_once __DIR__ . '/Subs-Editor.php';
 					$verificationOptions = array(
 						'id' => 'customform',
 					);
@@ -142,7 +153,7 @@ function CustomForm()
 				//	Do we have completly valid field data?
 				if ($post_errors === [])
 				{
-					require_once($sourcedir . '/Subs-Post.php');
+					require_once __DIR__ . '/Subs-Post.php';
 					$msgOptions = array(
 						'id' => 0,
 						'subject' => customform_replace_vars($subject, $vars),
@@ -168,15 +179,16 @@ function CustomForm()
 					if ($exit == 'board' || $exit == '')
 						redirectexit('board=' . $board . '.0');
 					elseif ($exit == 'forum')
-						redirectExit();
+						redirectexit();
 					elseif ($exit == 'form')
-						redirectExit("action=form;");
+						redirectexit('action=form;');
 					elseif ($exit == 'thanks')
-						redirectExit("action=form;thankyou");
+						redirectexit('action=form;thankyou');
 					else
-						redirectexit("$exit");
+						redirectexit($exit);
 				}
 				$context['post_errors'] = $post_errors;
+				$context['template_layers'][] = 'errors';
 			}
 
 			//	Otherwise we shall show the submit form page.
@@ -185,12 +197,11 @@ function CustomForm()
 			//	Okay, lets format the field data.
 			foreach ($data as $field)
 			{
-				$value = isset($_POST['CustomFormField'][$field['id_field']]) ? $_POST['CustomFormField'][$field['id_field']] : '';
 				$class_name = 'CustomForm_' . $field['type2'];
 				if (!class_exists($class_name))
 					fatal_error('Param "' . $field['type2'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
 
-				$type = new $class_name($field, $value, !empty($value));
+				$type = new $class_name($field, $_POST['CustomFormField'][$field['id_field']] ?? '');
 				$type->setOptions();
 				$type->setHtml();
 
@@ -203,88 +214,62 @@ function CustomForm()
 				);
 			}
 
-			//	Do we have fields data? If not then redirect the user to the form view page.
-			if (empty($context['fields']))
-				redirectExit("action=form;");
-
-			//	Load the language files.
 			loadLanguage('CustomForm+Post+Errors');
 
 			//	Setup and load the necessary template related stuff.
 			$context['page_title'] = $form_title;
 			$context['form_id'] = $form_id;
-			$context['failed_form_submit'] = !empty($post_errors);
+			$context['failed_form_submit'] = $post_errors === [];
 			$template_function = 'template_' . $form_data['template_function'];
 			$context['template_function'] = function_exists('form_' . $template_function) ? $template_function : 'template_submit_form';
 			$context['sub_template'] = 'submit_form';
 			loadTemplate('CustomForm');
 			$context['template_layers'][] = function_exists($template_function . '_above') && function_exists($template_function . '_below') ? $context['template_function'] : 'form';
-			if (!empty($post_errors))
-				$context['template_layers'][] = 'errors';
 		}
 		//	If not then fall to the default view form page, with the list of forms.
 		else
 			listCustomForm();
 }
 
+function require_verification()
+{
+	global $modSettings, $user_info;
+
+	return $user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
+}
+
 function listCustomForm()
 {
-	global $context, $modSettings, $scripturl, $smcFunc, $sourcedir, $txt;
+	global $context, $modSettings, $smcFunc, $txt;
 
 	if (!allowedTo('customform_view_perms'))
-		redirectExit();
+		redirectexit();
 
 	loadLanguage('CustomForm');
 	loadTemplate('CustomForm');
 
 	$request = $smcFunc['db_query']('', '
-		SELECT id_form
-		FROM {db_prefix}cf_fields
+		SELECT id_form, title
+		FROM {db_prefix}cf_forms AS f
 		WHERE title != \'\'
-		AND text != \'\'
-		AND type != \'\''
-	);
-
-	$cf = array();
-	while (list ($id_form) = $smcFunc['db_fetch_row']($request))
-		if (allowedTo('custom_forms_' . $id_form) && !in_array($id_form, $cf))
-			$cf[] = $id_form;
-	$smcFunc['db_free_result']($request);
-
-	//	Get the data from the cf_forms table.
-	$request = $smcFunc['db_query']('', '
-		SELECT f.id_form, f.title, b.name, b.id_board
-		FROM {db_prefix}cf_forms f, {db_prefix}boards b
-		WHERE b.id_board = f.id_board
-		AND b.redirect = \'\''
-	);
-
-	//~ //	Go through all of the forms and add them to the list.
-	//~ $request = $smcFunc['db_query']('', '
-		//~ SELECT id_form, title
-		//~ FROM {db_prefix}cf_forms AS f
-		//~ WHERE title != {string:empty_string}
-		//~ WHERE NOT EXISTS
-		//~ (
-			//~ SELECT * FROM {db_prefix}cf_fields AS d
-			//~ WHERE d.id_form = f.id_form
-		//~ and title != \'\'
-		//~ AND text != \'\'
-		//~ AND type != \'\'
-		//~ )',
-		//~ array(
-			//~ 'empty_string' => '',
-		//~ )
-	//~ );
+			AND EXISTS
+			(
+				SELECT * FROM {db_prefix}cf_fields AS d
+				WHERE d.id_form = f.id_form
+					AND title != \'\'
+					AND text != \'\'
+					AND type != \'\'
+			)');
 	$context['forms'] = array();
 	while (list ($id_form, $title) = $smcFunc['db_fetch_row']($request))
-		if (allowedTo('custom_forms_' . $id_form) && in_array($id_form, $cf))
+		if (allowedTo('custom_forms_' . $id_form))
 			$context['forms'][] = [$id_form, $title, ''];
 	$smcFunc['db_free_result']($request);
 
-	$context['template_layers'][] = 'main';
+	$context['template_layers'][] = 'forms';
 	$context['page_title'] = !empty($modSettings['customform_view_title'])
 		? $modSettings['customform_view_title']
 		: $txt['customform_tabheader'];
 	$context['page_message'] = $modSettings['customform_view_text'] ?? '';
+	$context['sub_template'] = 'forms';
 }

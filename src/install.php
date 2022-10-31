@@ -1,20 +1,29 @@
 <?php
 
-add_integration_function('integrate_pre_include', '$sourcedir/Subs-CustomForm.php');
-add_integration_function('integrate_admin_include', '$sourcedir/ManageCustomForm.php');
-add_integration_function('integrate_actions', 'customform_actions');
-add_integration_function('integrate_modify_modifications', 'customform_modify_modifications');
-add_integration_function('integrate_admin_areas', 'customform_admin_areas');
-add_integration_function('integrate_load_theme', 'customform_load_theme');
-add_integration_function('integrate_whos_online', 'customform_whos_online');
+declare(strict_types=1);
 
-//	Set up the correct columns for the table.
+/**
+ * @package   Ultimate Menu mod
+ * @version   2.2.4
+ * @author    John Rayes <live627@gmail.com>
+ * @copyright Copyright (c) 2014, John Rayes
+ * @license   http://opensource.org/licenses/MIT MIT
+ */
+
+// If SSI.php is in the same place as this file, and SMF isn't defined...
+if (file_exists(__DIR__ . '/SSI.php') && !defined('SMF'))
+	require_once __DIR__ . '/SSI.php';
+
+// Hmm... no SSI.php and no SMF?
+elseif (!defined('SMF'))
+	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
+ 
 $columns = array(
 	array(
 		'name' => 'id_form',
 		'type' => 'smallint',
 		'size' => '5',
-		'auto' => 1,
+		'auto' => true,
 	),
 	array(
 		'name' => 'id_board',
@@ -57,29 +66,20 @@ $columns = array(
 		'null' => true,
 	),
 );
-
-//	Set up the correct indexes for the table.
 $indexes = array(
 	array(
 		'type' => 'primary',
 		'columns' => array('id_form'),
 	),
 );
-
-//	Perform the table creation.
 $smcFunc['db_create_table']('{db_prefix}cf_forms', $columns, $indexes, array(), 'update_remove');
 
-foreach ($columns as $column)
-	if (stripos($column['type'], 'char') !== false)
-		$smcFunc['db_change_column']('{db_prefix}cf_forms', $column['name'], $column + ['default' => '']);
-
-//	Set up the correct columns for the table.
 $columns = array(
 	array(
 		'name' => 'id_field',
 		'type' => 'smallint',
 		'size' => '5',
-		'auto' => 1,
+		'auto' => true,
 	),
 	array(
 		'name' => 'id_form',
@@ -110,8 +110,6 @@ $columns = array(
 		'null' => true,
 	),
 );
-
-//	Set up the correct indexes for the table.
 $indexes = array(
 	array(
 		'type' => 'primary',
@@ -122,18 +120,4 @@ $indexes = array(
 		'columns' => array('id_form'),
 	),
 );
-
 $smcFunc['db_create_table']('{db_prefix}cf_fields', $columns, $indexes, array(), 'update_remove');
-
-foreach ($columns as $column)
-	if (stripos($column['type'], 'char') !== false)
-		$smcFunc['db_change_column']('{db_prefix}cf_fields', $column['name'], $column + ['default' => '']);
-
-//	Delete any field that has the ID 0, just for version compatibility reasons.
-$smcFunc['db_query'](
-	'',
-	'
-	DELETE 
-	FROM {db_prefix}cf_fields 
-	WHERE id_field = \'0\''
-);

@@ -28,35 +28,58 @@ function customform_modify_modifications(array &$sub_actions)
 	$sub_actions['customform'] = 'ModifyCustomFormSettings';
 }
 
-function customform_load_theme()
+function customform_who_allowed(array &$allowedActions)
 {
-	global $context, $scripturl, $smcFunc, $txt;
-
-	if ($context['current_action'] == 'who')
-	{
-		loadLanguage('CustomForm');
-		$request = $smcFunc['db_query']('', 'SELECT id_form, title FROM {db_prefix}cf_forms');
-		while ([$id_form, $title] = $smcFunc['db_fetch_row']($request))
-			if (allowedTo('custom_forms_' . $id_form))
-				$txt['customform_whoallow_' . $id_form] = sprintf(
-					$txt['customform_who'],
-					$scripturl,
-					$id_form,
-					$title,
-				);
-		$smcFunc['db_free_result']($request);
-	}
-
-	if ($context['current_action'] == 'helpadmin')
-		loadLanguage('CustomForm');
+	$allowedActions['form'] = array('customform_view_perms');
 }
 
-function customform_whos_online(array $actions)
+function customform_whos_online_after(array &$urls, array &$data)
 {
-	global $txt;
+	global $scripturl, $smcFunc, $txt;
 
-	if (isset($actions['n'], $txt['customform_whoallow_' . $actions['n']]))
-		return $txt['customform_whoallow_' . $actions['n']];
+	$forms = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT id_form, title
+		FROM {db_prefix}cf_forms AS f
+		WHERE title != \'\'
+			AND EXISTS
+			(
+				SELECT * FROM {db_prefix}cf_fields AS d
+				WHERE d.id_form = f.id_form
+					AND title != \'\'
+					AND text != \'\'
+					AND type != \'\'
+			)');
+	while (list ($id_form, $title) = $smcFunc['db_fetch_row']($request))
+		if (allowedTo('custom_forms_' . $id_form))
+			$forms[$id_form] = $title;
+	$smcFunc['db_free_result']($request);
+
+	loadLanguage('CustomForm');
+	if (!is_array($urls))
+		$url_list = array(array($urls, $user_info['id']));
+	else
+		$url_list = $urls;
+	foreach ($url_list as $k => $url)
+	{
+		// Get the request parameters..
+		$actions = $smcFunc['json_decode']($url[0], true);
+		if ($actions === array())
+			continue;
+
+		if (isset($actions['n'], $actions['action'], $forms[$actions['n']]) && $actions['action'] == 'form')
+			$data[$k] = sprintf(
+				$txt['customform_who'],
+				$scripturl,
+				$actions['n'],
+				$forms[$actions['n']],
+			);
+	}
+}
+
+function customform_helpadmin()
+{
+	loadLanguage('CustomForm');
 }
 
 function customform_list_classes()
@@ -68,10 +91,9 @@ function customform_list_classes()
 
 function customform_replace_vars(string $text, array $array): string
 {
-	return preg_replace_callback('~{{1,2}\s*?([a-zA-Z0-9\-_\.]+)\s*?}{1,2}~',
-		function($matches) use ($array)
-		{
-			return $array[$matches[1]] ?? $matches[1];
-		},
-		$text);
+	return preg_replace_callback(
+		'~{{1,2}\s*?([a-zA-Z0-9\-_\.]+)\s*?}{1,2}~',
+		fn($matches) => $array[$matches[1]] ?? $matches[1],
+		$text
+	);
 }

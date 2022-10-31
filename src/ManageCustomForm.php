@@ -11,7 +11,7 @@
 //	Fucntion to handle the settings for the Custom Form Mod.
 function ModifyCustomFormSettings($return_config = false)
 {
-	global $modSettings, $sourcedir, $txt, $scripturl, $context, $settings, $smcFunc;
+	global $modSettings, $txt, $scripturl, $context, $settings, $smcFunc;
 
 	$config_vars = array();
 
@@ -27,9 +27,7 @@ function ModifyCustomFormSettings($return_config = false)
 	if (isset($form_id))
 	{
 		//	Get some information about this form.
-		$request = $smcFunc['db_query'](
-			'',
-			'
+		$request = $smcFunc['db_query']('', '
 			SELECT title, id_board, icon, output, subject, form_exit, template_function
 			FROM {db_prefix}cf_forms
 			WHERE id_form = {int:id_form}',
@@ -43,15 +41,12 @@ function ModifyCustomFormSettings($return_config = false)
 
 		//	No data? Well, show the default settings page then.
 		if (empty($data))
-			redirectexit("action=admin;area=modsettings;sa=customform;");
+			redirectexit('action=admin;area=modsettings;sa=customform;');
 
 		//	Do we need to delete the form?
 		if (isset($_GET['delete']))
 		{
-			//	Delete the form itself.
-			$smcFunc['db_query'](
-				'',
-				'
+			$smcFunc['db_query']('', '
 				DELETE
 				FROM {db_prefix}cf_forms
 				WHERE id_form = {int:id_form}',
@@ -59,11 +54,7 @@ function ModifyCustomFormSettings($return_config = false)
 					'id_form' => $form_id,
 				)
 			);
-
-			//	Delete any permissions that belong to the form.
-			$smcFunc['db_query'](
-				'',
-				'
+			$smcFunc['db_query']('', '
 				DELETE
 				FROM {db_prefix}permissions
 				WHERE permission = {string:permission}',
@@ -71,11 +62,7 @@ function ModifyCustomFormSettings($return_config = false)
 					'permission' => 'custom_forms_' . $form_id,
 				)
 			);
-
-			//	Delete any fields that belong to the form.
-			$smcFunc['db_query'](
-				'',
-				'
+			$smcFunc['db_query']('', '
 				DELETE
 				FROM {db_prefix}cf_fields
 				WHERE id_form = {int:id_form}',
@@ -83,26 +70,13 @@ function ModifyCustomFormSettings($return_config = false)
 					'id_form' => $form_id,
 				)
 			);
-			redirectexit("action=admin;area=modsettings;sa=customform;");
+			redirectexit('action=admin;area=modsettings;sa=customform;');
 		}
 
 		//	Do we need to update the form?
 		elseif (isset($_GET['update']))
 		{
-			//	Format the form output, so that the WYSIWYG editor works correctly
-			if (!empty($_REQUEST['message_mode']) && isset($_REQUEST['output']))
-			{
-				require_once($sourcedir . '/Subs-Editor.php');
-				$_REQUEST['output'] = html_to_bbc($_REQUEST['output']);
-				$_REQUEST['output'] = un_htmlspecialchars($_REQUEST['output']);
-				$_REQUEST['output'] = $smcFunc['htmlspecialchars']($_REQUEST['output'], ENT_QUOTES);
-				preparsecode($_REQUEST['output']);
-			}
-
-			//	Perform the updating query.
-			$smcFunc['db_query'](
-				'',
-				'
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}cf_forms
 				SET id_board = {int:id_board},
 				icon = {string:icon},
@@ -124,10 +98,10 @@ function ModifyCustomFormSettings($return_config = false)
 			);
 
 			//	Update the permissions.
-			require_once($sourcedir . '/ManagePermissions.php');
+			require_once __DIR__ . '/ManagePermissions.php';
 			save_inline_permissions(array('custom_forms_' . $form_id));
 
-			redirectexit("action=admin;area=modsettings;sa=customform;form_id=" . $form_id . ";");
+			redirectexit('action=admin;area=modsettings;sa=customform;form_id=' . $form_id . ';');
 		}
 		//	Do we need to add a new field?
 		elseif (isset($_GET['add_field']))
@@ -145,7 +119,7 @@ function ModifyCustomFormSettings($return_config = false)
 			$field_id = $smcFunc['db_insert_id']('{db_prefix}cf_fields', 'id_field');
 
 			//	Take us to the newly created form.
-			redirectexit("action=admin;area=modsettings;sa=customform;field_id=" . $field_id . ";");
+			redirectexit('action=admin;area=modsettings;sa=customform;field_id=' . $field_id . ';');
 		}
 
 		//	The template will need some data.
@@ -161,7 +135,7 @@ function ModifyCustomFormSettings($return_config = false)
 		);
 
 		//	Call the function to setup the wysiwyg editor.
-		require_once($sourcedir . '/Subs-Editor.php');
+		require_once __DIR__ . '/Subs-Editor.php';
 		create_control_richedit(
 			array(
 				'id' => 'output',
@@ -224,14 +198,13 @@ function ModifyCustomFormSettings($return_config = false)
 		);
 
 		//	Call the function to setup the list for the template.
-		require_once($sourcedir . '/Subs-List.php');
+		require_once __DIR__ . '/Subs-List.php';
 		createList($list);
 
 		//	Call the function to setup the inline permissions for the template.
-		require_once($sourcedir . '/ManagePermissions.php');
+		require_once __DIR__ . '/ManagePermissions.php';
 		init_inline_permissions(array('custom_forms_' . $form_id));
-		if (function_exists('createToken'))
-			createToken('admin-mp');
+		createToken('admin-mp');
 
 		//	Set up the variables needed by the template.
 		$context['settings_title'] =
@@ -245,14 +218,10 @@ function ModifyCustomFormSettings($return_config = false)
 		$context['sub_template'] = 'customform_GeneralSettings';
 
 		// Load the boards and categories for adding or editing a Form.
-		$request = $smcFunc['db_query'](
-			'',
-			'
-		 SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
-		 FROM {db_prefix}boards AS b
-			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)',
-			array()
-		);
+		$request = $smcFunc['db_query']('', '
+			SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
+			FROM {db_prefix}boards AS b
+				LEFT JOIN {db_prefix}categories AS c USING (id_cat)');
 		$context['categories'] = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
@@ -272,12 +241,9 @@ function ModifyCustomFormSettings($return_config = false)
 		}
 		$smcFunc['db_free_result']($request);
 
-		if (empty($context['categories']))
-			fatal_lang_error('Invalid Board', false);
-
 		$context['icon'] = !empty($context['cf_forms']['icon']) ? $context['cf_forms']['icon'] : 'xx';
 
-		require_once($sourcedir . '/Subs-Editor.php');
+		require_once __DIR__ . '/Subs-Editor.php';
 		// Message icons - customized icons are off?
 		$context['icons'] =
 			getMessageIcons(!empty($context['cf_forms']['id_board']) ? $context['cf_forms']['id_board'] : 0);
@@ -324,7 +290,7 @@ function ModifyCustomFormSettings($return_config = false)
 
 	if (!empty($boards))
 	{
-		require_once($sourcedir . '/Subs-Boards.php');
+		require_once __DIR__ . '/Subs-Boards.php';
 		sortBoards($boards);
 		$boards = array('') + $boards;
 	}
@@ -387,27 +353,20 @@ function ModifyCustomFormSettings($return_config = false)
 				'output',
 			),
 		);
-
-
-		//	Load all of the templates that we need.
 		loadTemplate('CustomForm');
 		loadTemplate('GenericControls');
 		loadTemplate('GenericList');
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
-		if (function_exists('createToken'))
-		{
-			// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
-			createToken('admin-mp');
-			createToken('admin-dbsc');
-		}
+
+		// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
+		createToken('admin-mp');
+		createToken('admin-dbsc');
 	}
 	//	Do we need to deal with showing specific field settings?
 	elseif (isset($field_id))
 	{
-		$request = $smcFunc['db_query'](
-			'',
-			'
+		$request = $smcFunc['db_query']('', '
 			SELECT title, type, id_form, text, type_vars
 			FROM {db_prefix}cf_fields
 			WHERE id_field = {int:id_field}',
@@ -421,12 +380,10 @@ function ModifyCustomFormSettings($return_config = false)
 
 		//	No data? Well, show the default settings page then.
 		if (empty($data))
-			redirectexit("action=admin;area=modsettings;sa=customform;");
+			redirectexit('action=admin;area=modsettings;sa=customform;');
 
 		//	Get some information about the parent form.
-		$request = $smcFunc['db_query'](
-			'',
-			'
+		$request = $smcFunc['db_query']('', '
 			SELECT title, id_board
 			FROM {db_prefix}cf_forms
 			WHERE id_form = {int:id_form}',
@@ -441,9 +398,7 @@ function ModifyCustomFormSettings($return_config = false)
 		//	Do we need to delete the field?
 		if (isset($_GET['delete']))
 		{
-			$smcFunc['db_query'](
-				'',
-				'
+			$smcFunc['db_query']('', '
 				DELETE
 				FROM {db_prefix}cf_fields
 				WHERE id_field = {int:id_field}',
@@ -451,7 +406,7 @@ function ModifyCustomFormSettings($return_config = false)
 					'id_field' => $field_id,
 				)
 			);
-			redirectexit("action=admin;area=modsettings;sa=customform;form_id=" . $data['id_form'] . ";");
+			redirectexit('action=admin;area=modsettings;sa=customform;form_id=' . $data['id_form'] . ';');
 		}
 		//	Do we need to update the field?
 		elseif (isset($_GET['update']))
@@ -472,19 +427,15 @@ function ModifyCustomFormSettings($return_config = false)
 					'type_vars' => $_REQUEST['field_type_vars'],
 				)
 			);
-			redirectexit("action=admin;area=modsettings;sa=customform;form_id=" . $data['id_form'] . ";");
+			redirectexit('action=admin;area=modsettings;sa=customform;form_id=' . $data['id_form'] . ';');
 		}
 		//	Do we need to move the field?
-		elseif (isset($_GET['moveup'])
-			|| isset($_GET['movedown'])
-		)
+		elseif (isset($_GET['moveup']) || isset($_GET['movedown']))
 		{
 			$factor = isset($_GET['moveup']) ? -1 : 1;
 
 			//	Get a list of all of the 'siblings' of this field.
-			$request = $smcFunc['db_query'](
-				'',
-				'
+			$request = $smcFunc['db_query']('', '
 				SELECT id_field
 				FROM {db_prefix}cf_fields
 				WHERE id_form = {int:id_form}
@@ -521,9 +472,7 @@ function ModifyCustomFormSettings($return_config = false)
 			{
 				$replace_id = $siblings[$field_pos + $factor];
 				//	Perform the rather hacky updating queries. - They do work, just hackily! ;D
-				$smcFunc['db_query'](
-					'',
-					'
+				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}cf_fields
 					SET id_field = \'0\'
 					WHERE id_field = {int:field_id}',
@@ -531,9 +480,7 @@ function ModifyCustomFormSettings($return_config = false)
 						'field_id' => $field_id,
 					)
 				);
-				$smcFunc['db_query'](
-					'',
-					'
+				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}cf_fields
 					SET id_field = {int:field_id}
 					WHERE id_field = {int:replace_id}',
@@ -542,9 +489,7 @@ function ModifyCustomFormSettings($return_config = false)
 						'replace_id' => $replace_id,
 					)
 				);
-				$smcFunc['db_query'](
-					'',
-					'
+				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}cf_fields
 					SET id_field = {int:replace_id}
 					WHERE id_field = \'0\'',
@@ -554,10 +499,10 @@ function ModifyCustomFormSettings($return_config = false)
 				);
 			}
 			//	Take us back to the form setting page.
-			redirectexit("action=admin;area=modsettings;sa=customform;form_id=" . $data['id_form'] . ";");
+			redirectexit('action=admin;area=modsettings;sa=customform;form_id=' . $data['id_form'] . ';');
 		}
 
-		require_once($sourcedir . '/Class-CustomForm.php');
+		require_once __DIR__ . '/Class-CustomForm.php';
 		$result = [];
 		foreach (customform_list_classes() as $cn)
 			$result[$cn] = $txt['customform_type_' . $cn];
@@ -639,14 +584,13 @@ function ModifyCustomFormSettings($return_config = false)
 					textarea.parentNode.appendChild(el);
 					textarea.addEventListener("keyup", textareaLengthCheck, false);
 
-					textareaLengthCheck.call(textarea);
+					textareaLengthCheck();
 				});
 			</script>';
 
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
-		if (function_exists('createToken'))
-			createToken('admin-dbsc');
+		createToken('admin-dbsc');
 	}
 	//	Do we need to add a new form?
 	elseif (isset($_GET['add_form']))
@@ -664,7 +608,7 @@ function ModifyCustomFormSettings($return_config = false)
 		$form_id = $smcFunc['db_insert_id']('{db_prefix}cf_forms', 'id_form');
 
 		//	Take us to the newly created form.
-		redirectexit("action=admin;area=modsettings;sa=customform;form_id=" . $form_id . ";");
+		redirectexit('action=admin;area=modsettings;sa=customform;form_id=' . $form_id . ';');
 	}
 	//	Otherwise show the generic list of custom forms.
 	else
@@ -681,7 +625,7 @@ function ModifyCustomFormSettings($return_config = false)
 			//	Make sure that an admin is doing the updating.
 			checkSession();
 			saveDBSettings($config_vars);
-			redirectexit("action=admin;area=modsettings;sa=customform;");
+			redirectexit('action=admin;area=modsettings;sa=customform;');
 		}
 
 		$list = array(
@@ -736,7 +680,7 @@ function ModifyCustomFormSettings($return_config = false)
 
 
 		//	Call the function to setup the list for the template.
-		require_once($sourcedir . '/Subs-List.php');
+		require_once __DIR__ . '/Subs-List.php';
 		createList($list);
 
 		//	Set up the variables needed by the template.
@@ -750,12 +694,10 @@ function ModifyCustomFormSettings($return_config = false)
 
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
-		if (function_exists('createToken'))
-		{
-			// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
-			createToken('admin-mp');
-			createToken('admin-dbsc');
-		}
+
+		// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
+		createToken('admin-mp');
+		createToken('admin-dbsc');
 	}
 }
 
@@ -765,12 +707,9 @@ function list_CustomForms()
 	global $txt, $scripturl, $smcFunc;
 
 	//	Get the data from the cf_forms table.
-	$request = $smcFunc['db_query'](
-		'',
-		'
+	$request = $smcFunc['db_query']('', '
 		SELECT id_form, title, id_board
-		FROM {db_prefix}cf_forms'
-	);
+		FROM {db_prefix}cf_forms');
 
 	//	Get some general permissions info.
 	$permissions = get_customform_permissions();
@@ -789,9 +728,7 @@ function list_CustomForms()
 		//	Try to find the name of the board.
 		$board_name = 'Invalid Board';
 
-		$board_request = $smcFunc['db_query'](
-			'',
-			'
+		$board_request = $smcFunc['db_query']('', '
 			SELECT name
 			FROM {db_prefix}boards
 			WHERE id_board = {int:id_board}
@@ -836,12 +773,10 @@ function list_CustomForms()
 //	Fucntion to produce a list of custom form fields.
 function list_customform_fields($nul0, $nul1, $nul2, $id)
 {
-	global $txt, $scripturl, $sourcedir, $smcFunc;
+	global $txt, $scripturl, $smcFunc;
 
 	//	Get the data from the cf_fields table.
-	$request = $smcFunc['db_query'](
-		'',
-		'
+	$request = $smcFunc['db_query']('', '
 		SELECT id_field, title, type, text
 		FROM {db_prefix}cf_fields
 		WHERE id_form = {int:id_form}
@@ -860,7 +795,7 @@ function list_customform_fields($nul0, $nul1, $nul2, $id)
 	$i = 1;
 	$end = count($data);
 
-	require_once($sourcedir . '/Class-CustomForm.php');
+	require_once __DIR__ . '/Class-CustomForm.php';
 	$result = [];
 	foreach (customform_list_classes() as $cn)
 		$result[$cn] = $txt['customform_type_' . $cn];
@@ -921,14 +856,11 @@ function get_customform_permissions()
 	$permissions = array();
 
 	// 	Get the permissions for the Custom Menu System.
-	$request = $smcFunc['db_query'](
-		'',
-		'
+	$request = $smcFunc['db_query']('', '
 		SELECT permission, id_group
 		FROM {db_prefix}permissions
 		WHERE permission
-		LIKE \'custom_forms_%\''
-	);
+		LIKE \'custom_forms_%\'');
 
 	//	Store the data in a way that is easy to use. Permission => array (id_groups)
 	while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -952,22 +884,18 @@ function get_customform_membergroups()
 	$membergroups['0'] = $txt['users'];
 
 	// Get the permissions from the table, make sure we only get them for the Menu System.
-	$request = $smcFunc['db_query'](
-		'',
-		'
-		SELECT ID_GROUP, group_name
+	$request = $smcFunc['db_query']('', '
+		SELECT id_group, group_name
 		FROM {db_prefix}membergroups' . (($modSettings['permission_enable_postgroups']) ? '' : '
 		WHERE min_posts = -1')
 	);
 
 	//	Store the data in a way that is easy to use. Permission => array (id_groups)
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$membergroups[$row['ID_GROUP']] = $row['group_name'];
+		$membergroups[$row['id_group']] = $row['group_name'];
 
 	//	Don't forget to free the request!!!
 	$smcFunc['db_free_result']($request);
 
 	return $membergroups;
 }
-
-?>

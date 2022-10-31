@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license   http://opensource.org/licenses/MIT MIT
  */
  
-function template_main_above()
+function template_forms_above()
 {
 	global $context, $scripturl;
 
@@ -50,12 +50,11 @@ function template_main_above()
 			</div>';
 
 		echo '
-				<div class="windowbg noup">
-					<span class="topslice"><span></span></span>
+			<div class="windowbg noup">
 		<ul class="reset">';
 }
 
-function template_main(): void
+function template_forms(): void
 {
 	global $context, $scripturl;
 
@@ -65,7 +64,7 @@ function template_main(): void
 			<li>
 				<a href="' . $scripturl . '?action=form;n=' . $id_form . '">' . $title . '</a>';
 
-		if (!empty($description))
+		if ($description != '')
 			echo '
 				<div class="d">', $description, '</div>';
 
@@ -74,11 +73,10 @@ function template_main(): void
 	}
 }
 
-function template_main_below(): void
+function template_forms_below(): void
 {
 	echo '
 		</ul>
-					<span class="botslice"><span></span></span>
 			</div>';
 }
 
@@ -108,7 +106,6 @@ function template_form_above(): void
 					', $context['page_title'], '
 				</h3>
 			</div>
-			<span class="upperframe"><span></span></span>
 			<div class="roundframe noup">';
 }
 
@@ -116,7 +113,7 @@ function template_errors_above(): void
 {
 	global $context, $txt;
 
-	if (!empty($context['post_errors']))
+	if ($context['post_errors'] != [])
 	{
 		echo '
 					<div class="errorbox" id="errors">
@@ -124,8 +121,7 @@ function template_errors_above(): void
 						<ul>';
 
 		foreach ($context['post_errors'] as $error)
-			if (!empty($error))
-				echo '
+			echo '
 							<li>', sprintf($txt[$error[0]], $error[1]), '</li>';
 
 		echo '
@@ -146,10 +142,9 @@ function template_form_below(): void
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input name="n" value="', $context['form_id'], '" type="hidden" />
 				<div class="righttext padding">
-					<input name="submit" value="', $txt['customform_submit'], '" class="button_submit" type="submit" />
+					<input name="submit" value="', $txt['customform_submit'], '" class="button" type="submit" />
 				</div>
 			</div>
-			<span class="lowerframe"><span></span></span>
 		</form>';
 }
 
@@ -212,7 +207,6 @@ function form_template_submit_form()
 				<span class="tc lower_padding">', template_control_verification('customform','all'), '</span>';
 }
 
-//	Function to call the correct function for showing the submit form page.
 function template_submit_form()
 {
 	global $context;
@@ -222,8 +216,6 @@ function template_submit_form()
 
 function template_callback_output()
 {
-	global $context, $txt, $settings, $scripturl;
-
 	echo '
 									</dl>
 								<table>
@@ -260,7 +252,6 @@ function template_customform_GeneralSettings()
 	template_show_list();
 }
 
-//	Template function for the thank you page.
 function template_ThankYou()
 {
 	global $context, $modSettings, $scripturl, $txt;
@@ -271,29 +262,27 @@ function template_ThankYou()
 			', isset($modSettings['customform_view_title']) && $modSettings['customform_view_title'] != '' ? $modSettings['customform_view_title'] : $txt['customform_tabheader'], '
 		</h3>
 	</div>
-			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
 					<table style="width:100%;" align="center">
 						<tr>
 							<td style="padding:4px;" colspan="3" align="center">
-							<b>	', $txt['customform_thankyou'], '</b>
+							<b>', $txt['customform_thankyou'], '</b>
 							</td>
 						</tr>
 
 						<tr>
 							<td style="padding:4px;" style="width:45%;" align="center">
-								<a href="' . $scripturl . '">
+								<a class="button" href="' . $scripturl . '">
 									', $txt['customform_forum'], '
 								</a>
 							</td>
 							<td style="padding:4px;" style="width:45%;" align="center">
-								<a href="' . $scripturl . '?action=form">
+								<a class="button" href="' . $scripturl . '?action=form">
 									', $txt['customform_list'], '
 								</a>
 							</td>
 						</tr>
 					</table>
 			</div>
-			<span class="lowerframe"><span></span></span>
 	';
 }
