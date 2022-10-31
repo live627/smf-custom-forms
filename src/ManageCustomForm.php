@@ -236,7 +236,7 @@ function ModifyCustomFormSettings($return_config = false)
 				'name' => strip_tags($row['name']),
 				'category' => strip_tags($row['cat_name']),
 				'child_level' => $row['child_level'],
-				'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board'] && $row['id_board'] != $board,
+				'selected' => $row['id_board'] == $data['id_board']
 			);
 		}
 		$smcFunc['db_free_result']($request);
