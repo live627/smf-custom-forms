@@ -172,7 +172,7 @@ class CustomForm_select extends CustomFormBase
 	public function setHtml()
 	{
 		$this->input_html = sprintf(
-			'<select name="%s[%d]" style="width: 90%%;">',
+			'<select name="%s[%d]">',
 			'CustomFormField',
 			$this->field['id_field']
 		);
@@ -237,7 +237,7 @@ class CustomForm_text extends CustomFormBase
 	{
 		$this->output_html = $this->value;
 		$this->input_html = sprintf(
-			'<input type="text" name="%s[%d]" style="width: 90%%;" value="%s">',
+			'<input type="text" name="%s[%d]" value="%s">',
 			'CustomFormField',
 			$this->field['id_field'],
 			$this->value

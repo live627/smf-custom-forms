@@ -221,10 +221,10 @@ function CustomForm()
 			$context['form_id'] = $form_id;
 			$context['failed_form_submit'] = $post_errors != [];
 			$template_function = 'template_' . $form_data['template_function'];
-			$context['template_function'] = function_exists('form_' . $template_function) ? $template_function : 'template_submit_form';
-			$context['sub_template'] = 'submit_form';
+			$template = function_exists('form_' . $template_function) ? $template : 'form';
+			$context['sub_template'] = $template;
 			loadTemplate('CustomForm');
-			$context['template_layers'][] = function_exists($template_function . '_above') && function_exists($template_function . '_below') ? $context['template_function'] : 'form';
+			$context['template_layers'][] = function_exists($template_function . '_above') && function_exists($template_function . '_below') ? $template : 'form';
 		}
 		//	If not then fall to the default view form page, with the list of forms.
 		else

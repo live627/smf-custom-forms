@@ -89,15 +89,22 @@ function template_form_above(): void
 		.roundframe
 		{
 			display: grid;
-			grid-template-columns: repeat(2, 1fr);
+			gap: 0.5em;
 		}
-		.roundframe :not(.tc)
+		@media (min-width: 480px)
 		{
-			grid-column: span 2;
+			.roundframe
+			{
+				grid-template-columns: 1fr 2fr;
+			}
+			.roundframe .breaker
+			{
+				grid-column: span 2;
+			}
 		}
-		.main_section, .lower_padding
+		.roundframe label
 		{
-			padding-bottom: 0.5em;
+			font-weight: bold;
 		}
 	</style>
 		<form action="', $scripturl, '?action=form" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
@@ -141,21 +148,14 @@ function template_form_below(): void
 	echo '
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input name="n" value="', $context['form_id'], '" type="hidden" />
-				<div class="righttext padding">
+				<div class="righttext breaker">
 					<input name="submit" value="', $txt['customform_submit'], '" class="button" type="submit" />
 				</div>
 			</div>
 		</form>';
 }
 
-/*
-	Custom Form Mod v1.7 SMF 2 Beta made by LHVWB and Garou.
-	
-	CustomForm.template.php - Handles the templates for the Custom Form Mod.
-*/
-
-// Generic template for showing the submit form page.
-function form_template_submit_form()
+function template_form()
 {
 	global $context, $txt, $settings, $scripturl;
 
@@ -177,41 +177,29 @@ function form_template_submit_form()
 	{
 		if ($field_data['type'] == 'info')
 			echo '
-				<span class="lower_padding">', $field_data['text'], '</span>';
+				<span class="breaker">', $field_data['text'], '</span>';
 		else
-
-			//	Show the display text for this field.
 			echo '
-				<span class="tc lower_padding', $field_data['failed'] ? ' error' : '', '"><label for="', $field_name, '"><b>', $field_data['text'], '</b></label></span>
-				<span class="tc lower_padding">
+					<label for="', $field_name, '"', $field_data['failed'] ? ' class="error"' : '', '>', $field_data['text'];
+
+		if ($field_data['required'])
+			echo ' *';
+
+		echo '</label>
 					', $field_data['html'];
-
-		//	Show the 'required' asterix if necessary.
-		if (!empty($field_data['required']))
-			echo '
-					<span', !empty($field_data['failed']) ? ' class="error"' : '', '> *</span>';
-
-		//	End the input column and the entire row.
-		echo '
-				</span>';
 	}
 
 	//    Show the "Required Fields" text down the bottom, show it in red if there was a failed submit.
 	echo '
-				<span class="lower_padding centertext', !empty($context['failed_form_submit']) ? ' error' : '', '">', $txt['customform_required'], '</span>';
+				<span class="breaker centertext', $context['failed_form_submit'] ? ' error' : '', '">', $txt['customform_required'], '</span>';
 
 	// Display visual verification on the form
 	if ($context['require_verification'])
 		echo '
-				<span class="tc lower_padding"><b>', $txt['verification'], ':</b></span>
-				<span class="tc lower_padding">', template_control_verification('customform','all'), '</span>';
-}
-
-function template_submit_form()
-{
-	global $context;
-
-	call_user_func('form_' . $context['template_function']);
+				<fieldset class="breaker">
+					<legend>', $txt['verification'], '</legend>
+					<span class="centertext">', template_control_verification('customform','all'), '</span>
+				</fieldset>';
 }
 
 function template_callback_boards()
