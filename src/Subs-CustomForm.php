@@ -33,7 +33,7 @@ function customform_who_allowed(array &$allowedActions)
 	$allowedActions['form'] = array('customform_view_perms');
 }
 
-function customform_whos_online_after(array &$urls, array &$data)
+function customform_whos_online_after(/* string|array */ &$urls, array &$data)
 {
 	global $scripturl, $smcFunc, $txt;
 
@@ -56,8 +56,11 @@ function customform_whos_online_after(array &$urls, array &$data)
 	$smcFunc['db_free_result']($request);
 
 	loadLanguage('CustomForm');
+
+	// Fix the anomaly where $urls is a string when
+	// coming from the profile section.
 	if (!is_array($urls))
-		$url_list = array(array($urls, $user_info['id']));
+		$url_list = array(array($urls, 0));
 	else
 		$url_list = $urls;
 	foreach ($url_list as $k => $url)
