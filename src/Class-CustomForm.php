@@ -220,7 +220,7 @@ class CustomForm_radio extends CustomForm_select
 		foreach ($this->type_vars as $v)
 		{
 			$this->input_html .= sprintf(
-				'<label><input type="radio" name="%s[%d]"%s> %s</label><br>',
+				'<label><input type="radio" name="%s[%d]" value="%4$s"%s> %s</label><br>',
 				'CustomFormField',
 				$this->field['id_field'],
 				(!$this->exists && $this->default == $v) || $this->value == $v
