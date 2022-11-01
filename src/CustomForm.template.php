@@ -106,6 +106,10 @@ function template_form_above(): void
 		{
 			font-weight: bold;
 		}
+		.roundframe input[type=checkbox]
+		{
+			justify-self: flex-start;
+		}
 	</style>
 		<form action="', $scripturl, '?action=form" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
 			<div class="cat_bar">
@@ -180,12 +184,12 @@ function template_form()
 				<span class="breaker">', $field_data['text'], '</span>';
 		else
 			echo '
-					<label for="', $field_name, '"', $field_data['failed'] ? ' class="error"' : '', '>', $field_data['text'];
+					<label for="', $field_name, '"', $field_data['failed'] ? ' class="error"' : '', '>';
 
 		if ($field_data['required'])
 			echo ' *';
 
-		echo '</label>
+		echo $field_data['text'], '</label>
 					', $field_data['html'];
 	}
 
