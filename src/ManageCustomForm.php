@@ -219,9 +219,10 @@ function ModifyCustomFormSettings($return_config = false)
 
 		// Load the boards and categories for adding or editing a Form.
 		$request = $smcFunc['db_query']('', '
-			SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
+			SELECT id_board, b.name, child_level, c.name AS cat_name, id_cat
 			FROM {db_prefix}boards AS b
-				LEFT JOIN {db_prefix}categories AS c USING (id_cat)');
+				LEFT JOIN {db_prefix}categories AS c USING (id_cat)
+			ORDER BY board_order');
 		$context['categories'] = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
@@ -231,10 +232,8 @@ function ModifyCustomFormSettings($return_config = false)
 					'boards' => array(),
 				);
 
-			$context['categories'][$row['id_cat']]['boards'][] = array(
-				'id' => $row['id_board'],
+			$context['categories'][$row['id_cat']]['boards'][$row['id_board']] = array(
 				'name' => strip_tags($row['name']),
-				'category' => strip_tags($row['cat_name']),
 				'child_level' => $row['child_level'],
 				'selected' => $row['id_board'] == $data['id_board']
 			);
@@ -275,27 +274,7 @@ function ModifyCustomFormSettings($return_config = false)
 				)
 			);
 		}
-	$request = $smcFunc['db_query']('order_by_board_order', '
-		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
-		FROM {db_prefix}boards AS b
-			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE redirect = {string:empty_string}',
-		array(
-			'empty_string' => '',
-		)
-	);
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$boards[$row['id_board']] = $row['cat_name'] . ' - ' . $row['board_name'];
-	$smcFunc['db_free_result']($request);
 
-	if (!empty($boards))
-	{
-		require_once __DIR__ . '/Subs-Boards.php';
-		sortBoards($boards);
-		$boards = array('') + $boards;
-	}
-	else
-		$boards = array('');
 		$config_vars = array(
 			array(
 				'text',
@@ -305,12 +284,8 @@ function ModifyCustomFormSettings($return_config = false)
 				'help' => 'customform_field_title',
 			),
 			array(
-				'select',
-				'board_id',
-				$boards,
-				'value' => $data['id_board'],
-				'text_label' => $txt['customform_board_id'],
-				'help' => 'customform_board_id',
+				'callback',
+				'boards',
 			),
 			array(
 				'select',
@@ -358,6 +333,12 @@ function ModifyCustomFormSettings($return_config = false)
 		loadTemplate('GenericList');
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
+		$context['html_headers'] .= '
+			<style>
+				optgroup:not(:first-child) {
+					padding-top: 8px;
+				}
+			</style>';
 
 		// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
 		createToken('admin-mp');

@@ -38,7 +38,8 @@ $txt['customform_text'] = 'Text';
 $txt['customform_type'] = 'Type';
 $txt['customform_type_vars'] = 'Extra Type Parameters';
 $txt['customform_output'] = 'Form Output';
-$txt['customform_board_id'] = 'Board';
+$txt['customform_board'] = 'Board to post to';
+$txt['customform_board_desc'] = 'Select the board that the form will post to. The target board can be hidden.';
 $txt['customform_template_function'] = 'Custom Template Function';
 $txt['customform_exit'] = 'Submit Redirect';
 
@@ -102,7 +103,6 @@ $helptxt['customform_view_text'] =
 //	Help text for the edit form page.
 $helptxt['customform_form_title'] =
 	'This is the title of the current form, it will be displayed when a user is filling out the form and when they are viewing the list of forms.';
-$helptxt['customform_board_id'] = 'This drop-down menu to select the board that the form will post to. ';
 $helptxt['customform_icon'] =
 	'This drop-down menu allows you to change the default icon for the subject line to something matching the mood or purpose of your post. ';
 $helptxt['customform_permissions'] =

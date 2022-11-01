@@ -214,6 +214,44 @@ function template_submit_form()
 	call_user_func('form_' . $context['template_function']);
 }
 
+function template_callback_boards()
+{
+	global $context, $txt;
+
+	echo '
+						<dt>
+							', $txt['customform_board'], '<br>
+							<span class="smalltext">', $txt['customform_board_desc'], '</span>
+						</dt>
+						<dd>
+							<select name="board_id" size="10" style="width: 75%;">';
+
+	foreach ($context['categories'] as $category)
+	{
+		printf(
+			'
+								<optgroup label="%s">',
+			$category['name']
+		);
+
+		foreach ($category['boards'] as $idx => $board)
+			printf(
+				'
+									<option value="%s"%s>%s</option>',
+				$idx,
+				$board['selected'] ? ' selected' : '',
+				str_repeat('&emsp;', $board['child_level'] * 2) . $board['name']
+			);
+
+	echo '
+								</optgroup>';
+	}
+
+	echo '
+							</select>
+						</dd>';
+}
+
 function template_callback_output()
 {
 	echo '
