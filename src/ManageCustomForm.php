@@ -139,8 +139,7 @@ function ModifyCustomFormSettings($return_config = false)
 		create_control_richedit(
 			array(
 				'id' => 'output',
-				'value' => $data['output'],
-				'richvalue' => $data['output'],
+				'value' => $data['output'] ?? '',
 				'width' => '100%',
 			)
 		);
