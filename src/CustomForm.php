@@ -88,11 +88,13 @@ function CustomForm()
 				)
 			);
 
-			$data = array();
-			//	Get all of data from the db query.
+			$vars = array();
+			$post_errors = array();
+			$context['fields'] = array();
+			require_once __DIR__ . '/Class-CustomForm.php';
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
-				$row['type2'] = strtr($row['type'], [
+				$type = strtr($row['type'], [
 					'largetextbox' =>'textarea',
 					'textbox' =>'text',
 					'checkbox' =>'check',
@@ -102,22 +104,34 @@ function CustomForm()
 					'radiobox' =>'radio',
 					'infobox' =>'info'
 				]);
-				$data[] = $row;
+				$class_name = 'CustomForm_' . $type;
+				if (!class_exists($class_name))
+					fatal_error('Param "' . $type . '" not found for field "' . $row['text'] . '" at ID #' . $row['id_field'] . '.', false);
+
+				$type = new $class_name($row, $_POST['CustomFormField'][$row['id_field']] ?? '');
+				$type->setHtml();
+
+				if (isset($_POST['n']))
+				{
+					if (!$type->validate())
+						$post_errors['id_field' . $row['id_field']] = $type->getError();
+
+					// Add this field's value to the list of variables for the output post.
+					$vars[$row['title']] = $type->getValue();
+				}
+
+				$context['fields'][$row['title']] = array(
+					'text' => $row['text'],
+					'type' => $row['type'],
+					'html' => $type->getInputHtml(),
+					'required' => $type->isRequired(),
+					'failed' => isset($post_errors['id_field' . $row['id_field']]),
+				);
 			}
 			$smcFunc['db_free_result']($request);
 
-			//	Do we have fields attached to this form? If not then redirect the user to the form view page.
-			if (empty($data))
-				redirectexit('action=form;');
-
-			require_once __DIR__ . '/Class-CustomForm.php';
-
-			//	Do we need to submit this form?
-			$post_errors = array();
 			if (isset($_POST['n']))
 			{
-				$vars = array();
-				$replace = array();
 				if ('' != ($sc_error = checkSession('post', '', false)))
 					$post_errors[] = array(['error_' . $sc_error, '']);
 				if ($context['require_verification'])
@@ -131,26 +145,6 @@ function CustomForm()
 							$post_errors[] = ['error_' . $verification_error, ''];
 				}
 
-				//	Check for valid post data from the forms fields.
-				foreach ($data as $field)
-				{
-					$class_name = 'CustomForm_' . $field['type2'];
-					if (!class_exists($class_name))
-						fatal_error('Param "' . $field['type2'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
-
-					$type = new $class_name($field, $_POST['CustomFormField'][$field['id_field']] ?? '');
-					$type->setOptions();
-					if (!$type->validate())
-					{
-						$post_errors['id_field_' . $field['id_field']] = $type->getError();
-						continue;
-					}
-
-					//	Add this fields value to the list of variables for the output post.
-					$vars[$field['title']] = $type->getValue();
-				}
-
-				//	Do we have completly valid field data?
 				if ($post_errors === [])
 				{
 					require_once __DIR__ . '/Subs-Post.php';
@@ -187,36 +181,14 @@ function CustomForm()
 					else
 						redirectexit($exit);
 				}
-				$context['post_errors'] = $post_errors;
-				$context['template_layers'][] = 'errors';
-			}
-
-			//	Otherwise we shall show the submit form page.
-			$context['fields'] = array();
-
-			//	Okay, lets format the field data.
-			foreach ($data as $field)
-			{
-				$class_name = 'CustomForm_' . $field['type2'];
-				if (!class_exists($class_name))
-					fatal_error('Param "' . $field['type2'] . '" not found for field "' . $field['text'] . '" at ID #' . $field['id_field'] . '.', false);
-
-				$type = new $class_name($field, $_POST['CustomFormField'][$field['id_field']] ?? '');
-				$type->setOptions();
-				$type->setHtml();
-
-				$context['fields'][$field['title']] = array(
-					'text' => $field['text'],
-					'type' => $field['type'],
-					'html' => $type->getInputHtml(),
-					'required' => $type->isRequired(),
-					'failed' => isset($post_errors['id_field_' . $field['id_field']]),
-				);
+				else
+				{
+					$context['post_errors'] = $post_errors;
+					$context['template_layers'][] = 'errors';
+				}
 			}
 
 			loadLanguage('CustomForm+Post+Errors');
-
-			//	Setup and load the necessary template related stuff.
 			$context['page_title'] = $form_title;
 			$context['form_id'] = $form_id;
 			$context['failed_form_submit'] = $post_errors != [];
