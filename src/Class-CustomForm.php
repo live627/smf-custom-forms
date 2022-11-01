@@ -146,9 +146,12 @@ class CustomForm_check extends CustomFormBase
 	public function setHtml()
 	{
 		global $txt;
-		$true = (!$this->exists && $this->default) || $this->value;
+
+		$true = $this->exists
+			? $this->value
+			: $this->default;
 		$this->input_html = sprintf(
-			'<input type="checkbox" text="%s[%d]"%s>',
+			'<input type="checkbox" name="%s[%d]"%s>',
 			'CustomFormField',
 			$this->field['id_field'],
 			$true ? ' checked' : ''
@@ -157,9 +160,10 @@ class CustomForm_check extends CustomFormBase
 	}
 	public function validate(): bool
 	{
-		// Nothing needed here, really. It's just a get out of jail
-		// free card. "This card may be kept until needed, or sold."
-		return true;
+		if (!$this->exists && $this->required)
+			$this->err = array('customform_invalid_value', $this->field['text']);
+
+		return $this->err == [];
 	}
 	public function getValue(): string
 	{
@@ -198,7 +202,7 @@ class CustomForm_select extends CustomFormBase
 		if (!$found && $this->required)
 			$this->err = array('customform_invalid_value', $this->field['text']);
 
-		return $found;
+		return $this->err == [];
 	}
 	public function getValue(): string
 	{
