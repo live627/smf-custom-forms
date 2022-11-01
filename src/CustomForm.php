@@ -219,7 +219,7 @@ function CustomForm()
 			//	Setup and load the necessary template related stuff.
 			$context['page_title'] = $form_title;
 			$context['form_id'] = $form_id;
-			$context['failed_form_submit'] = $post_errors === [];
+			$context['failed_form_submit'] = $post_errors != [];
 			$template_function = 'template_' . $form_data['template_function'];
 			$context['template_function'] = function_exists('form_' . $template_function) ? $template_function : 'template_submit_form';
 			$context['sub_template'] = 'submit_form';
