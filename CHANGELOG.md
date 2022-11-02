@@ -1,5 +1,33 @@
 # Changelog
 
+## [3.0.0](https://www.github.com/live627/smf-custom-forms/compare/v2.2.4...v3.0.0) (2022-11-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drop support for SMF 2.0.x
+
+### Features
+
+* Add meta descriptions to forms for SERPs ([7cc30b4](https://www.github.com/live627/smf-custom-forms/commit/7cc30b47372991fa54d9c9fa81dcf62e487b2b5e))
+* Build linktree in forms ([03ad761](https://www.github.com/live627/smf-custom-forms/commit/03ad7618c7d5a7abff9233d6633acc4d7fd44c7f))
+* Form grid is now responsive ([334ade3](https://www.github.com/live627/smf-custom-forms/commit/334ade3848b38de8e9bf4146781c1b7974eb3292))
+* Make target board selection a list ([4926bf6](https://www.github.com/live627/smf-custom-forms/commit/4926bf61799a222d1b843933d16f72063ead006b))
+* Request search engines to not index the thank you page ([f55392f](https://www.github.com/live627/smf-custom-forms/commit/f55392f1c03868a63e533220103cf64b1c80304a))
+
+
+### Bug Fixes
+
+* AssertionError ([d76de71](https://www.github.com/live627/smf-custom-forms/commit/d76de7128ad00f5f4b2fa189bc1cca45a6e8e952))
+* Checkbox validation didn't work at all ([8aecc9e](https://www.github.com/live627/smf-custom-forms/commit/8aecc9e4c0bc84dc854e0d5590104e4d1a6b4c9f))
+* Radio button values needed to be set in HTML ([5fc912d](https://www.github.com/live627/smf-custom-forms/commit/5fc912da3d6bc92531d46a330cdfa87e4ae0515f))
+* Undefined $board ([877c242](https://www.github.com/live627/smf-custom-forms/commit/877c2422353f05e886a0bec738ab2b1b3a0db362))
+
+
+### Code Refactoring
+
+* Drop support for SMF 2.0.x ([867edf1](https://www.github.com/live627/smf-custom-forms/commit/867edf1bf1cdae7c1e250b6748856e439d74b8a5))
+
 ### [2.2.4](https://www.github.com/live627/smf-custom-forms/compare/v2.2.3...v2.2.4) (2022-05-24)
 
 

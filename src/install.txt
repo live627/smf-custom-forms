@@ -1,4 +1,4 @@
-[b][size=6]Custom Form Mod Version 2.2.4[/size][/b]
+[b][size=6]Custom Form Mod Version 3.0.0[/size][/b]
 
 [url="http://opensource.org/licenses/MIT"][img]https://camo.githubusercontent.com/d7b0ca6383644d5ac81e234f8d2249b731a1407b/687474703a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d3030393939392e737667[/img][/url] [url="https://www.paypal.me/JohnRayes"][img]https://camo.githubusercontent.com/e03e24ac37094afa6d1d089fc32de8027e9b4988/687474703a2f2f696d672e736869656c64732e696f2f62616467652f50617950616c2d242d3030393936362e737667[/img][/url]
 
@@ -20,9 +20,9 @@ Settings are found in the admin panel: Administration Center » Configuration »
 
 [*][b]Posting a form:[/b] This is done at the [font=monospace]form[/font] action [font=monospace]index.php?action=form;n=#[/font], Replace [font=monospace]#[/font] with the actual number of the form. Once the user has filled out the form and saved/submitted, the results will be posted to the appropriate board. You can change the look of this page by creating a Custom Template Function.
 
-[*][b]Custom Template Functions:[/b] This is a feature allows you to create your own custom template function for each form, to do this we suggest that you make a duplicate of the [font=monospace]form_template_example()[/font] function within the [font=monospace]CustomForm.template.php[/font] file. You can then use the documentation from that function to see how information is passed to it by the Mod, allowing you to change it for your purposes.
+[*][b]Custom Template Functions:[/b] This is a feature allows you to create your own custom template function for each form, to do this we suggest that you make a duplicate of the [font=monospace]template_example()[/font] function within the [font=monospace]CustomForm.template.php[/font] file. You can then use the documentation from that function to see how information is passed to it by the Mod, allowing you to change it for your purposes.
 
-Please remember that you have to name the new template function in this format [font=monospace]form_template_{Custom Template Name}[/font], and you will have to put the correct value from [font=monospace]{Custom Template Name}[/font] into the [font=monospace]Custom Template Function[/font] setting for the form that you wish to use you new template. Further explanation for custom templates can be found in [font=monospace]CustomForm.template.php[/font].
+Please remember that you have to name the new template function in this format [font=monospace]template_{Custom Template Name}[/font], and you will have to put the correct value from [font=monospace]{Custom Template Name}[/font] into the [font=monospace]Custom Template Function[/font] setting for the form that you wish to use you new template. Further explanation for custom templates can be found in [font=monospace]CustomForm.template.php[/font].
 
 [*][b]CAPTCHA Visual Verification:[/b] Visual verification often referred to as CAPTCHA and used by SMF for registration and posting, is included in the mod to help prevent against bots from using forms as a way to post your forum. Visual verification requires that the user type letters or digits from a distorted image that appears on the screen in order for a form to submit correctly.
 [list]

@@ -2,7 +2,7 @@
 
 /**
  * @package   Custom Form mod
- * @version   2.2.4
+ * @version   3.0.0
  * @author    John Rayes <live627@gmail.com>
  * @copyright Copyright (c) 2014, John Rayes
  * @license   http://opensource.org/licenses/MIT MIT

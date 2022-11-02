@@ -1,15 +1,14 @@
 ## Custom Form
 [![MIT license](http://img.shields.io/badge/license-MIT-009999.svg)](http://opensource.org/licenses/MIT)
-[![GitHub issues](https://img.shields.io/github/issues/live627/smf-custom-forms.svg)](https://github.com/live627/smf-ultimate-menu/issues)
-[![Latest Version](https://img.shields.io/github/release/live627/smf-custom-forms.svg)](https://github.com/live627/smf-ultimate-menu/releases)
-[![Total Downloads](https://img.shields.io/github/downloads/live627/smf-custom-forms/total.svg)](https://github.com/live627/elk-um/releases)
+[![GitHub issues](https://img.shields.io/github/issues/live627/smf-custom-forms.svg)](https://github.com/live627/smf-custom-forms/issues)
+[![Latest Version](https://img.shields.io/github/release/live627/smf-custom-forms.svg)](https://github.com/live627/smf-custom-forms/releases)
+[![Total Downloads](https://img.shields.io/github/downloads/live627/smf-custom-forms/total.svg)](https://github.com/live627/smf-custom-forms/releases)
 [![Support](http://img.shields.io/badge/PayPal-$-009966.svg)](https://www.paypal.me/JohnRayes)
 
 Package name | SMF version | Minimmum PHP version
 --- | --- | ---
+[Custom Form Mod 3.0.0](https://github.com/live627/smf-custom-forms/releases/download/v3.0.0/custom-forms_3-0-0.tgz) | SMF 2.1.x | PHP 7.4
 [Custom Form Mod 2.2.4](https://github.com/live627/smf-custom-forms/releases/download/v2.2.4/custom-forms_2-2-4.tgz) | SMF 2.0.x, SMF 2.1.x | PHP 7.4
-Custom Form Mod 2.0.0 | 2.0.x | PHP 7.4
-Custom Form Mod 1.8.0 | 2.0.x | PHP 5.3
 Custom Form Mod 1.7 | SMF 1.1.x, 2.0.x | PHP 4.3 – PHP 7.4
 
 [View changelog](https://github.com/live627/smf-custom-forms/blob/master/CHANGELOG.md)
@@ -30,9 +29,9 @@ Settings are found in the admin panel: Administration Center » Configuration »
 
 - **Posting a form:** This is done at the `form` action `index.php?action=form;n=#`, Replace `#` with the actual number of the form. Once the user has filled out the form and saved/submitted, the results will be posted to the appropriate board. You can change the look of this page by creating a Custom Template Function.
 
-- **Custom Template Functions:** This is a feature allows you to create your own custom template function for each form, to do this we suggest that you make a duplicate of the `form_template_example()` function within the `CustomForm.template.php` file. You can then use the documentation from that function to see how information is passed to it by the Mod, allowing you to change it for your purposes.
+- **Custom Template Functions:** This is a feature allows you to create your own custom template function for each form, to do this we suggest that you make a duplicate of the `template_example()` function within the `CustomForm.template.php` file. You can then use the documentation from that function to see how information is passed to it by the Mod, allowing you to change it for your purposes.
 
-  Please remember that you have to name the new template function in this format `form_template_{Custom Template Name}`, and you will have to put the correct value from `{Custom Template Name}` into the `Custom Template Function` setting for the form that you wish to use you new template. Further explanation for custom templates can be found in `CustomForm.template.php`.
+  Please remember that you have to name the new template function in this format `template_{Custom Template Name}`, and you will have to put the correct value from `{Custom Template Name}` into the `Custom Template Function` setting for the form that you wish to use you new template. Further explanation for custom templates can be found in `CustomForm.template.php`.
 
 - **CAPTCHA Visual Verification:** Visual verification often referred to as CAPTCHA and used by SMF for registration and posting, is included in the mod to help prevent against bots from using forms as a way to post your forum. Visual verification requires that the user type letters or digits from a distorted image that appears on the screen in order for a form to submit correctly.
   - All forms require visual verification when being filled out by guests and can not be turned off
