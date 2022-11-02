@@ -15,9 +15,6 @@ final class Test extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function replaceProvider(): array
 	{
 		return [
@@ -76,15 +73,11 @@ final class Test extends TestCase
 			],
 			$value
 		);
-		$type->setOptions();
 		$this->assertTrue($type->validate());
 		$this->assertEmpty($type->getError());
 		$this->assertEquals($expected, $type->getValue());
 	}
 
-	/**
-	 * @return string[][]
-	 */
 	public function checkboxProvider(): array
 	{
 		return [
@@ -109,7 +102,6 @@ final class Test extends TestCase
 			],
 			$value
 		);
-		$type->setOptions();
 		$this->assertTrue($type->validate());
 		$this->assertEmpty($type->getError());
 		$this->assertEquals($expected, $type->getValue());
