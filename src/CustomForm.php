@@ -200,7 +200,9 @@ function CustomForm()
 			$context['form_id'] = $form_id;
 			$context['failed_form_submit'] = $post_errors != [];
 			$template_function = 'template_' . $form_data['template_function'];
-			$template = function_exists('form_' . $template_function) ? $template : 'form';
+			$template = function_exists($template_function)
+				? $form_data['template_function']
+				: 'form';
 			$context['sub_template'] = $template;
 			loadTemplate('CustomForm');
 			$context['template_layers'][] = function_exists($template_function . '_above') && function_exists($template_function . '_below') ? $template : 'form';
@@ -214,6 +216,8 @@ function CustomForm()
 				'url' => $scripturl . '?action=form;n=' . $form_id,
 				'name' => $form_title,
 			];
+			$context['meta_description'] = $smcFunc['htmlspecialchars']($form_title);
+			setMetaProperty('type', 'website');
 		}
 		//	If not then fall to the default view form page, with the list of forms.
 		else
@@ -265,4 +269,38 @@ function listCustomForm()
 	];
 	$context['page_message'] = $modSettings['customform_view_text'] ?? '';
 	$context['sub_template'] = 'forms';
+	$context['meta_description'] = $smcFunc['htmlspecialchars']($context['page_message']);
+	setMetaProperty('type', 'website');
+}
+
+function setMetaTag(string $key, string $value): void
+{
+	global $context;
+
+	$found = false;
+	foreach ($context['meta_tags'] as $i => $m)
+		if (isset($m['name']) && $m['name'] == $key)
+		{
+			$context['meta_tags'][$i]['content'] = $value;
+			$found = true;
+		}
+
+	if (!$found)
+		$context['meta_tags'][] = ['name' => $key, 'content' => $value];
+}
+
+function setMetaProperty(string $key, string $value): void
+{
+	global $context;
+
+	$found = false;
+	foreach ($context['meta_tags'] as $i => $m)
+		if (isset($m['property']) && $m['property'] == 'og:' . $key)
+		{
+			$context['meta_tags'][$i]['content'] = $value;
+			$found = true;
+		}
+
+	if (!$found)
+		$context['meta_tags'][] = ['property' => 'og:' . $key, 'content' => $value];
 }
