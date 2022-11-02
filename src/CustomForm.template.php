@@ -331,12 +331,12 @@ function template_ThankYou()
 						<tr>
 							<td style="padding:4px;" style="width:45%;" align="center">
 								<a class="button" href="' . $scripturl . '">
-									', $txt['customform_forum'], '
+									', $txt['customform_redirect_forum'], '
 								</a>
 							</td>
 							<td style="padding:4px;" style="width:45%;" align="center">
 								<a class="button" href="' . $scripturl . '?action=form">
-									', $txt['customform_list'], '
+									', $txt['customform_redirect_list'], '
 								</a>
 							</td>
 						</tr>

@@ -156,7 +156,7 @@ function ModifyCustomFormSettings($return_config = false)
 			'columns' => array(
 				'title' => array(
 					'header' => array(
-						'value' => $txt['title'],
+						'value' => $txt['customform_identifier'],
 					),
 					'data' => array(
 						'db' => 'title',
@@ -179,9 +179,6 @@ function ModifyCustomFormSettings($return_config = false)
 					),
 				),
 				'modify' => array(
-					'header' => array(
-						'value' => $txt['modify'],
-					),
 					'data' => array(
 						'db' => 'modify',
 					),
@@ -190,8 +187,8 @@ function ModifyCustomFormSettings($return_config = false)
 			'additional_rows' => array(
 				array(
 					'position' => 'below_table_data',
-					'value' => '<a href="' . $scripturl . '?action=admin;area=modsettings;sa=customform;form_id=' . $form_id . ';add_field;">' . $txt['customform_add_field'] . '</a>',
-					'class' => 'titlebg',
+					'value' => '<a class="button" href="' . $scripturl . '?action=admin;area=modsettings;sa=customform;form_id=' . $form_id . ';add_field">' . $txt['customform_add_field'] . '</a>',
+					'class' => 'righttext',
 				),
 			),
 		);
@@ -462,6 +459,20 @@ function ModifyCustomFormSettings($return_config = false)
 			//	Take us back to the form setting page.
 			redirectexit('action=admin;area=modsettings;sa=customform;form_id=' . $data['id_form'] . ';');
 		}
+		$invalid = preg_match('/[^a-zA-Z0-9\-_\.]/', $data['title']);
+		if ($invalid)
+			$context['settings_insert_above'] = sprintf(
+				'<div class="errorbox">%s<ul><li>%s</li><li>%s</li></ul></div>',
+				$txt['customform_character_warning'],
+				sprintf(
+					$txt['customform_current_identifier'],
+					'<code>' . $data['title'] . '</code>'
+				),
+				sprintf(
+					$txt['customform_suggested_identifier'],
+					'<code>' . trim(preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', $data['title']), '-') . '</code>'
+				)
+			);
 
 		require_once __DIR__ . '/Class-CustomForm.php';
 		$result = [];
@@ -474,7 +485,7 @@ function ModifyCustomFormSettings($return_config = false)
 				'text',
 				'field_title',
 				'value' => $data['title'],
-				'text_label' => $txt['title'],
+				'text_label' => $txt['customform_identifier'],
 				'help' => 'customform_field_title',
 			),
 			array(
@@ -482,7 +493,7 @@ function ModifyCustomFormSettings($return_config = false)
 				'field_text',
 				'value' => $data['text'],
 				'text_label' => $txt['customform_text'],
-				'help' => 'customform_text',
+				'subtext' => $txt['customform_text_desc'],
 			),
 			array(
 				'select',
@@ -520,6 +531,18 @@ function ModifyCustomFormSettings($return_config = false)
 		$context['page_title'] = $txt['customform_tabheader'];
 		$context['sub_template'] = 'show_settings';
 		$context['html_headers'] .= '
+			<style>
+				.popup_content h3,
+				.popup_content li,
+				.popup_content p:not(:first-child)
+				{
+					padding-top: 0.3em;
+				}
+				.popup_content p:not(:last-child)
+				{
+					padding-bottom: 0.3em;
+				}
+			</style>
 			<script>
 				window.addEventListener("DOMContentLoaded", function()
 				{
@@ -575,9 +598,9 @@ function ModifyCustomFormSettings($return_config = false)
 	else
 	{
 		$config_vars = array(
-			array('permissions', 'customform_view_perms'),
-			array('text', 'customform_view_title'),
-			array('text', 'customform_view_text'),
+			array('permissions', 'customform_view_perms', 'subtext' => $txt['customform_view_perms_desc']),
+			array('text', 'customform_view_title', 'subtext' => $txt['customform_view_title_desc']),
+			array('large_text', 'customform_view_text', 'subtext' => $txt['customform_view_text_desc']),
 		);
 
 		//	Save the permissions?
@@ -607,7 +630,7 @@ function ModifyCustomFormSettings($return_config = false)
 				),
 				'board' => array(
 					'header' => array(
-						'value' => $txt['customform_board_id'],
+						'value' => $txt['customform_board'],
 					),
 					'data' => array(
 						'db' => 'board',
@@ -622,9 +645,6 @@ function ModifyCustomFormSettings($return_config = false)
 					),
 				),
 				'modify' => array(
-					'header' => array(
-						'value' => $txt['modify'],
-					),
 					'data' => array(
 						'db' => 'modify',
 					),
@@ -633,14 +653,12 @@ function ModifyCustomFormSettings($return_config = false)
 			'additional_rows' => array(
 				array(
 					'position' => 'below_table_data',
-					'value' => '<a href="' . $scripturl . '?action=admin;area=modsettings;sa=customform;add_form;">' . $txt['customform_add_form'] . '</a>',
-					'class' => 'titlebg',
+					'value' => '<a class="button" href="' . $scripturl . '?action=admin;area=modsettings;sa=customform;add_form;">' . $txt['customform_add_form'] . '</a>',
+					'class' => 'righttext',
 				),
 			),
 		);
 
-
-		//	Call the function to setup the list for the template.
 		require_once __DIR__ . '/Subs-List.php';
 		createList($list);
 
@@ -652,8 +670,35 @@ function ModifyCustomFormSettings($return_config = false)
 		loadTemplate('CustomForm');
 
 		$context['sub_template'] = 'customform_GeneralSettings';
+		$context['html_headers'] .= '
+			<script>
+				window.addEventListener("DOMContentLoaded", function()
+				{
+					var
+						el = document.createElement("div"),
+						textarea = document.getElementById("customform_view_text"),
+						textareaLengthCheck = (num) =>
+						{
+							var charactersLeft = num - textarea.value.length;
+							el.innerHTML = "Max characters: <b>" + num + "</b>; characters remaining: <b>" + charactersLeft + "</b>";
+							if (charactersLeft < 0)
+							{
+								el.className = "error";
+								textarea.style.border = "1px solid red";
+							}
+							else
+							{
+								el.className = "";
+								textarea.style.border = "";
+							}
+						};
+					el.className = "smalltext";
+					textarea.parentNode.appendChild(el);
+					textarea.addEventListener("keyup", textareaLengthCheck, false);
 
-		//	Finally prepare the settings array to be shown by the 'show_settings' template.
+					textareaLengthCheck(320);
+				});
+			</script>';
 		prepareDBSettingContext($config_vars);
 
 		// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
