@@ -28,6 +28,13 @@ function CustomForm()
 	//	Are we looking for the thank you page.
 	if (isset($_REQUEST['thankyou']))
 	{
+		$context['page_title'] = !empty($modSettings['customform_view_title'])
+			? $modSettings['customform_view_title']
+			: $txt['customform_tabheader'];
+		$context['linktree'][] = [
+			'url' => $scripturl . '?action=form',
+			'name' => $context['page_title'],
+		];
 		$context['sub_template'] = 'ThankYou';
 		loadTemplate('CustomForm');
 		loadLanguage('CustomForm');
@@ -197,6 +204,16 @@ function CustomForm()
 			$context['sub_template'] = $template;
 			loadTemplate('CustomForm');
 			$context['template_layers'][] = function_exists($template_function . '_above') && function_exists($template_function . '_below') ? $template : 'form';
+			$context['linktree'][] = [
+				'url' => $scripturl . '?action=form',
+				'name' => !empty($modSettings['customform_view_title'])
+					? $modSettings['customform_view_title']
+					: $txt['customform_tabheader'],
+			];
+			$context['linktree'][] = [
+				'url' => $scripturl . '?action=form;n=' . $form_id,
+				'name' => $form_title,
+			];
 		}
 		//	If not then fall to the default view form page, with the list of forms.
 		else
@@ -212,7 +229,7 @@ function require_verification()
 
 function listCustomForm()
 {
-	global $context, $modSettings, $smcFunc, $txt;
+	global $context, $modSettings, $scripturl, $smcFunc, $txt;
 
 	if (!allowedTo('customform_view_perms'))
 		redirectexit();
@@ -242,6 +259,10 @@ function listCustomForm()
 	$context['page_title'] = !empty($modSettings['customform_view_title'])
 		? $modSettings['customform_view_title']
 		: $txt['customform_tabheader'];
+	$context['linktree'][] = [
+		'url' => $scripturl . '?action=form',
+		'name' => $context['page_title'],
+	];
 	$context['page_message'] = $modSettings['customform_view_text'] ?? '';
 	$context['sub_template'] = 'forms';
 }
