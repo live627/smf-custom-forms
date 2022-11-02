@@ -35,6 +35,7 @@ function CustomForm()
 			'url' => $scripturl . '?action=form',
 			'name' => $context['page_title'],
 		];
+		$context['robot_no_index'] = true;
 		$context['sub_template'] = 'ThankYou';
 		loadTemplate('CustomForm');
 		loadLanguage('CustomForm');
