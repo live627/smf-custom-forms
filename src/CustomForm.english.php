@@ -37,7 +37,10 @@ $txt['customform_movedown'] = 'Move Down';
 $txt['customform_text'] = 'Text';
 $txt['customform_type'] = 'Type';
 $txt['customform_type_vars'] = 'Extra Type Parameters';
+$txt['customform_subject'] = 'Form Subject';
+$txt['customform_subject_desc'] = 'Subject of final message. Supports macros for field names.';
 $txt['customform_output'] = 'Form Output';
+$txt['customform_output_desc'] = 'To actually display data a user enters in the forum post you will need to enter the title for the field between a set of braces <code>{{ name }}</code>.';
 $txt['customform_board'] = 'Board to post to';
 $txt['customform_board_desc'] = 'Select the board that the form will post to. The target board can be hidden.';
 $txt['customform_template_function'] = 'Custom Template Function';
@@ -101,14 +104,6 @@ $helptxt['customform_view_text'] =
 	'This setting allows you to chose the explanation text shown for the action/page that shows the list of forms to a user (at &quot;index.php?action=form&quot;). By default nothing will be shown.';
 
 //	Help text for the edit form page.
-$helptxt['customform_form_title'] =
-	'This is the title of the current form, it will be displayed when a user is filling out the form and when they are viewing the list of forms.';
-$helptxt['customform_icon'] =
-	'This drop-down menu allows you to change the default icon for the subject line to something matching the mood or purpose of your post. ';
-$helptxt['customform_permissions'] =
-	'This is the permissions setting for this form, to be able to view or submit a form, a user must be in one of the member groups selected.';
-$helptxt['customform_subject'] =
-	'This is the subject/title of the post created by the form, like the Form Output area, it can contain values from the form itself.<br /><br />Example:<br />Form name: {field_name}';
 $helptxt['customform_output'] =
 	'This is the the format in which the data a users enters in the form will be displayed in the forum post after they submit the form.<br/><br/>To actually display data a user enters in the forum post you will need to enter the title for the field between braces { }.<br /><br />Example: If the field was called \'name\' then {name} would be replaced with what the user entered in the field of the form.<br />My name is {name}.<br />Then if the user were to enter &quot;Bob&quot; in the corresponding form field, the forum post would display &quot;My name is Bob&quot;.<br /><br />If Bob chose not to enter his name into the field and it was not required then your forum post would display &quot;My name is&quot; You can also choose tho hide some forum output, by adding a second set of {} to the entire section of the form.<br />Example: {My name is {name}}<br />Instead of the forum displaying &quot;My name is&quot; it would be replaced with a blank line.';
 $helptxt['customform_submit_exit'] =

@@ -246,34 +246,62 @@ function template_callback_boards()
 
 function template_callback_output()
 {
+	global $context, $scripturl, $txt;
+
 	echo '
+									<script type="text/javascript">;
+										var icon_urls = {';
+
+	foreach ($context['icons'] as $icon)
+		echo '
+											\'', $icon['value'], '\': \'', $icon['url'], '\',';
+
+	echo '
+										};
+										function showimage(f)
+										{
+											document.images.icons.src = icon_urls[f.icon.options[f.icon.selectedIndex].value];
+										}
+									</script>
 									</dl>
-								<table>
-									<tr>
-										<td class="windowbg2" style="width:50px;"></td>
-										<td class="windowbg2" id="bbcBox_message">
-										</td>
-										<td class="windowbg2" style="width:50px;"></td>
-									</tr>
-									<tr>
-										<td class="windowbg2" style="width:50px;"></td>
-										<td class="windowbg2" id="smileyBox_message">
-										</td>
-										<td class="windowbg2" style="width:50px;"></td>
-									</tr>
-									<tr>
-										<td class="windowbg2" style="width:50px;"></td>
-										<td class="windowbg2">
-											', template_control_richedit(
-		'output',
-		'smileyBox_message',
-		'bbcBox_message'
-	), '
-										</td>
-										<td class="windowbg2" style="width:50px;"></td>
-									</tr>
-								</table>
-									<dl>';
+									<dl id="post_header">
+										<dt', isset($context['post_error']['no_subject']) ? ' class="error"' : '', '>
+											', $txt['customform_subject'], '
+										</dt>
+										<dd>
+											<input type="text" name="subject" value="', $context['custom_form_settings']['subject'], '" size="80" maxlength="80" /><br>
+											<span class="smalltext">', $txt['customform_subject_desc'], '</span>
+										</dd>
+										<dt class="clear_left">
+											', $txt['message_icon'], '
+										</dt>
+										<dd>
+											<select name="icon" id="icon" onchange="showimage(this.form)">';
+
+	foreach ($context['icons'] as $icon)
+		echo '
+												<option value="', $icon['value'], '"', $icon['value'] == $context['custom_form_settings']['icon'] ? ' selected' : '', '>', $icon['name'], '</option>';
+
+	echo '
+											</select>
+											<img src="', $context['icon_url'], '" name="icons" hspace="15" alt="" />
+										</dd>
+										</dd>
+										<dt>
+											', $txt['customform_output'], '
+											<p>', $txt['customform_output_desc'], '</p>
+											<p><a href="', $scripturl, '?action=helpadmin;help=customform_output" onclick="return reqOverlayDiv(this.href);"><span class="main_icons help" title="', $txt['help'], '"></span> ', $txt['help'], '</a></p>
+										</dt>
+										<dd>
+											<div id="bbcBox_message"></div>
+											<div id="smileyBox_message"></div>';
+
+	template_control_richedit('output', 'smileyBox_message', 'bbcBox_message');
+
+	echo '
+										</dd>
+									</dl>
+									<dl id="post_header">';
 }
 
 function template_customform_GeneralSettings()

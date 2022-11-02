@@ -239,40 +239,20 @@ function ModifyCustomFormSettings($return_config = false)
 		}
 		$smcFunc['db_free_result']($request);
 
-		$context['icon'] = !empty($context['cf_forms']['icon']) ? $context['cf_forms']['icon'] : 'xx';
-
 		require_once __DIR__ . '/Subs-Editor.php';
-		// Message icons - customized icons are off?
-		$context['icons'] =
-			getMessageIcons(!empty($context['cf_forms']['id_board']) ? $context['cf_forms']['id_board'] : 0);
-
-		if (!empty($context['icons']))
-			$context['icons'][count($context['icons']) - 1]['is_last'] = true;
-
-		$context['icon_url'] = '';
-		for ($i = 0, $n = count($context['icons']); $i < $n; $i++)
-		{
-			$context['icons'][$i]['selected'] =
-				$context['custom_form_settings']['icon'] == $context['icons'][$i]['value'];
-			if ($context['icons'][$i]['selected'])
-				$context['icon_url'] = $context['icons'][$i]['url'];
-		}
-		if (empty($context['icon_url']))
-		{
-			$context['icon_url'] = $settings[file_exists(
-					$settings['theme_dir'] . '/images/post/' . $context['icon'] . '.gif'
-				) ? 'images_url' : 'default_images_url'] . '/post/' . $context['icon'] . '.gif';
-			array_unshift(
-				$context['icons'],
-				array(
-					'value' => $context['icon'],
-					'name' => $txt['current_icon'],
-					'url' => $context['icon_url'],
-					'is_last' => empty($context['icons']),
-					'selected' => true,
-				)
-			);
-		}
+		$context['icons'] = getMessageIcons($data['id_board']);
+		$setting = file_exists($settings['theme_dir'] . '/images/post/' . $data['icon'] . '.png')
+			? 'images_url'
+			: 'default_images_url';
+		$context['icon_url'] = $settings[$setting] . '/post/' . $data['icon'] . '.png';
+		array_unshift(
+			$context['icons'],
+			array(
+				'value' => $data['icon'],
+				'name' => $txt['current_icon'],
+				'url' => $context['icon_url'],
+			)
+		);
 
 		$config_vars = array(
 			array(
@@ -280,19 +260,10 @@ function ModifyCustomFormSettings($return_config = false)
 				'title',
 				'value' => $data['title'],
 				'text_label' => $txt['title'],
-				'help' => 'customform_field_title',
 			),
 			array(
 				'callback',
 				'boards',
-			),
-			array(
-				'select',
-				'icon',
-				array_column($context['icons'], 'name', 'value'),
-				'value' => $data['icon'],
-				'text_label' => $txt['message_icon'],
-				'help' => 'customform_icon',
 			),
 			array(
 				'text',
@@ -306,21 +277,13 @@ function ModifyCustomFormSettings($return_config = false)
 				'custom_forms_' . $form_id,
 				'value' => 'custom_forms_' . $form_id,
 				'text_label' => $txt['edit_permissions'],
-				'help' => 'customform_permissions',
-			),
-			array(
-				'text',
-				'subject',
-				'value' => $data['subject'],
-				'text_label' => $txt['subject'],
-				'help' => 'customform_subject',
 			),
 			array(
 				'text',
 				'exit',
 				'value' => $data['form_exit'],
 				'text_label' => $txt['customform_exit'],
-				'help' => 'customform_exit',
+				'help' => 'customform_submit_exit',
 			),
 			array(
 				'callback',
@@ -334,8 +297,26 @@ function ModifyCustomFormSettings($return_config = false)
 		prepareDBSettingContext($config_vars);
 		$context['html_headers'] .= '
 			<style>
-				optgroup:not(:first-child) {
+				optgroup:not(:first-child)
+				{
 					padding-top: 8px;
+				}
+				.popup_content p:not(:first-child)
+				{
+					padding-top: 0.3em;
+				}
+				.popup_content p:not(:last-child)
+				{
+					padding-bottom: 0.3em;
+				}
+				#post_header
+				{
+					padding: 12px 12%;
+				}
+				#post_header p
+				{
+					font-weight: initial;
+					padding-top: 0.5em;
 				}
 			</style>';
 
