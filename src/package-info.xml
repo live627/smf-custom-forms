@@ -6,6 +6,75 @@
 	<type>modification</type>
 	<version>3.0.0</version>
 
+	<upgrade for="2.1 - 2.1.99" from="3.*">
+		<code type="inline"><![CDATA[<?php
+			define('REQUIRED_PHP_VERSION', '7.4.0');
+			if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
+				fatal_error(
+					sprintf(
+						'This mod requires a minimum of PHP %s in order to function. (You are currently running PHP %s)',
+						REQUIRED_PHP_VERSION,
+						PHP_VERSION
+					),
+					false
+				);
+		?>]]></code>
+		<redirect url="?action=admin;area=modsettings;sa=customform"/>
+		<readme parsebbc="true">install.txt</readme>
+
+		<!-- Overwrite/freshen existing files -->
+		<require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
+		<require-file name="ManageCustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.english.php" destination="$languagedir"/>
+		<require-file name="Class-CustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.template.php" destination="$themedir"/>
+
+		<!-- Add missing hooks -->
+		<hook hook="who_allowed" function="customform_who_allowed" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="integrate_helpadmin" function="customform_helpadmin" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="whos_online_after" function="customform_whos_online_after" file="$sourcedir/Subs-CustomForm.php" />
+	</upgrade>
+
+	<upgrade for="2.1 - 2.1.99" from="2.*">
+		<code type="inline"><![CDATA[<?php
+			define('REQUIRED_PHP_VERSION', '7.4.0');
+			if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
+				fatal_error(
+					sprintf(
+						'This mod requires a minimum of PHP %s in order to function. (You are currently running PHP %s)',
+						REQUIRED_PHP_VERSION,
+						PHP_VERSION
+					),
+					false
+				);
+		?>]]></code>
+		<redirect url="?action=admin;area=modsettings;sa=customform"/>
+		<readme parsebbc="true">install.txt</readme>
+
+		<!-- Overwrite/freshen existing files -->
+		<require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
+		<require-file name="ManageCustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.english.php" destination="$languagedir"/>
+		<require-file name="Class-CustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.php" destination="$sourcedir"/>
+		<require-file name="CustomForm.template.php" destination="$themedir"/>
+
+		<!-- Modify hooks to add the file to the call -->
+		<hook hook="integrate_pre_include" function="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" reverse="true" />
+		<hook hook="integrate_actions" function="customform_actions" reverse="true" />
+		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" reverse="true" />
+		<hook hook="integrate_admin_areas" function="customform_admin_areas" reverse="true" />
+		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" />
+		<hook hook="integrate_actions" function="customform_actions" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="integrate_admin_areas" function="customform_admin_areas" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="who_allowed" function="customform_who_allowed" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="integrate_helpadmin" function="customform_helpadmin" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="whos_online_after" function="customform_whos_online_after" file="$sourcedir/Subs-CustomForm.php" />
+	</upgrade>
+
 	<install for="2.1 - 2.1.99">
 		<code type="inline"><![CDATA[<?php
 			define('REQUIRED_PHP_VERSION', '7.4.0');
