@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://www.github.com/live627/smf-custom-forms/compare/v3.0.0...v3.1.0) (2022-11-21)
+
+
+### Features
+
+* Ability to directly upgrade ([efb3b57](https://www.github.com/live627/smf-custom-forms/commit/efb3b571ae3963006e3ba24dc86c07a169a480c7))
+
 ## [3.0.0](https://www.github.com/live627/smf-custom-forms/compare/v2.2.4...v3.0.0) (2022-11-02)
 
 
