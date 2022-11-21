@@ -42,7 +42,7 @@ Settings are found in the admin panel: Administration Center » Configuration »
 Further explanation of a setting's functionality can be found by clicking on the [?] help button.
 
 ### Tutorial
-**[View more tutorials](https://github.com/live627/smf-custom-forms/tree/main/docs)**
+**[View more tutorials](https://github.com/live627/smf-custom-forms/tree/master/docs)**
 #### Redirect the 'New Topic' button to a form
 http://www.simplemachines.org/community/index.php?topic=248871.msg3726297#msg3726297
 
