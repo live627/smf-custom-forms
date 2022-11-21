@@ -36,7 +36,7 @@ Further explanation of a setting&#39;s functionality can be found by clicking on
 
 [b][size=5]Tutorial[/size][/b]
 
-[b][url="https://github.com/live627/smf-custom-forms/tree/main/docs"]View more tutorials[/url][/b]
+[b][url=https://github.com/live627/smf-custom-forms/tree/master/docs]View more tutorials[/url][/b]
 
 [b][size=4]Redirect the &#39;New Topic&#39; button to a form[/size][/b]
 
