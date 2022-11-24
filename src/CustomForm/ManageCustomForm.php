@@ -152,38 +152,12 @@ class ManageCustomForm
 		$context['settings_title'] = $txt['customform_generalsettings_heading'];
 		$context['page_title'] = $txt['customform_tabheader'];
 		$context['default_list'] = 'customform_list';
-		$context['post_url'] = $scripturl . '?action=admin;area=modsettings;sa=customform;update';
+		$context['post_url'] = $this->scripturl . '?action=admin;area=modsettings;sa=customform;update';
 		loadTemplate('CustomForm');
-
+		loadJavaScriptFile('customform.js', array('minimize' => true));
+		addInlineJavaScript('
+		textareaLengthCheck(document.getElementById("customform_view_text"), 320);', true);
 		$context['sub_template'] = 'customform_GeneralSettings';
-		$context['html_headers'] .= '
-			<script>
-				window.addEventListener("DOMContentLoaded", function()
-				{
-					const el = document.createElement("div"),
-						textarea = document.getElementById("customform_view_text"),
-						textareaLengthCheck = (num) =>
-						{
-							const charactersLeft = num - textarea.value.length;
-							el.innerHTML = "Max characters: <b>" + num + "</b>; characters remaining: <b>" + charactersLeft + "</b>";
-							if (charactersLeft < 0)
-							{
-								el.className = "error";
-								textarea.style.border = "1px solid red";
-							}
-							else
-							{
-								el.className = "";
-								textarea.style.border = "";
-							}
-						};
-					el.className = "smalltext";
-					textarea.parentNode.appendChild(el);
-					textarea.addEventListener("keyup", textareaLengthCheck.bind(null, 320), false);
-
-					textareaLengthCheck(320);
-				});
-			</script>';
 		prepareDBSettingContext($config_vars);
 
 		// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
@@ -221,16 +195,6 @@ class ManageCustomForm
 			'output' => $data['output'],
 			'template_function' => $data['template_function'],
 		];
-
-		//	Call the function to setup the wysiwyg editor.
-		require_once __DIR__ . '/Subs-Editor.php';
-		create_control_richedit(
-			[
-				'id' => 'output',
-				'value' => $data['output'] ?? '',
-				'width' => '100%',
-			]
-		);
 
 		//	Create the list of fields.
 		$list = [
@@ -294,6 +258,19 @@ class ManageCustomForm
 		require_once $this->sourcedir . '/ManagePermissions.php';
 		init_inline_permissions(['custom_forms_' . $form_id]);
 		createToken('admin-mp');
+
+		add_integration_function('integrate_sceditor_options', __NAMESPACE__ . '\Integration::sce_options', false);
+		require_once $this->sourcedir . '/Subs-Editor.php';
+		create_control_richedit(
+			[
+				'disable_smiley_box' => true,
+				'id' => 'output',
+				'value' => $data['output'] ?? '',
+				'width' => '100%',
+			]
+		);
+		loadCSSFile('customform.css');
+		loadJavaScriptFile('customform.js', array('minimize' => true));
 
 		//	Set up the variables needed by the template.
 		$context['settings_title'] = sprintf(
@@ -365,30 +342,6 @@ class ManageCustomForm
 		loadTemplate('GenericList');
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
-		$context['html_headers'] .= '
-			<style>
-				optgroup:not(:first-child)
-				{
-					padding-top: 8px;
-				}
-				.popup_content p:not(:first-child)
-				{
-					padding-top: 0.3em;
-				}
-				.popup_content p:not(:last-child)
-				{
-					padding-bottom: 0.3em;
-				}
-				#post_header
-				{
-					padding: 12px 12%;
-				}
-				#post_header p
-				{
-					font-weight: initial;
-					padding-top: 0.5em;
-				}
-			</style>';
 
 		// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
 		createToken('admin-mp');
@@ -569,6 +522,10 @@ class ManageCustomForm
 				'help' => 'customform_type_vars',
 			],
 		];
+		loadCSSFile('customform.css');
+		loadJavaScriptFile('customform.js', array('minimize' => true));
+		addInlineJavaScript('
+		textareaLengthCheck(document.getElementById("field_text"), 4096);', true);
 
 		//	Set up the variables needed by the template.
 		$context['settings_title'] = sprintf(
@@ -585,46 +542,6 @@ class ManageCustomForm
 		$context['post_url'] = sprintf('%s?action=admin;area=modsettings;sa=customform;field_id=%d;act=savefield', $this->scripturl, $field_id);
 		$context['page_title'] = $txt['customform_tabheader'];
 		$context['sub_template'] = 'show_settings';
-		$context['html_headers'] .= '
-			<style>
-				.popup_content h3,
-				.popup_content li,
-				.popup_content p:not(:first-child)
-				{
-					padding-top: 0.3em;
-				}
-				.popup_content p:not(:last-child)
-				{
-					padding-bottom: 0.3em;
-				}
-			</style>
-			<script>
-				window.addEventListener("DOMContentLoaded", function()
-				{
-					const el = document.createElement("div"),
-						textarea = document.getElementById("field_text"),
-						textareaLengthCheck = () =>
-						{
-							var charactersLeft = 4096 - textarea.value.length;
-							el.innerHTML = "Max characters: <b>4096</b>; characters remaining: <b>" + charactersLeft + "</b>";
-							if (charactersLeft < 0)
-							{
-								el.className = "error";
-								textarea.style.border = "1px solid red";
-							}
-							else
-							{
-								el.className = "";
-								textarea.style.border = "";
-							}
-						};
-					el.className = "smalltext";
-					textarea.parentNode.appendChild(el);
-					textarea.addEventListener("keyup", textareaLengthCheck, false);
-
-					textareaLengthCheck();
-				});
-			</script>';
 
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
@@ -806,6 +723,11 @@ class ManageCustomForm
 		$i = 1;
 		$end = count($data);
 		$result = [];
+		addJavaScriptVar(
+			'customformFields',
+			array_column($data, 'title'),
+			true
+		);
 
 		$result = array_map(
 			fn($cn) => $txt['customform_type_' . $cn],

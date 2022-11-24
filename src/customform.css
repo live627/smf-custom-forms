@@ -1,0 +1,31 @@
+optgroup:not(:first-child)
+{
+	padding-top: 8px;
+}
+#post_header
+{
+	padding: 12px 12%;
+}
+#post_header p
+{
+	font-weight: initial;
+	padding-top: 0.5em;
+}
+.popup_content h3,
+.popup_content li,
+.popup_content p:not(:first-child)
+{
+	padding-top: 0.3em;
+}
+.popup_content p:not(:last-child)
+{
+	padding-bottom: 0.3em;
+}
+.sceditor-button-customformFields::after {
+	content: '';
+	margin: 0 0.5em;
+	border: 0.3em solid transparent;
+	border-top: 0.5em solid currentColor;
+	border-bottom: 0 none;
+	vertical-align: middle;
+}
