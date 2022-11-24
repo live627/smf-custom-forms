@@ -8,7 +8,7 @@
 
 	<upgrade for="2.1 - 2.1.99" from="3.*">
 		<code type="inline"><![CDATA[<?php
-			define('REQUIRED_PHP_VERSION', '7.4.0');
+			define('REQUIRED_PHP_VERSION', '8');
 			if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
 				fatal_error(
 					sprintf(
@@ -20,25 +20,39 @@
 				);
 		?>]]></code>
 		<redirect url="?action=admin;area=modsettings;sa=customform"/>
-		<readme parsebbc="true">install.txt</readme>
-
-		<!-- Overwrite/freshen existing files -->
-		<require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
-		<require-file name="ManageCustomForm.php" destination="$sourcedir"/>
+		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" reverse="true" />
+		<hook hook="integrate_actions" function="customform_actions" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<hook hook="integrate_admin_areas" function="customform_admin_areas" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<hook hook="who_allowed" function="customform_who_allowed" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<hook hook="integrate_helpadmin" function="customform_helpadmin" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<hook hook="whos_online_after" function="customform_whos_online_after" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<remove-file name="$sourcedir/Subs-CustomForm.php"/>
+		<remove-file name="$sourcedir/ManageCustomForm.php"/>
+		<remove-file name="$languagedir/CustomForm.english.php"/>
+		<remove-file name="$sourcedir/Class-CustomForm.php"/>
+		<remove-file name="$sourcedir/CustomForm.php"/>
+		<remove-file name="$themedir/CustomForm.template.php"/>
+		<remove-file name="$themedir/scripts/customform.js" />
+		<remove-file name="$themedir/css/customform.css" />
 		<require-file name="CustomForm.english.php" destination="$languagedir"/>
-		<require-file name="Class-CustomForm.php" destination="$sourcedir"/>
-		<require-file name="CustomForm.php" destination="$sourcedir"/>
+		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
-
-		<!-- Add missing hooks -->
-		<hook hook="who_allowed" function="customform_who_allowed" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="integrate_helpadmin" function="customform_helpadmin" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="whos_online_after" function="customform_whos_online_after" file="$sourcedir/Subs-CustomForm.php" />
+		<require-file name="customform.js" destination="$themedir/scripts" />
+		<require-file name="customform.css" destination="$themedir/css" />
+		<hook hook="integrate_pre_include" function="$sourcedir/CustomForm/Integration.php" />
+		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" />
+		<hook hook="integrate_actions" function="CustomForm\Integration::actions" />
+		<hook hook="integrate_modify_modifications" function="CustomForm\Integration::modify_modifications" />
+		<hook hook="integrate_admin_areas" function="CustomForm\Integration::admin_areas" />
+		<hook hook="who_allowed" function="CustomForm\Integration::who_allowed" />
+		<hook hook="integrate_helpadmin" function="CustomForm\Integration::helpadmin" />
+		<hook hook="whos_online_after" function="CustomForm\Integration::whos_online_after" />
 	</upgrade>
 
 	<upgrade for="2.1 - 2.1.99" from="2.*">
 		<code type="inline"><![CDATA[<?php
-			define('REQUIRED_PHP_VERSION', '7.4.0');
+			define('REQUIRED_PHP_VERSION', '8');
 			if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
 				fatal_error(
 					sprintf(
@@ -50,34 +64,35 @@
 				);
 		?>]]></code>
 		<redirect url="?action=admin;area=modsettings;sa=customform"/>
-		<readme parsebbc="true">install.txt</readme>
-
-		<!-- Overwrite/freshen existing files -->
-		<require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
-		<require-file name="ManageCustomForm.php" destination="$sourcedir"/>
-		<require-file name="CustomForm.english.php" destination="$languagedir"/>
-		<require-file name="Class-CustomForm.php" destination="$sourcedir"/>
-		<require-file name="CustomForm.php" destination="$sourcedir"/>
-		<require-file name="CustomForm.template.php" destination="$themedir"/>
-
-		<!-- Modify hooks to add the file to the call -->
 		<hook hook="integrate_pre_include" function="$sourcedir/Subs-CustomForm.php" reverse="true" />
 		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" reverse="true" />
-		<hook hook="integrate_actions" function="customform_actions" reverse="true" />
-		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" reverse="true" />
-		<hook hook="integrate_admin_areas" function="customform_admin_areas" reverse="true" />
-		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" />
-		<hook hook="integrate_actions" function="customform_actions" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="integrate_admin_areas" function="customform_admin_areas" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="who_allowed" function="customform_who_allowed" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="integrate_helpadmin" function="customform_helpadmin" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="whos_online_after" function="customform_whos_online_after" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="integrate_actions" function="customform_actions" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<hook hook="integrate_admin_areas" function="customform_admin_areas" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
+		<remove-file name="$sourcedir/Subs-CustomForm.php"/>
+		<remove-file name="$sourcedir/ManageCustomForm.php"/>
+		<remove-file name="$languagedir/CustomForm.english.php"/>
+		<remove-file name="$sourcedir/Class-CustomForm.php"/>
+		<remove-file name="$sourcedir/CustomForm.php"/>
+		<remove-file name="$themedir/CustomForm.template.php"/>
+		<require-file name="CustomForm.english.php" destination="$languagedir"/>
+		<require-dir name="CustomForm" destination="$sourcedir"/>
+		<require-file name="CustomForm.template.php" destination="$themedir"/>
+		<require-file name="customform.js" destination="$themedir/scripts" />
+		<require-file name="customform.css" destination="$themedir/css" />
+		<hook hook="integrate_pre_include" function="$sourcedir/CustomForm/Integration.php" />
+		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" />
+		<hook hook="integrate_actions" function="CustomForm\Integration::actions" />
+		<hook hook="integrate_modify_modifications" function="CustomForm\Integration::modify_modifications" />
+		<hook hook="integrate_admin_areas" function="CustomForm\Integration::admin_areas" />
+		<hook hook="who_allowed" function="CustomForm\Integration::who_allowed" />
+		<hook hook="integrate_helpadmin" function="CustomForm\Integration::helpadmin" />
+		<hook hook="whos_online_after" function="CustomForm\Integration::whos_online_after" />
 	</upgrade>
 
 	<install for="2.1 - 2.1.99">
 		<code type="inline"><![CDATA[<?php
-			define('REQUIRED_PHP_VERSION', '7.4.0');
+			define('REQUIRED_PHP_VERSION', '8');
 			if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '<'))
 				fatal_error(
 					sprintf(
@@ -91,36 +106,31 @@
 		<redirect url="?action=admin;area=modsettings;sa=customform"/>
 		<readme parsebbc="true">install.txt</readme>
 		<database>install.php</database>
-		<require-file name="Subs-CustomForm.php" destination="$sourcedir"/>
-		<require-file name="ManageCustomForm.php" destination="$sourcedir"/>
 		<require-file name="CustomForm.english.php" destination="$languagedir"/>
-		<require-file name="Class-CustomForm.php" destination="$sourcedir"/>
-		<require-file name="CustomForm.php" destination="$sourcedir"/>
+		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
-		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" />
-		<hook hook="integrate_actions" function="customform_actions" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="integrate_admin_areas" function="customform_admin_areas" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="who_allowed" function="customform_who_allowed" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="integrate_helpadmin" function="customform_helpadmin" file="$sourcedir/Subs-CustomForm.php" />
-		<hook hook="whos_online_after" function="customform_whos_online_after" file="$sourcedir/Subs-CustomForm.php" />
+		<hook hook="integrate_pre_include" function="$sourcedir/CustomForm/Integration.php" />
+		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" />
+		<hook hook="integrate_actions" function="CustomForm\Integration::actions" />
+		<hook hook="integrate_modify_modifications" function="CustomForm\Integration::modify_modifications" />
+		<hook hook="integrate_admin_areas" function="CustomForm\Integration::admin_areas" />
+		<hook hook="who_allowed" function="CustomForm\Integration::who_allowed" />
+		<hook hook="integrate_helpadmin" function="CustomForm\Integration::helpadmin" />
+		<hook hook="whos_online_after" function="CustomForm\Integration::whos_online_after" />
 	</install>
 
 	<uninstall for="2.1 - 2.1.99">
 		<readme type="file" parsebbc="true">uninstall.txt</readme>
 		<database>uninstall-optional.php</database>
-		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" reverse="true" />
-		<hook hook="integrate_actions" function="customform_actions" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
-		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
-		<hook hook="integrate_admin_areas" function="customform_admin_areas" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
-		<hook hook="who_allowed" function="customform_who_allowed" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
-		<hook hook="integrate_helpadmin" function="customform_helpadmin" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
-		<hook hook="whos_online_after" function="customform_whos_online_after" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
-		<remove-file name="$sourcedir/Subs-CustomForm.php"/>
-		<remove-file name="$sourcedir/ManageCustomForm.php"/>
+		<hook hook="integrate_pre_include" function="$sourcedir/CustomForm/Integration.php" reverse="true" />
+		<hook hook="integrate_actions" function="CustomForm\Integration::actions" reverse="true" />
+		<hook hook="integrate_modify_modifications" function="CustomForm\Integration::modify_modifications" reverse="true" />
+		<hook hook="integrate_admin_areas" function="CustomForm\Integration::admin_areas" reverse="true" />
+		<hook hook="who_allowed" function="CustomForm\Integration::who_allowed" reverse="true" />
+		<hook hook="integrate_helpadmin" function="CustomForm\Integration::helpadmin" reverse="true" />
+		<hook hook="whos_online_after" function="CustomForm\Integration::whos_online_after" reverse="true" />
 		<remove-file name="$languagedir/CustomForm.english.php"/>
-		<remove-file name="$sourcedir/Class-CustomForm.php"/>
-		<remove-file name="$sourcedir/CustomForm.php"/>
+		<remove-dir name="$sourcedir/CustomForm"/>
 		<remove-file name="$themedir/CustomForm.template.php"/>
 	</uninstall>
 </package-info>

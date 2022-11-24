@@ -9,8 +9,8 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2014, John Rayes
  * @license   http://opensource.org/licenses/MIT MIT
  */
- 
-function template_forms_above()
+
+function template_forms_above(): void
 {
 	global $context, $scripturl;
 
@@ -159,7 +159,7 @@ function template_form_below(): void
 		</form>';
 }
 
-function template_form()
+function template_form(): void
 {
 	global $context, $txt, $settings, $scripturl;
 
@@ -202,11 +202,11 @@ function template_form()
 		echo '
 				<fieldset class="breaker">
 					<legend>', $txt['verification'], '</legend>
-					<span class="centertext">', template_control_verification('customform','all'), '</span>
+					<span class="centertext">', template_control_verification('customform', 'all'), '</span>
 				</fieldset>';
 }
 
-function template_callback_boards()
+function template_callback_boards(): void
 {
 	global $context, $txt;
 
@@ -244,7 +244,7 @@ function template_callback_boards()
 						</dd>';
 }
 
-function template_callback_output()
+function template_callback_output(): void
 {
 	global $context, $scripturl, $txt;
 
@@ -304,13 +304,13 @@ function template_callback_output()
 									<dl id="post_header">';
 }
 
-function template_customform_GeneralSettings()
+function template_customform_GeneralSettings(): void
 {
 	template_show_settings();
 	template_show_list();
 }
 
-function template_ThankYou()
+function template_ThankYou(): void
 {
 	global $context, $modSettings, $scripturl, $txt;
 

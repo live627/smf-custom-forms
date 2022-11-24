@@ -118,5 +118,4 @@ final class Test extends TestCase
 			['gold,silver,bronze,default=silver', 'titanium', 'silver']
 		];
 	}
-
 }

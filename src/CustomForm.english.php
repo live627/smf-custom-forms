@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @package   Custom Form mod
  * @version   3.1.0
@@ -11,7 +13,7 @@
 global $helptxt;
 
 //	Header and General text for the Custom Form Mod settings area.
-$txt['customform_generalsettings_heading'] = 'Custom Form Mod Settings'; 
+$txt['customform_generalsettings_heading'] = 'Custom Form Mod Settings';
 $txt['customform_tabheader'] = 'Custom Forms';
 $txt['customform_form'] = 'Form';
 $txt['customform_field'] = 'Field';

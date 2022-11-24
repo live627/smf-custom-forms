@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @package   Custom Form mod
  * @version   3.1.0
@@ -20,7 +22,7 @@ $smcFunc['db_query']('', '
 	DELETE FROM {db_prefix}permissions
 	WHERE permission
 	LIKE {string:fuzzy_permissions}',
-	array(
+	[
 		'fuzzy_permissions' => 'custom_forms_%',
-	)
+	]
 );

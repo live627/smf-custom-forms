@@ -7,7 +7,20 @@
     ],
     "require-dev": {
         "simplemachines/smf2.1": "dev-unittest",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "squizlabs/php_codesniffer": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "CustomForm\\": "src/CustomForm/"
+        }
+    },
+    "scripts": {
+        "lint": "php-cs-fixer fix --dry-run --verbose --show-progress=dots",
+        "lint-fix": "php-cs-fixer fix --verbose --show-progress=dots",
+        "phpcs": "phpcs --standard=./ ./src",
+        "phpcbf": "phpcbf --standard=./ ./src"
     },
     "require": {
         "php": ">=7.4"

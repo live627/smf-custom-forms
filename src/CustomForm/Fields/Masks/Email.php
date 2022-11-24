@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @package   Custom Form mod
+ * @version   3.0.0
+ * @author    John Rayes <live627@gmail.com>
+ * @copyright Copyright (c) 2014, John Rayes
+ * @license   http://opensource.org/licenses/MIT MIT
+ */
+
+declare(strict_types=1);
+
+namespace CustomForm\Fields\Masks;
+
+use CustomForm\MaskInterface;
+use CustomForm\MaskTrait;
+
+class Email implements MaskInterface
+{
+	use MaskTrait;
+
+	public function validate(): bool
+	{
+		if (!preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $this->value))
+			$this->err = ['customform_invalid_value', $this->field['text']];
+
+		return $this->err == false;
+	}
+}
