@@ -99,4 +99,11 @@ class Integration
 		$sce_options['toolbar'] .= '|customformFields';
 		$sce_options['toolbarExclude'] = (!empty($sce_options['toolbarExclude']) ? $sce_options['toolbarExclude'] . ',' : '') . 'table,sup,sub,floatright,floatleft,hr,email,img,size,pre,code,youtube';
 	}
+
+	public static function sce_options2(&$sce_options)
+	{
+		$sce_options['plugins'] = ($sce_options['plugins'] != '' ? $sce_options['plugins'] . ',' : '') . 'customform2';
+		$sce_options['customformel'] = 'field_text';
+		$sce_options['toolbar'] = 'bold,italic,underline|font,size,color,removeformat|maximize,source';
+	}
 }

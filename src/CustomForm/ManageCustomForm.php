@@ -107,7 +107,7 @@ class ManageCustomForm
 						'value' => $txt['title'],
 					],
 					'data' => [
-						'db' => 'title',
+						'db_htmlsafe' => 'title',
 					],
 				],
 				'board' => [
@@ -211,7 +211,7 @@ class ManageCustomForm
 						'value' => $txt['customform_identifier'],
 					],
 					'data' => [
-						'db' => 'title',
+						'db_htmlsafe' => 'title',
 					],
 				],
 				'text' => [
@@ -219,7 +219,7 @@ class ManageCustomForm
 						'value' => $txt['customform_text'],
 					],
 					'data' => [
-						'db' => 'text',
+						'db_htmlsafe' => 'text',
 					],
 				],
 				'type' => [
@@ -448,7 +448,7 @@ class ManageCustomForm
 				$txt['customform_character_warning'],
 				sprintf(
 					$txt['customform_current_identifier'],
-					'<code>' . $data['title'] . '</code>'
+					'<code>' . $this->smcFunc['htmlspecialchars']($data['title']) . '</code>'
 				),
 				sprintf(
 					$txt['customform_suggested_identifier'],
@@ -488,11 +488,8 @@ class ManageCustomForm
 				'help' => 'customform_field_title',
 			],
 			[
-				'large_text',
+				'callback',
 				'field_text',
-				'value' => $data['text'],
-				'text_label' => $txt['customform_text'],
-				'subtext' => $txt['customform_text_desc'],
 			],
 			[
 				'select',
@@ -522,6 +519,16 @@ class ManageCustomForm
 				'help' => 'customform_type_vars',
 			],
 		];
+		add_integration_function('integrate_sceditor_options', __NAMESPACE__ . '\Integration::sce_options2', false);
+		require_once $this->sourcedir . '/Subs-Editor.php';
+		create_control_richedit(
+			[
+				'disable_smiley_box' => true,
+				'id' => 'field_text',
+				'value' => $data['text'] ?? '',
+				'width' => '100%',
+			]
+		);
 		loadCSSFile('customform.css');
 		loadJavaScriptFile('customform.js', array('minimize' => true));
 		addInlineJavaScript('
@@ -546,6 +553,8 @@ class ManageCustomForm
 		//	Finally prepare the settings array to be shown by the 'show_settings' template.
 		prepareDBSettingContext($config_vars);
 		createToken('admin-dbsc');
+		loadTemplate('CustomForm');
+		loadTemplate('GenericControls');
 	}
 
 	public function MoveFieldDown(int $field_id): void

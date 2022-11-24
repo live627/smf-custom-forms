@@ -264,7 +264,7 @@ class CustomForm
 					sprintf(
 						'Param "%s" not found for field "%s" at ID #%s.',
 						$type,
-						$row['text'],
+						$this->smcFunc['htmlspecialchars']($row['text']),
 						$row['id_field']
 					),
 					false
@@ -298,9 +298,9 @@ class CustomForm
 				require_once $this->sourcedir . '/Subs-Post.php';
 				$msgOptions = [
 					'id' => 0,
-					'subject' => $this->customform_replace_vars($form_data['subject'], $vars),
+					'subject' => $this->smcFunc['htmlspecialchars']($this->replace_vars($form_data['subject'], $vars)),
 					'icon' => $form_data['icon'],
-					'body' => $this->customform_replace_vars($form_data['output'], $vars),
+					'body' => $this->smcFunc['htmlspecialchars']($this->replace_vars($form_data['output'], $vars)),
 					'smileys_enabled' => true,
 				];
 
@@ -385,7 +385,7 @@ class CustomForm
 			$field['obj']->setHtml();
 
 			$context['fields'][$field['title']] = [
-				'text' => $field['text'],
+				'text' => parse_bbc($this->smcFunc['htmlspecialchars']($field['text'])),
 				'type' => $field['type'],
 				'html' => $field['obj']->getInputHtml(),
 				'required' => $field['obj']->isRequired(),

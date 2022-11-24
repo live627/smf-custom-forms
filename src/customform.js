@@ -1,6 +1,20 @@
 (function (document, sceditor) {
 	'use strict';
 
+	sceditor.plugins.customform2 = function()
+	{
+		let editor;
+		this.init = function()
+		{
+			editor = this;
+		};
+		this.signalValuechangedEvent = e =>
+		{
+			editor.updateOriginal();
+			document.getElementById(editor.opts.customformel).dispatchEvent(new Event('change', { 'bubbles': true }));
+		};
+	};
+
 	sceditor.plugins.customform = function()
 	{
 		let editor;
@@ -67,7 +81,7 @@
 
 		el.className = 'smalltext';
 		textarea.parentNode.appendChild(el);
-		textarea.addEventListener('keyup', fn);
+		textarea.addEventListener('change', fn);
 
 		fn(num);
 	};
