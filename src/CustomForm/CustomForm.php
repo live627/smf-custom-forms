@@ -317,14 +317,25 @@ class CustomForm
 				//	Finally create the post!!! :D
 				createPost($msgOptions, $topicOptions, $posterOptions);
 
-				$exit = match ($form_data['form_exit'])
+				switch ($form_data['form_exit'])
 				{
-					'board', '' => 'board=' . $form_data['id_board'],
-					'forum' => '',
-					'form' => 'action=form',
-					'thanks' => 'action=form;thankyou',
-					default => $form_data['form_exit']
-				};
+					case 'board':
+					case '':
+						$exit = 'board=' . $form_data['id_board'];
+						break;
+					case 'forum':
+						$exit = '';
+						break;
+					case 'form':
+						$exit = 'action=form';
+						break;
+					case 'thanks':
+						$exit = 'action=form;thankyou';
+						break;
+					default:
+						$exit = $form_data['form_exit'];
+						break;
+				}
 				redirectexit($exit);
 			}
 		}

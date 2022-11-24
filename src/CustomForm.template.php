@@ -183,14 +183,16 @@ function template_form(): void
 			echo '
 				<span class="breaker">', $field_data['text'], '</span>';
 		else
+		{
 			echo '
-					<label for="', $field_name, '"', $field_data['failed'] ? ' class="error"' : '', '>';
+				<label for="', $field_name, '"', $field_data['failed'] ? ' class="error"' : '', '>';
 
 		if ($field_data['required'])
-			echo ' *';
+			echo '* ';
 
 		echo $field_data['text'], '</label>
-					', $field_data['html'];
+				', $field_data['html'];
+		}
 	}
 
 	//    Show the "Required Fields" text down the bottom, show it in red if there was a failed submit.
