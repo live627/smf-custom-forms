@@ -1,6 +1,6 @@
 ## Custom Form
 [![MIT license](http://img.shields.io/badge/license-MIT-009999.svg)](http://opensource.org/licenses/MIT)
-[![GitHub issues](https://img.shields.io/github/issues/live627/smf-custom-forms.svg)](https://github.com/live627/smf-custom-forms/issues)
+[![Crowdin](https://badges.crowdin.net/custom-form/localized.svg)](https://crowdin.com/project/custom-form)
 [![Latest Version](https://img.shields.io/github/release/live627/smf-custom-forms.svg)](https://github.com/live627/smf-custom-forms/releases)
 [![Total Downloads](https://img.shields.io/github/downloads/live627/smf-custom-forms/total.svg)](https://github.com/live627/smf-custom-forms/releases)
 [![Support](http://img.shields.io/badge/PayPal-$-009966.svg)](https://www.paypal.me/JohnRayes)
@@ -10,6 +10,8 @@ Package name | SMF version | Minimmum PHP version
 [Custom Form Mod 3.1.0](https://github.com/live627/smf-custom-forms/releases/download/v3.1.0/custom-forms_3-1-0.tgz) | SMF 2.1.x | PHP 7.4
 [Custom Form Mod 2.2.4](https://github.com/live627/smf-custom-forms/releases/download/v2.2.4/custom-forms_2-2-4.tgz) | SMF 2.0.x, SMF 2.1.x | PHP 7.4
 Custom Form Mod 1.7 | SMF 1.1.x, 2.0.x | PHP 4.3 – PHP 7.4
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A8GEKTO)
 
 [View changelog](https://github.com/live627/smf-custom-forms/blob/master/CHANGELOG.md)
 
