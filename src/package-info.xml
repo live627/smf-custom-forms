@@ -39,6 +39,7 @@
 		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
 		<require-file name="customform.js" destination="$themedir/scripts" />
+		<require-file name="sceditor.plugins.customform.js" destination="$themedir/scripts" />
 		<require-file name="customform.css" destination="$themedir/css" />
 		<hook hook="integrate_pre_include" function="$sourcedir/CustomForm/Integration.php" />
 		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" />
@@ -79,6 +80,7 @@
 		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
 		<require-file name="customform.js" destination="$themedir/scripts" />
+		<require-file name="sceditor.plugins.customform.js" destination="$themedir/scripts" />
 		<require-file name="customform.css" destination="$themedir/css" />
 		<hook hook="integrate_pre_include" function="$sourcedir/CustomForm/Integration.php" />
 		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" />
@@ -109,6 +111,9 @@
 		<require-file name="CustomForm.english.php" destination="$languagedir"/>
 		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
+		<require-file name="customform.js" destination="$themedir/scripts" />
+		<require-file name="sceditor.plugins.customform.js" destination="$themedir/scripts" />
+		<require-file name="customform.css" destination="$themedir/css" />
 		<hook hook="integrate_pre_include" function="$sourcedir/CustomForm/Integration.php" />
 		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" />
 		<hook hook="integrate_actions" function="CustomForm\Integration::actions" />
@@ -132,5 +137,8 @@
 		<remove-file name="$languagedir/CustomForm.english.php"/>
 		<remove-dir name="$sourcedir/CustomForm"/>
 		<remove-file name="$themedir/CustomForm.template.php"/>
+		<remove-file name="$themedir/scripts/customform.js"/>
+		<remove-file name="$themedir/scripts/sceditor.plugins.customform.js"/>
+		<remove-file name="$themedir/css/customform.css"/>
 	</uninstall>
 </package-info>

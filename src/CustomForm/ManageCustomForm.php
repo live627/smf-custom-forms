@@ -269,7 +269,8 @@ class ManageCustomForm
 				'width' => '100%',
 			]
 		);
-		loadCSSFile('customform.css');
+		loadCSSFile('customform.css', array('minimize' => true));
+		loadJavaScriptFile('sceditor.plugins.customform.js', array('minimize' => true));
 		loadJavaScriptFile('customform.js', array('minimize' => true));
 
 		//	Set up the variables needed by the template.
@@ -529,8 +530,8 @@ class ManageCustomForm
 				'width' => '100%',
 			]
 		);
-		loadCSSFile('customform.css');
-		loadJavaScriptFile('customform.js', array('minimize' => true));
+		loadCSSFile('customform.css', array('minimize' => true));
+		loadJavaScriptFile('sceditor.plugins.customform.js', array('minimize' => true));
 		addInlineJavaScript('
 		textareaLengthCheck(document.getElementById("field_text"), 4096);', true);
 
