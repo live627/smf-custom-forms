@@ -45,6 +45,7 @@ jobs:
             sed -i "/@version/c \ * @version   $VERSION" "$f"
           done
           sed -i "/<version>/c \	<version>$VERSION</version>" src/package-info.xml
+          sed -i -E "30s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/" srcCustomForm/ManageCustomForm.php)
           sed -i -E "1s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/" src/install.txt
           sed -i -E "10s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/g" README.md
           sed -i -E "10s/[0-9]+-[0-9]+-[0-9]+/${MAJOR}-${MINOR}-${PATCH}/" README.md

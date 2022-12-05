@@ -27,6 +27,7 @@ class ManageCustomForm
 	const MOVEFIELDDOWN = 'movefielddown';
 	const MOVEFIELDUP = 'movefieldup';
 	const SAVEFIELD = 'savefield';
+	const VERSION = '3.0.0';
 
 	private string $scripturl;
 	private string $sourcedir;
@@ -47,6 +48,7 @@ class ManageCustomForm
 
 		$call = match ($act)
 		{
+			'delay' => ['Delay', null],
 			self::ADDFORM => ['AddForm', null],
 			self::DELETEFORM => ['DeleteForm', $form_id],
 			self::EDITFORM => ['EditForm', $form_id],
@@ -163,6 +165,56 @@ class ManageCustomForm
 		// Two tokens because saving these settings requires both save_inline_permissions and saveDBSettings
 		createToken('admin-mp');
 		createToken('admin-dbsc');
+
+		$request = $this->smcFunc['db_query']('', '
+			SELECT data
+			FROM {db_prefix}admin_info_files
+			WHERE filename = \'customform/versions.json\''
+		);
+
+		[$data] = $this->smcFunc['db_fetch_row']($request);
+		$this->smcFunc['db_free_result']($request);
+
+		if ($data !== null)
+		{
+			$data = json_decode($data, true);
+			require_once $this->sourcedir . '/Subs-Package.php';
+			if ($data !== null && compareVersions(self::VERSION, $data[0]['version']['string']) < 1)
+			{
+				$changes = '';
+				foreach ($data[1]['changes'] as $type => $change)
+					$changes .= '<h4>'.$type.'</h4><ul><li>&emsp;'.implode('</li><li>&emsp;', $change).'</li></ul>';
+
+				$context['settings_insert_above'] = sprintf(
+					'<div class="noticebox" style="overflow:auto; max-height: 11em;"><h3 id="update_title">%s</h3><div class="padding"><a class="button floatnone" href="%s?action=admin;area=packages;pgdownload;auto;package=%s;%s=%s">%s</a>&emsp;<a class="button floatnone" href="%2$s?action=admin;area=modsettings;sa=customform;act=delay">%s</a></div>%s</div>',
+					$txt['customform_update_available'],
+					$this->scripturl,
+					sprintf(
+						'https://github.com/live627/smf-custom-forms/releases/download/v%s/custom-forms_%d-%d-%d.tgz',
+						$data[0]['version']['string'],
+						$data[0]['version']['major'],
+						$data[0]['version']['minor'],
+						$data[0]['version']['patch'],
+					),
+					$context['session_var'],
+					$context['session_id'],
+					sprintf($txt['customform_update_action'], $data[0]['version']['string']),
+					$txt['customform_update_later'],
+					$changes,
+				);
+			}
+		}
+	}
+
+	public function Delay(): void
+	{
+		$this->smcFunc['db_query']('', '
+			UPDATE {db_prefix}admin_info_files
+			SET data = \'\'
+			WHERE filename = \'customform/versions.json\''
+		);
+
+		redirectexit('action=admin;area=modsettings;sa=customform');
 	}
 
 	public function EditForm(int $form_id): void

@@ -20,6 +20,7 @@
 				);
 		?>]]></code>
 		<redirect url="?action=admin;area=modsettings;sa=customform"/>
+		<code>upgrade.php</code>
 		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" reverse="true" />
 		<hook hook="integrate_actions" function="customform_actions" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
 		<hook hook="integrate_modify_modifications" function="customform_modify_modifications" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
@@ -65,6 +66,7 @@
 				);
 		?>]]></code>
 		<redirect url="?action=admin;area=modsettings;sa=customform"/>
+		<code>upgrade.php</code>
 		<hook hook="integrate_pre_include" function="$sourcedir/Subs-CustomForm.php" reverse="true" />
 		<hook hook="integrate_admin_include" function="$sourcedir/ManageCustomForm.php" reverse="true" />
 		<hook hook="integrate_actions" function="customform_actions" file="$sourcedir/Subs-CustomForm.php" reverse="true" />
@@ -107,6 +109,7 @@
 		?>]]></code>
 		<redirect url="?action=admin;area=modsettings;sa=customform"/>
 		<readme parsebbc="true">install.txt</readme>
+		<code>upgrade.php</code>
 		<database>install.php</database>
 		<require-file name="CustomForm.english.php" destination="$languagedir"/>
 		<require-dir name="CustomForm" destination="$sourcedir"/>
@@ -127,6 +130,7 @@
 	<uninstall for="2.1 - 2.1.99">
 		<readme type="file" parsebbc="true">uninstall.txt</readme>
 		<database>uninstall-optional.php</database>
+		<code>uninstall-required.php</code>
 		<hook hook="integrate_pre_include" function="$sourcedir/CustomForm/Integration.php" reverse="true" />
 		<hook hook="integrate_actions" function="CustomForm\Integration::actions" reverse="true" />
 		<hook hook="integrate_modify_modifications" function="CustomForm\Integration::modify_modifications" reverse="true" />

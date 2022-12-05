@@ -15,6 +15,9 @@ global $helptxt;
 //	Header and General text for the Custom Form Mod settings area.
 $txt['customform_generalsettings_heading'] = 'Custom Form Mod Settings';
 $txt['customform_tabheader'] = 'Custom Forms';
+$txt['customform_update_available'] = 'Update available!';
+$txt['customform_update_action'] = 'Update to %s';
+$txt['customform_update_later'] = 'Remind me later';
 $txt['customform_form'] = 'Form';
 $txt['customform_field'] = 'Field';
 $txt['customform_view_title'] = 'View Forms Title';
