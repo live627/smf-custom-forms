@@ -1,0 +1,16 @@
+name: Crowdin Action
+on:
+  workflow_dispatch:
+jobs:
+  crowdin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: crowdin/github-action@1.5.1
+        with:
+          download_translations: true
+          config: '.github/crowdin.yml'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_API_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
