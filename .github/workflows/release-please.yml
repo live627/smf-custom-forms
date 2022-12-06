@@ -12,27 +12,15 @@ jobs:
       FORCE_COLOR: 1
       MOD_NAME: custom-forms
     steps:
-      - uses: live627/release-please-action@main
+      - uses: google-github-actions/release-please-action@v3
         id: release
         with:
           release-type: php
           draft: true
           package-name: ${{ env.MOD_NAME }}
-      - uses: actions/github-script@v3
-        id: vars
+      - uses: actions/checkout@v3
         with:
-          script: |
-            const response = await github.pulls.get({
-              pull_number: ${{ steps.release.outputs.pr }},
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            core.info("\u001B[32m✔\u001B[39mBranch: \u001B[1;32m" + response.data.head.ref);
-            core.setOutput("branch", response.data.head.ref);
-        if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ steps.vars.outputs.branch }}
+          ref: ${{ fromJson(steps.release.outputs.pr).headBranchName }}
         if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
       - if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
         run: |
@@ -45,7 +33,7 @@ jobs:
             sed -i "/@version/c \ * @version   $VERSION" "$f"
           done
           sed -i "/<version>/c \	<version>$VERSION</version>" src/package-info.xml
-          sed -i -E "30s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/" srcCustomForm/ManageCustomForm.php)
+          sed -i -E "30s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/" src/CustomForm/ManageCustomForm.php
           sed -i -E "1s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/" src/install.txt
           sed -i -E "10s/[0-9]+\.[0-9]+\.[0-9]+/$VERSION/g" README.md
           sed -i -E "10s/[0-9]+-[0-9]+-[0-9]+/${MAJOR}-${MINOR}-${PATCH}/" README.md
@@ -53,17 +41,17 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git commit -am "build: Update versions in mod files"
           git push
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ steps.release.outputs.release_created }}
       - run: tar -czvf myfile.tgz LICENSE README.md -C src $(ls src)
         if: ${{ steps.release.outputs.release_created }}
       - name: Upload release asset
-        uses: actions/github-script@v2
+        uses: actions/github-script@v6
         with:
           script: |
             const fs = require('fs');
             const str = "${{ steps.release.outputs.upload_url }}";
-            await github.repos.uploadReleaseAsset({
+            await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               url: "${{ steps.release.outputs.upload_url }}",
               repo: context.repo.repo,
@@ -74,8 +62,7 @@ jobs:
               name: "${{ env.MOD_NAME }}_${{ steps.release.outputs.major }}-${{ steps.release.outputs.minor }}-${{ steps.release.outputs.patch }}.tgz",
               data: fs.readFileSync("./myfile.tgz")
             });
-            console.log(str.substring(str.lastIndexOf('/', str.lastIndexOf('/assets') - 1) + 1, str.lastIndexOf('/assets')))
-            await github.repos.updateRelease({
+            await github.rest.repos.updateRelease({
               ...context.repo,
               release_id: str.substring(str.lastIndexOf('/', str.lastIndexOf('/assets') - 1) + 1, str.lastIndexOf('/assets')),
               draft: false,
