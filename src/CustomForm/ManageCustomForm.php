@@ -32,6 +32,7 @@ class ManageCustomForm
 	private string $scripturl;
 	private string $sourcedir;
 	private array $smcFunc;
+	private Util $util;
 
 	public function __construct(string $act)
 	{
@@ -61,6 +62,7 @@ class ManageCustomForm
 			self::SAVEFIELD => ['SaveField', $field_id],
 			default => ['ModifySettings', false],
 		};
+		$this->util = new Util;
 		call_user_func([$this, $call[0]], $call[1]);
 	}
 
@@ -222,7 +224,7 @@ class ManageCustomForm
 		global $context, $settings, $txt;
 
 		$request = $this->smcFunc['db_query']('', '
-			SELECT title, id_board, icon, output, subject, form_exit, template_function
+			SELECT title, id_board, icon, output, subject, form_exit, template_function, output_type
 			FROM {db_prefix}cf_forms
 			WHERE id_form = {int:id_form}',
 			[
@@ -386,6 +388,26 @@ class ManageCustomForm
 				'help' => 'customform_submit_exit',
 			],
 			[
+				'select',
+				'output_type',
+				'value' => $data['output_type'],
+				'text_label' => $txt['customform_output_type'],
+				'subtext' => 'customform_output_type',
+				iterator_to_array(
+					$this->util->map(
+						fn($cn, $key) => [$key ?? $cn, $txt[$this->util->decamelize(strtr($cn, '\\', '_'))]],
+						$this->util->find_classes(
+							new GlobIterator(
+								__DIR__ . '/Output/*.php',
+								FilesystemIterator::SKIP_DOTS
+							),
+							'CustomForm\Output\\',
+							'CustomForm\OutputInterface'
+						)
+					)
+				),
+			],
+			[
 				'callback',
 				'output',
 			],
@@ -410,7 +432,8 @@ class ManageCustomForm
 			title = {string:title}, output = {string:output},
 			subject = {string:subject},
 			form_exit = {string:form_exit},
-			template_function = {string:template_function}
+			template_function = {string:template_function},
+			output_type = {string:output_type}
 			WHERE id_form = {int:id_form}',
 			[
 				'id_form' => $form_id,
@@ -421,6 +444,7 @@ class ManageCustomForm
 				'subject' => $_REQUEST['subject'],
 				'form_exit' => $_REQUEST['exit'],
 				'template_function' => $_REQUEST['template_function'],
+				'output_type' => $_REQUEST['output_type'],
 			]
 		);
 
@@ -509,30 +533,7 @@ class ManageCustomForm
 				)
 			);
 
-		$result = array_map(
-			fn($cn) => $txt['customform_type_' . strtr(
-				$cn,
-				[
-					'largetextbox' => 'textarea',
-					'textbox' => 'text',
-					'checkbox' => 'check',
-					'selectbox' => 'select',
-					'float' => 'text',
-					'int' => 'text',
-					'radiobox' => 'radio',
-					'infobox' => 'info'
-				]
-			)],
-			$this->find_classes(
-				new GlobIterator(
-					__DIR__ . '/Fields/*.php',
-					FilesystemIterator::SKIP_DOTS
-				),
-				'CustomForm\Fields\\',
-				'CustomForm\FieldInterface'
-			)
-			);
-			$config_vars = [
+		$config_vars = [
 			[
 				'text',
 				'field_title',
@@ -562,7 +563,22 @@ class ManageCustomForm
 				),
 				'text_label' => $txt['customform_type'],
 				'help' => 'customform_type',
-				$result
+				iterator_to_array(
+					$this->util->map(
+						fn($cn, $key) => [
+							$key === null ? $cn : $this->util->decamelize($key),
+							$txt[$this->util->decamelize(strtr($cn, '\\', '_'))],
+						],
+						$this->util->find_classes(
+							new GlobIterator(
+								__DIR__ . '/Fields/*.php',
+								FilesystemIterator::SKIP_DOTS
+							),
+							'CustomForm\Fields\\',
+							'CustomForm\FieldInterface'
+						)
+					)
+				)
 			],
 			[
 				'text',
@@ -784,22 +800,26 @@ class ManageCustomForm
 		$list = [];
 		$i = 1;
 		$end = count($data);
-		$result = [];
 		addJavaScriptVar(
 			'customformFields',
 			array_column($data, 'title'),
 			true
 		);
 
-		$result = array_map(
-			fn($cn) => $txt['customform_type_' . $cn],
-			$this->find_classes(
-				new GlobIterator(
-					__DIR__ . '/Fields/*.php',
-					FilesystemIterator::SKIP_DOTS
-				),
-				'CustomForm\Fields\\',
-				'CustomForm\FieldInterface'
+		$result = iterator_to_array(
+			$this->util->map(
+				fn($cn, $key) => [
+					$key === null ? $cn : $this->util->decamelize($key),
+					$txt[$this->util->decamelize(strtr($cn, '\\', '_'))],
+				],
+				$this->util->find_classes(
+					new GlobIterator(
+						__DIR__ . '/Fields/*.php',
+						FilesystemIterator::SKIP_DOTS
+					),
+					'CustomForm\Fields\\',
+					'CustomForm\FieldInterface'
+				)
 			)
 		);
 
@@ -992,16 +1012,5 @@ class ManageCustomForm
 		$this->smcFunc['db_free_result']($request);
 
 		return (int) $id_form;
-	}
-
-	public function find_classes(iterable $iterator, string $ns, string $interface): array
-	{
-		$class_list = [];
-
-		foreach ($iterator as $file_info)
-			if (class_exists($fqcn = $ns . $file_info->getBasename('.php')) && is_subclass_of($fqcn, $interface, true))
-				$class_list[strtolower($file_info->getBasename('.php'))] = strtolower($file_info->getBasename('.php'));
-
-		return $class_list;
 	}
 }

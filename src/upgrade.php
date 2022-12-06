@@ -11,6 +11,15 @@ declare(strict_types=1);
  */
 
 
+$column = array(
+	'name' => 'output_type',
+	'type' => 'varchar',
+	'size' => 150,
+	'default' => 'ForumPost'
+);
+
+$smcFunc['db_add_column']('{db_prefix}cf_forms', $column);
+
 $request = $smcFunc['db_query']('', '
 	SELECT id_file
 	FROM {db_prefix}admin_info_files

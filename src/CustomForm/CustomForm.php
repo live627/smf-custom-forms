@@ -201,7 +201,7 @@ class CustomForm
 		$request = $this->smcFunc['db_query']('', '
 			SELECT
 				id_form, title, output, subject, id_board,
-				icon, form_exit, template_function
+				icon, form_exit, template_function, output_type
 			FROM {db_prefix}cf_forms AS f
 			WHERE title != \'\'
 				AND EXISTS
@@ -295,27 +295,25 @@ class CustomForm
 
 			if ($post_errors === [])
 			{
-				require_once $this->sourcedir . '/Subs-Post.php';
-				$msgOptions = [
-					'id' => 0,
-					'subject' => $this->smcFunc['htmlspecialchars']($this->replace_vars($form_data['subject'], $vars)),
-					'icon' => $form_data['icon'],
-					'body' => $this->smcFunc['htmlspecialchars']($this->replace_vars($form_data['output'], $vars)),
-					'smileys_enabled' => true,
-				];
+				$output = $this->replace_vars($form_data['output'], $vars);
 
-				$topicOptions = [
-					'id' => 0,
-					'board' => $form_data['id_board'],
-					'mark_as_read' => true,
-				];
+				$class_name = strpos($form_data['output_type'], '\\') !== false
+					? $form_data['output_type']
+					: 'CustomForm\Output\\' . $form_data['output_type'];
 
-				$posterOptions = [
-					'id' => $user_info['id'],
-				];
+				if (!class_exists($class_name))
+					fatal_error(
+						sprintf(
+							'Output type "%s" not found for form "%s" at ID #%s.',
+							$this->smcFunc['htmlspecialchars']($form_data['output_type']),
+							$this->smcFunc['htmlspecialchars']($form_data['title']),
+							$form_data['id_form']
+						),
+						false
+					);
 
-				//	Finally create the post!!! :D
-				createPost($msgOptions, $topicOptions, $posterOptions);
+				$output_type = new $class_name;
+				$output_type->send($output, $form_data);
 
 				switch ($form_data['form_exit'])
 				{

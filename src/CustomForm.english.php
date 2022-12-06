@@ -25,7 +25,7 @@ $txt['customform_view_title_desc'] = 'Choose the title for the action/page that 
 $txt['customform_view_text'] = 'View Forms Text';
 $txt['customform_view_text_desc'] = 'Choose the explanation text for the action/page that shows the list of forms to a user (at "index.php?action=form").';
 $txt['customform_view_perms'] = 'Form View Page Permissions';
-$txt['customform_view_perms_desc'] = 'Restrict the member groups that can see the list of forms. Individual forms run independent of this, there is no permission inheritance.';
+$txt['customform_view_perms_desc'] = 'Limit the member groups that can see the form list. Individual forms and do not inherit from this.';
 
 //	Stuff for the forms action
 $txt['customform_submit'] = 'Submit Form';
@@ -44,10 +44,13 @@ $txt['customform_movedown'] = 'Move Down';
 //	Text for the settings pages.
 $txt['customform_subject'] = 'Form Subject';
 $txt['customform_subject_desc'] = 'Subject of final message. Supports macros for field names.';
+$txt['customform_output_type'] = 'Form Output Method';
+$txt['customform_output_type_desc'] = 'Choose how form output is sent.';
+$txt['custom_form_output_forum_post'] = 'Forum Post';
 $txt['customform_output'] = 'Form Output';
-$txt['customform_output_desc'] = 'To actually display data a user enters in the forum post you will need to enter the identifier of the field between a set of braces <code>{{ name }}</code>.';
+$txt['customform_output_desc'] = 'Enter the identifier of the field between a set of braces <code>{{ name }}</code> to view the data entered in the form.';
 $txt['customform_board'] = 'Board to post to';
-$txt['customform_board_desc'] = 'Select the board that the form will post to. The target board can be hidden.';
+$txt['customform_board_desc'] = 'Choose the board where the form will post to. The target board can be hidden.';
 $txt['customform_template_function'] = 'Custom Template Function';
 $txt['customform_exit'] = 'Submit Redirect';
 
@@ -74,12 +77,12 @@ $txt['customform_text'] = 'Description';
 $txt['customform_text_desc'] = 'A description of the field, shown to the user when they enter the information.';
 $txt['customform_type'] = 'Type';
 $txt['customform_type_vars'] = 'Extra Type Parameters';
-$txt['customform_type_text'] = 'Text';
-$txt['customform_type_textarea'] = 'Large Text';
-$txt['customform_type_select'] = 'Select Box';
-$txt['customform_type_radio'] = 'Radio Buttons';
-$txt['customform_type_check'] = 'Checkbox';
-$txt['customform_type_info'] = 'Information';
+$txt['custom_form_fields_text'] = 'Text';
+$txt['custom_form_fields_textarea'] = 'Large Text';
+$txt['custom_form_fields_select'] = 'Select Box';
+$txt['custom_form_fields_radio'] = 'Radio Buttons';
+$txt['custom_form_fields_check'] = 'Checkbox';
+$txt['custom_form_fields_info'] = 'Information';
 $txt['customform_max_length'] = 'Maximum Length';
 $txt['customform_max_length_desc'] = '(0 for no limit)';
 $txt['customform_dimension'] = 'Dimensions';
@@ -120,24 +123,24 @@ $helptxt['customform_output'] = '
 	<p>Then if the user were to enter "Bob" in the corresponding form field, the forum post would display "My name is Bob".</p>
 	';
 $helptxt['customform_submit_exit'] = '
-	<p>This setting allows you to select where the user is sent after the form is successfully completed.</p>
-	<p>Several macros are listed below that you can use.</p>
+	<p>This setting allows you to specify where the user goes after completing the form.</p>
+	<p>You can use the macros listed below.</p>
 	<ul class="normallist">
 		<li>
 			<b>board</b>
-			&nbsp;- will redirect the user to the board where the form is posted (this is also the default if the field is left empty).
+			&nbsp;- redirects the user to the board where the form posts (this is also the default if you leave the field empty).
 		</li>
 		<li><b>forum</b>
-			&nbsp;- will redirect the user to the Forum Index page.
+			&nbsp;- redirects the user to the Forum Index page.
 		</li>
 		<li><b>form</b>
-			&nbsp;- will redirect the user to the list of forms available form them to fill out, if they have permission to view it.
+			&nbsp;- redirects the user to the list of available forms to fill out, if they have permission to view it.
 		</li>
 		<li><b>thanks</b>
-			&nbsp;- will redirect the user to a simple page letting them know that form has been completed correctly and thanking them for completing the form.
+			&nbsp;- redirects the user to a simple page that informs them that they correctly completed the form and thanks them for doing so.
 		</li>
 	</ul>
-	<p>forum, form, and thanks, are useful if the form posts to a board the user does not have access to view.</p>
+	<p>The keywords "forum," "form," and "thanks" are helpful if the form posts to a board that the user is unable to access.</p>
 	<p>You can also enter a URL like <code>https://www.eample.com/</code> and the user will be directed to that URL. This can be useful to redirect users to a custom thank you page, another specific form, a specific forum post, or anyplace else on the internet.</p>
 	';
 $helptxt['customform_template_function'] = '
