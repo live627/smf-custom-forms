@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * @package   Ultimate Menu mod
- * @version   4.0.0
+ * @version   4.0.1
  * @author    John Rayes <live627@gmail.com>
  * @copyright Copyright (c) 2014, John Rayes
  * @license   http://opensource.org/licenses/MIT MIT
