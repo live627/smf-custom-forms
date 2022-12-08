@@ -10,6 +10,8 @@ declare(strict_types=1);
  * @license   http://opensource.org/licenses/MIT MIT
  */
 
+if (!array_key_exists('db_add_column', $smcFunc))
+	db_extend('packages');
 
 $column = array(
 	'name' => 'output_type',

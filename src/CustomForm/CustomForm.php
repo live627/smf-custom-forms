@@ -295,6 +295,7 @@ class CustomForm
 
 			if ($post_errors === [])
 			{
+				$subject = $this->replace_vars($form_data['subject'], $vars);
 				$output = $this->replace_vars($form_data['output'], $vars);
 
 				$class_name = strpos($form_data['output_type'], '\\') !== false
@@ -313,7 +314,7 @@ class CustomForm
 					);
 
 				$output_type = new $class_name;
-				$output_type->send($output, $form_data);
+				$output_type->send($subject, $output, $form_data);
 
 				switch ($form_data['form_exit'])
 				{

@@ -226,7 +226,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) as of v1.8.0.
 - Added SMF 1.1.6 version.
 - Added SMF 2.0 Beta 3 version.
 
-## v1.1:
+## v1.1 (2008-06-22)
 - Added SMF 1.1.5 version.
 - Added the new custom template stuff.
 - Some minor bugfixes.
