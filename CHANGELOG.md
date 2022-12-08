@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 This project adheres to [Semantic Versioning](http://semver.org/) as of v1.8.0.
 
+## [4.0.0](https://github.com/live627/smf-custom-forms/compare/v3.1.0...v4.0.0) (2022-12-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* Field descriptions no longer accept raw HTML as part of the security fix (BBC accepted instead)
+* Requires PHP 8 or newer
+
+### Features
+
+* Add update notice for admins ([8d88ff6](https://github.com/live627/smf-custom-forms/commit/8d88ff6dc3c107e053dd98eca7a81df6cc516f46))
+* Form edit box now includes a button to add field macros ([445473d](https://github.com/live627/smf-custom-forms/commit/445473de818f7fd55aac44e67965e3d26c8c6dc5))
+* integrate_customform_classlist ([bd054cb](https://github.com/live627/smf-custom-forms/commit/bd054cbc81ae69d8e0b697c33e54a08eeb854f73))
+
+
+### Bug Fixes
+
+* Tighten security by encoding HTML special characters ([430f1f7](https://github.com/live627/smf-custom-forms/commit/430f1f7b35583d35a0ba02ccd275ca24781f70c4))
+
+
+### Code Refactoring
+
+* move to namespace classes ([3289cd8](https://github.com/live627/smf-custom-forms/commit/3289cd80e925a338b33fb3313d141a672a6b0f59))
+
 ## [3.1.0](https://www.github.com/live627/smf-custom-forms/compare/v3.0.0...v3.1.0) (2022-11-21)
 
 
