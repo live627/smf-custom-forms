@@ -4,7 +4,7 @@
 	<name>Custom Form Mod</name>
 	<id>LHVWB:CustomFormMod</id>
 	<type>modification</type>
-	<version>4.0.3</version>
+	<version>4.0.4</version>
 
 	<upgrade for="2.1 - 2.1.99" from="4.*">
 		<code type="inline"><![CDATA[<?php
