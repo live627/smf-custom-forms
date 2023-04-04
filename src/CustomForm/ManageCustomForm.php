@@ -714,8 +714,8 @@ class ManageCustomForm
 		$this->smcFunc['db_insert'](
 			'',
 			'{db_prefix}cf_forms',
-			['id_board' => 'int'],
-			['0'],
+			['id_board' => 'int', 'title' => 'string', 'icon' => 'string', 'output' => 'string', 'subject' => 'string', 'form_exit' => 'string', 'template_function' => 'string', 'output_type' => 'string'],
+			['0', '', '', '', '', '', '', ''],
 			['id_form']
 		);
 		$form_id = $this->smcFunc['db_insert_id']('{db_prefix}cf_forms', 'id_form');
@@ -924,8 +924,8 @@ class ManageCustomForm
 		$this->smcFunc['db_insert'](
 			'',
 			'{db_prefix}cf_fields',
-			['id_form' => 'int'],
-			[$form_id],
+			['id_form' => 'int', 'title' => 'string', 'type' => 'string', 'text' => 'string', 'type_vars' => 'string'],
+			[$form_id, '', '', '', ''],
 			['id_field']
 		);
 		$field_id = $this->smcFunc['db_insert_id']('{db_prefix}cf_fields', 'id_field');

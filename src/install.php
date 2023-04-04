@@ -34,36 +34,30 @@ $columns = [
 		'name' => 'title',
 		'type' => 'varchar',
 		'size' => 150,
-		'null' => true,
 	],
 	[
 		'name' => 'subject',
 		'type' => 'varchar',
 		'size' => 150,
-		'null' => true,
 	],
 	[
 		'name' => 'icon',
 		'type' => 'varchar',
 		'size' => 150,
-		'null' => true,
 	],
 	[
 		'name' => 'form_exit',
 		'type' => 'varchar',
 		'size' => 150,
-		'null' => true,
 	],
 	[
 		'name' => 'template_function',
 		'type' => 'varchar',
 		'size' => 150,
-		'null' => true,
 	],
 	[
 		'name' => 'output',
 		'type' => 'text',
-		'null' => true,
 	],
 ];
 $indexes = [
@@ -90,24 +84,20 @@ $columns = [
 		'name' => 'title',
 		'type' => 'varchar',
 		'size' => 150,
-		'null' => true,
 	],
 	[
 		'name' => 'text',
 		'type' => 'varchar',
 		'size' => 4096,
-		'null' => true,
 	],
 	[
 		'name' => 'type',
 		'type' => 'varchar',
 		'size' => 150,
-		'null' => true,
 	],
 	[
 		'name' => 'type_vars',
 		'type' => 'text',
-		'null' => true,
 	],
 ];
 $indexes = [
