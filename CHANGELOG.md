@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 This project adheres to [Semantic Versioning](http://semver.org/) as of v1.8.0.
 
+## [4.0.3](https://github.com/live627/smf-custom-forms/compare/v4.0.2...v4.0.3) (2023-04-04)
+
+
+### Bug Fixes
+
+* Null fields cause problems when used in string functions ([a464946](https://github.com/live627/smf-custom-forms/commit/a464946176dbd23161801c3f272dded2b9237eb5))
+
 ## [4.0.2](https://github.com/live627/smf-custom-forms/compare/v4.0.1...v4.0.2) (2023-01-12)
 
 
