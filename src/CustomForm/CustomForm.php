@@ -244,7 +244,7 @@ class CustomForm
 
 		while ($row = $this->smcFunc['db_fetch_assoc']($request))
 		{
-			$type = strtr(
+			$row['type'] = strtr(
 				$row['type'],
 				[
 					'largetextbox' => 'textarea',
@@ -257,13 +257,13 @@ class CustomForm
 					'infobox' => 'info'
 				]
 			);
-			$class_name = 'CustomForm\Fields\\' . ucfirst($type);
+			$class_name = 'CustomForm\Fields\\' . ucfirst($row['type']);
 
 			if (!class_exists($class_name))
 				fatal_error(
 					sprintf(
 						'Param "%s" not found for field "%s" at ID #%s.',
-						$type,
+						$row['type'],
 						$this->smcFunc['htmlspecialchars']($row['text']),
 						$row['id_field']
 					),
