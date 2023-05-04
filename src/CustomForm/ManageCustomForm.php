@@ -542,10 +542,6 @@ class ManageCustomForm
 				'help' => 'customform_field_title',
 			],
 			[
-				'callback',
-				'field_text',
-			],
-			[
 				'select',
 				'field_type',
 				'value' => strtr(
@@ -581,11 +577,15 @@ class ManageCustomForm
 				)
 			],
 			[
-				'text',
+				'large_text',
 				'field_type_vars',
 				'value' => $data['type_vars'],
 				'text_label' => $txt['customform_type_vars'],
 				'help' => 'customform_type_vars',
+			],
+			[
+				'callback',
+				'field_text',
 			],
 		];
 		add_integration_function('integrate_sceditor_options', __NAMESPACE__ . '\Integration::sce_options2', false);

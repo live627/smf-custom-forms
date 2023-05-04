@@ -306,6 +306,29 @@ function template_callback_output(): void
 									<dl id="post_header">';
 }
 
+function template_callback_field_text(): void
+{
+	global $context, $scripturl, $txt;
+
+	echo '
+									</dl>
+									<dl id="post_header">
+										<dt>
+											', $txt['customform_text'], '
+											<p>', $txt['customform_text_desc'], '</p>
+										</dt>
+										<dd>
+											<div id="bbcBox_message"></div>
+											<div id="smileyBox_message"></div>';
+
+	template_control_richedit('field_text', 'smileyBox_message', 'bbcBox_message');
+
+	echo '
+										</dd>
+									</dl>
+									<dl id="post_header">';
+}
+
 function template_customform_GeneralSettings(): void
 {
 	template_show_settings();
