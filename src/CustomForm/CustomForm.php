@@ -379,6 +379,7 @@ class CustomForm
 		$context['meta_description'] = $this->smcFunc['htmlspecialchars']($form_data['title']);
 		$this->setMetaProperty('type', 'website');
 
+		require_once $this->sourcedir . '/BBCodeParser.php';
 		foreach ($fields as $field)
 		{
 			$field['obj']->setHtml();

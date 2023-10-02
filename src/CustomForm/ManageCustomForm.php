@@ -149,7 +149,7 @@ class ManageCustomForm
 			],
 		];
 
-		require_once $this->sourcedir . '/Subs-List.php';
+		require_once $this->sourcedir . '/ItemList.php';
 		createList($list);
 
 		//	Set up the variables needed by the template.
@@ -305,16 +305,15 @@ class ManageCustomForm
 		];
 
 		//	Call the function to setup the list for the template.
-		require_once $this->sourcedir . '/Subs-List.php';
+		require_once $this->sourcedir . '/ItemList.php';
 		createList($list);
 
 		//	Call the function to setup the inline permissions for the template.
-		require_once $this->sourcedir . '/ManagePermissions.php';
-		init_inline_permissions(['custom_forms_' . $form_id]);
+		\SMF\Actions\Admin\Permissions::init_inline_permissions(['custom_forms_' . $form_id]);
 		createToken('admin-mp');
 
 		add_integration_function('integrate_sceditor_options', __NAMESPACE__ . '\Integration::sce_options', false);
-		require_once $this->sourcedir . '/Subs-Editor.php';
+		require_once $this->sourcedir . '/Editor.php';
 		create_control_richedit(
 			[
 				'disable_smiley_box' => true,
@@ -449,8 +448,7 @@ class ManageCustomForm
 		);
 
 		//	Update the permissions.
-		require_once $this->sourcedir . '/ManagePermissions.php';
-		save_inline_permissions(['custom_forms_' . $form_id]);
+		\SMF\Actions\Admin\Permissions::save_inline_permissions(['custom_forms_' . $form_id]);
 
 		redirectexit('action=admin;area=modsettings;sa=customform;act=editform;form_id=' . $form_id);
 	}
@@ -589,7 +587,7 @@ class ManageCustomForm
 			],
 		];
 		add_integration_function('integrate_sceditor_options', __NAMESPACE__ . '\Integration::sce_options2', false);
-		require_once $this->sourcedir . '/Subs-Editor.php';
+		require_once $this->sourcedir . '/Editor.php';
 		create_control_richedit(
 			[
 				'disable_smiley_box' => true,
