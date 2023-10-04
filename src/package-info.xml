@@ -107,7 +107,6 @@
 		<require-file name="sceditor.plugins.customform.js" destination="$themedir/scripts" />
 		<require-file name="customform.css" destination="$themedir/css" />
 		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" file="$sourcedir/CustomForm/Integration.php" />
-		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" />
 		<hook hook="integrate_actions" function="CustomForm\Integration::actions" />
 		<hook hook="integrate_modify_modifications" function="CustomForm\Integration::modify_modifications" />
 		<hook hook="integrate_admin_areas" function="CustomForm\Integration::admin_areas" />
@@ -140,7 +139,6 @@
 		<require-file name="sceditor.plugins.customform.js" destination="$themedir/scripts" />
 		<require-file name="customform.css" destination="$themedir/css" />
 		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" file="$sourcedir/CustomForm/Integration.php" />
-		<hook hook="integrate_autoload" function="CustomForm\Integration::autoload" />
 		<hook hook="integrate_actions" function="CustomForm\Integration::actions" />
 		<hook hook="integrate_modify_modifications" function="CustomForm\Integration::modify_modifications" />
 		<hook hook="integrate_admin_areas" function="CustomForm\Integration::admin_areas" />
