@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 This project adheres to [Semantic Versioning](http://semver.org/) as of v1.8.0.
 
+## [4.0.6](https://github.com/live627/smf-custom-forms/compare/v4.0.5...v4.0.6) (2023-10-04)
+
+
+### Bug Fixes
+
+* pass backwards compatible field types to the template ([d8adf63](https://github.com/live627/smf-custom-forms/commit/d8adf6358abcc7eb13ec1a0a7f5f2d07ac8f49c0)), closes [#43](https://github.com/live627/smf-custom-forms/issues/43)
+
 ## [4.0.5](https://github.com/live627/smf-custom-forms/compare/v4.0.4...v4.0.5) (2023-05-04)
 
 
