@@ -27,7 +27,7 @@ class ManageCustomForm
 	const MOVEFIELDDOWN = 'movefielddown';
 	const MOVEFIELDUP = 'movefieldup';
 	const SAVEFIELD = 'savefield';
-	const VERSION = '4.0.5';
+	const VERSION = '4.0.6';
 
 	private string $scripturl;
 	private string $sourcedir;
