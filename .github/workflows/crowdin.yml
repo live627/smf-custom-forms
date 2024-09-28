@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: crowdin/github-action@1.5.1
+      - uses: crowdin/github-action@v2.2.0
         with:
           download_translations: true
           config: '.github/crowdin.yml'
