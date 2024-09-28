@@ -392,7 +392,7 @@ class ManageCustomForm
 				'output_type',
 				'value' => $data['output_type'],
 				'text_label' => $txt['customform_output_type'],
-				'subtext' => 'customform_output_type',
+				'subtext' => $txt['customform_output_type_desc'],
 				iterator_to_array(
 					$this->util->map(
 						fn($cn, $key) => [$key ?? $cn, $txt[$this->util->decamelize(strtr($cn, '\\', '_'))]],
