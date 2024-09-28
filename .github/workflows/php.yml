@@ -9,7 +9,7 @@ jobs:
     env:
       XDEBUG_MODE: coverage
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v2
