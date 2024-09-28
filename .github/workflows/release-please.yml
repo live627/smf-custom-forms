@@ -12,7 +12,7 @@ jobs:
       FORCE_COLOR: 1
       MOD_NAME: custom-forms
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
           release-type: php
@@ -29,7 +29,8 @@ jobs:
           MAJOR=`echo $VERSION | sed -e "s#$RE#\1#"`
           MINOR=`echo $VERSION | sed -e "s#$RE#\2#"`
           PATCH=`echo $VERSION | sed -e "s#$RE#\3#"`
-          for f in src/*.php; do
+          shopt -s globstar nullglob
+          for f in src/**.php; do
             sed -i "/@version/c \ * @version   $VERSION" "$f"
           done
           sed -i "/<version>/c \	<version>$VERSION</version>" src/package-info.xml
