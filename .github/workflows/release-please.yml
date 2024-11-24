@@ -2,8 +2,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'src/*'
 name: release-please
 jobs:
   release-please:
