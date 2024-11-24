@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2c87c55541d40845dae5d563c2fe315",
+    "content-hash": "6a1a8fee9dedd5a291856af74de93a79",
     "packages": [],
     "packages-dev": [
         {
@@ -2346,54 +2346,6 @@
             "time": "2020-09-28T06:39:44+00:00"
         },
         {
-            "name": "simplemachines/smf2.1",
-            "version": "dev-unittest",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/live627/SMF2.1.git",
-                "reference": "13573b918a486f0f9f38746884acc6a917b29f93"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/live627/SMF2.1/zipball/13573b918a486f0f9f38746884acc6a917b29f93",
-                "reference": "13573b918a486f0f9f38746884acc6a917b29f93",
-                "shasum": ""
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.0",
-                "phpunit/phpunit": "^8.5",
-                "simplemachines/build-tools": "dev-master",
-                "squizlabs/php_codesniffer": "^3.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PHPTDD\\": "tests"
-                }
-            },
-            "scripts": {
-                "lint": [
-                    "php-cs-fixer fix --dry-run --verbose --show-progress=dots"
-                ],
-                "lint-fix": [
-                    "php-cs-fixer fix --verbose --show-progress=dots"
-                ],
-                "phpcs": [
-                    "phpcs --standard=coding-standards/SMF ./Sources/tasks"
-                ],
-                "phpcbf": [
-                    "phpcbf --standard=coding-standards/SMF ./Sources/tasks"
-                ],
-                "phpstan": [
-                    "phpstan analyze"
-                ]
-            },
-            "support": {
-                "source": "https://github.com/live627/SMF2.1/tree/unittest"
-            },
-            "time": "2022-08-27T00:26:27+00:00"
-        },
-        {
             "name": "squizlabs/php_codesniffer",
             "version": "3.7.1",
             "source": {
@@ -3806,13 +3758,11 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "simplemachines/smf2.1": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4"
+        "php": ">=8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"

@@ -20,6 +20,7 @@ class CustomForm
 	private string $scripturl;
 	private string $sourcedir;
 	private array $smcFunc;
+	private Util $util;
 
 	public function __construct(string $sa)
 	{
@@ -28,6 +29,7 @@ class CustomForm
 		$this->scripturl = $scripturl;
 		$this->sourcedir = $sourcedir;
 		$this->smcFunc = $smcFunc;
+		$this->util = new Util;
 
 		$call = match ($sa)
 		{
@@ -57,15 +59,6 @@ class CustomForm
 		global $modSettings, $user_info;
 
 		return $user_info['is_guest'] || !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha']);
-	}
-
-	public function replace_vars(string $text, array $array): string
-	{
-		return preg_replace_callback(
-			'~{{1,2}\s*?([a-zA-Z0-9\-_.]+)\s*?}{1,2}~',
-			fn($matches) => $array[$matches[1]] ?? $matches[1],
-			$text
-		);
 	}
 
 	public function ListForms(): void
@@ -109,41 +102,7 @@ class CustomForm
 		$context['page_message'] = $modSettings['customform_view_text'] ?? '';
 		$context['sub_template'] = 'forms';
 		$context['meta_description'] = $this->smcFunc['htmlspecialchars']($context['page_message']);
-		$this->setMetaProperty('type', 'website');
-	}
-
-	public function setMetaTag(string $key, string $value): void
-	{
-		global $context;
-
-		$found = false;
-
-		foreach ($context['meta_tags'] as $i => $m)
-			if (isset($m['name']) && $m['name'] == $key)
-			{
-				$context['meta_tags'][$i]['content'] = $value;
-				$found = true;
-			}
-
-		if (!$found)
-			$context['meta_tags'][] = ['name' => $key, 'content' => $value];
-	}
-
-	public function setMetaProperty(string $key, string $value): void
-	{
-		global $context;
-
-		$found = false;
-
-		foreach ($context['meta_tags'] as $i => $m)
-			if (isset($m['property']) && $m['property'] == 'og:' . $key)
-			{
-				$context['meta_tags'][$i]['content'] = $value;
-				$found = true;
-			}
-
-		if (!$found)
-			$context['meta_tags'][] = ['property' => 'og:' . $key, 'content' => $value];
+		$this->util->setMetaProperty('type', 'website');
 	}
 
 	private function ThankYou(): void
@@ -295,10 +254,10 @@ class CustomForm
 
 			if ($post_errors === [])
 			{
-				$subject = $this->replace_vars($form_data['subject'], $vars);
-				$output = $this->replace_vars($form_data['output'], $vars);
+				$subject = $this->util->replaceVars($form_data['subject'], $vars);
+				$output = $this->util->replaceVars($form_data['output'], $vars);
 
-				$class_name = strpos($form_data['output_type'], '\\') !== false
+				$class_name = str_contains($form_data['output_type'], '\\')
 					? $form_data['output_type']
 					: 'CustomForm\Output\\' . $form_data['output_type'];
 
@@ -316,25 +275,14 @@ class CustomForm
 				$output_type = new $class_name;
 				$output_type->send($subject, $output, $form_data);
 
-				switch ($form_data['form_exit'])
+				$exit = match ($form_data['form_exit'])
 				{
-					case 'board':
-					case '':
-						$exit = 'board=' . $form_data['id_board'];
-						break;
-					case 'forum':
-						$exit = '';
-						break;
-					case 'form':
-						$exit = 'action=form';
-						break;
-					case 'thanks':
-						$exit = 'action=form;thankyou';
-						break;
-					default:
-						$exit = $form_data['form_exit'];
-						break;
-				}
+					'board', '' => 'board=' . $form_data['id_board'],
+					'forum' => '',
+					'form' => 'action=form',
+					'thanks' => 'action=form;thankyou',
+					default => $form_data['form_exit'],
+				};
 				redirectexit($exit);
 			}
 		}
@@ -377,7 +325,7 @@ class CustomForm
 			'name' => $form_data['title'],
 		];
 		$context['meta_description'] = $this->smcFunc['htmlspecialchars']($form_data['title']);
-		$this->setMetaProperty('type', 'website');
+		$this->util->setMetaProperty('type', 'website');
 
 		foreach ($fields as $field)
 		{

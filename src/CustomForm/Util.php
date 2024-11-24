@@ -52,4 +52,79 @@ class Util
 
 		yield from $this->find_integrated_classes($interface);
 	}
+
+	/**
+	 * Replaces placeholder variables in a given text with corresponding values from an array.
+	 *
+	 * This function searches for placeholders in the text formatted as `{{key}}` or `{key}`.
+	 * It replaces each placeholder with the corresponding value from the provided array.
+	 * If a key is not found in the array, the placeholder key itself is retained in the text.
+	 *
+	 * @param string $text  The input text containing placeholders to be replaced.
+	 * @param array $array  An associative array where keys are placeholder names and values are their replacements.
+	 *
+	 * @return string The text with placeholders replaced by their corresponding values.
+	 */
+	public function replaceVars(string $text, array $array): string
+	{
+		return preg_replace_callback(
+			'~{{1,2}\s*?([a-zA-Z0-9\-_.]+)\s*?}{1,2}~',
+			fn($matches) => $array[$matches[1]] ?? $matches[1],
+			$text
+		);
+	}
+
+	/**
+	 * Adds or updates a meta tag in the global context.
+	 *
+	 * This function searches for a meta tag with the specified key in the global
+	 * `$context['meta_tags']` array. If found, it updates the content. If not found,
+	 * it adds a new meta tag with the specified key and value.
+	 *
+	 * @param string $key   The name of the meta tag to set (e.g., "description").
+	 * @param string $value The content of the meta tag.
+	 */
+	public function setMetaTag(string $key, string $value): void
+	{
+		global $context;
+
+		$found = false;
+
+		foreach ($context['meta_tags'] as $i => $m)
+			if (isset($m['name']) && $m['name'] == $key)
+			{
+				$context['meta_tags'][$i]['content'] = $value;
+				$found = true;
+			}
+
+		if (!$found)
+			$context['meta_tags'][] = ['name' => $key, 'content' => $value];
+	}
+
+	/**
+	 * Adds or updates an Open Graph meta property in the global context.
+	 *
+	 * This function searches for an Open Graph meta property (e.g., `og:title`)
+	 * in the global `$context['meta_tags']` array. If found, it updates the content.
+	 * If not found, it adds a new meta property with the specified key and value.
+	 *
+	 * @param string $key   The Open Graph property key (without the "og:" prefix).
+	 * @param string $value The content of the Open Graph property.
+	 */
+	public function setMetaProperty(string $key, string $value): void
+	{
+		global $context;
+
+		$found = false;
+
+		foreach ($context['meta_tags'] as $i => $m)
+			if (isset($m['property']) && $m['property'] == 'og:' . $key)
+			{
+				$context['meta_tags'][$i]['content'] = $value;
+				$found = true;
+			}
+
+		if (!$found)
+			$context['meta_tags'][] = ['property' => 'og:' . $key, 'content' => $value];
+	}
 }
