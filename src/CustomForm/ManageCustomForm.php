@@ -180,8 +180,10 @@ class ManageCustomForm
 		if ($data !== null)
 		{
 			$data = json_decode($data, true);
-			require_once $this->sourcedir . '/Subs-Package.php';
-			if ($data !== null && compareVersions(self::VERSION, $data[0]['version']['string']) < 1)
+			$v1 = Version::fromString(self::VERSION);
+			$v2 = Version::fromString($data[0]['version']['string']);
+
+			if ($data !== null && $v1->getMajor() === $v2->getMajor() && $v1->compareTo($v2) === -1)
 			{
 				$changes = '';
 				foreach ($data[1]['changes'] as $type => $change)
