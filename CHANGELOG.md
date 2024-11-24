@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 This project adheres to [Semantic Versioning](http://semver.org/) as of v1.8.0.
 
+## [4.0.7](https://github.com/live627/smf-custom-forms/compare/v4.0.6...v4.0.7) (2024-11-24)
+
+
+### Bug Fixes
+
+* New version warning incorrectly showed when using the latest ([1b980bb](https://github.com/live627/smf-custom-forms/commit/1b980bb3948de4bd6751b3b6d58c71fa705aeb8b))
+
 ## [4.0.6](https://github.com/live627/smf-custom-forms/compare/v4.0.5...v4.0.6) (2023-10-04)
 
 
