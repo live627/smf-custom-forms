@@ -22,6 +22,9 @@
 		<redirect url="?action=admin;area=modsettings;sa=customform"/>
 		<code>upgrade.php</code>
 		<require-file name="CustomForm.english.php" destination="$languagedir"/>
+		<require-file name="CustomForm.german.php" destination="$languagedir"/>
+		<require-file name="CustomForm.spanish_es.php" destination="$languagedir"/>
+		<require-file name="CustomForm.spanish_latin.php" destination="$languagedir"/>
 		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
 		<require-file name="customform.js" destination="$themedir/scripts" />
@@ -60,6 +63,9 @@
 		<remove-file name="$themedir/scripts/customform.js" />
 		<remove-file name="$themedir/css/customform.css" />
 		<require-file name="CustomForm.english.php" destination="$languagedir"/>
+		<require-file name="CustomForm.german.php" destination="$languagedir"/>
+		<require-file name="CustomForm.spanish_es.php" destination="$languagedir"/>
+		<require-file name="CustomForm.spanish_latin.php" destination="$languagedir"/>
 		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
 		<require-file name="customform.js" destination="$themedir/scripts" />
@@ -101,6 +107,9 @@
 		<remove-file name="$sourcedir/CustomForm.php"/>
 		<remove-file name="$themedir/CustomForm.template.php"/>
 		<require-file name="CustomForm.english.php" destination="$languagedir"/>
+		<require-file name="CustomForm.german.php" destination="$languagedir"/>
+		<require-file name="CustomForm.spanish_es.php" destination="$languagedir"/>
+		<require-file name="CustomForm.spanish_latin.php" destination="$languagedir"/>
 		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
 		<require-file name="customform.js" destination="$themedir/scripts" />
@@ -133,6 +142,9 @@
 		<database>install.php</database>
 		<code>upgrade.php</code>
 		<require-file name="CustomForm.english.php" destination="$languagedir"/>
+		<require-file name="CustomForm.german.php" destination="$languagedir"/>
+		<require-file name="CustomForm.spanish_es.php" destination="$languagedir"/>
+		<require-file name="CustomForm.spanish_latin.php" destination="$languagedir"/>
 		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
 		<require-file name="customform.js" destination="$themedir/scripts" />
@@ -159,6 +171,9 @@
 		<hook hook="integrate_helpadmin" function="CustomForm\Integration::helpadmin" reverse="true" />
 		<hook hook="whos_online_after" function="CustomForm\Integration::whos_online_after" reverse="true" />
 		<remove-file name="$languagedir/CustomForm.english.php"/>
+		<remove-file name="$languagedir/CustomForm.german.php"/>
+		<remove-file name="$languagedir/CustomForm.spanish_es.php"/>
+		<remove-file name="$languagedir/CustomForm.spanish_latin.php"/>
 		<remove-dir name="$sourcedir/CustomForm"/>
 		<remove-file name="$themedir/CustomForm.template.php"/>
 		<remove-file name="$themedir/scripts/customform.js"/>
