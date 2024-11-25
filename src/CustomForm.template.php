@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @package   Ultimate Menu mod
+ * Edit `CustomFormUserland.template.php` to implement your custom templates.
+ *
+ * @package   Custom Form mod
  * @version   4.0.6
  * @author    John Rayes <live627@gmail.com>
  * @copyright Copyright (c) 2014, John Rayes
@@ -15,28 +17,6 @@ function template_forms_above(): void
 	global $context, $scripturl;
 
 	echo '
-			<style>
-				ul.reset, ul.reset li
-				{
-					padding: 0;
-					margin: 0;
-					list-style: none;
-				}
-				.reset li:not(:last-child)
-				{
-					padding-bottom: 0.5em;
-				}
-				.reset a
-				{
-					font-size: 1.1em;
-				}
-				li.padding div.d
-				{
-					font-style: italic;
-					opacity: 0.4;
-					padding: 0.4em 0.7em;
-				}
-			</style>
 			<div class="cat_bar">
 				<h3 class="catbg">
 					', $context['page_title'], '
@@ -84,33 +64,7 @@ function template_form_above(): void
 {
 	global $context, $scripturl;
 
-	echo '
-	<style>
-		.roundframe
-		{
-			display: grid;
-			gap: 0.5em;
-		}
-		@media (min-width: 480px)
-		{
-			.roundframe
-			{
-				grid-template-columns: 1fr 2fr;
-			}
-			.roundframe .breaker
-			{
-				grid-column: span 2;
-			}
-		}
-		.roundframe label
-		{
-			font-weight: bold;
-		}
-		.roundframe input[type=checkbox]
-		{
-			justify-self: flex-start;
-		}
-	</style>
+	echo '-
 		<form action="', $scripturl, '?action=form" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data">
 			<div class="cat_bar">
 				<h3 class="catbg">

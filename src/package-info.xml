@@ -147,6 +147,7 @@
 		<require-file name="CustomForm.spanish_latin.php" destination="$languagedir"/>
 		<require-dir name="CustomForm" destination="$sourcedir"/>
 		<require-file name="CustomForm.template.php" destination="$themedir"/>
+		<require-file name="CustomFormUserland.template.php" destination="$themedir"/>
 		<require-file name="customform.js" destination="$themedir/scripts" />
 		<require-file name="sceditor.plugins.customform.js" destination="$themedir/scripts" />
 		<require-file name="customform.css" destination="$themedir/css" />

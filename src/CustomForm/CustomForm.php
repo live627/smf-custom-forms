@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @package   Ultimate Menu mod
+ * @package   Custom Form mod
  * @version   3.0.0
  * @author    John Rayes <live627@gmail.com>
  * @copyright Copyright (c) 2014, John Rayes
@@ -14,9 +14,6 @@ namespace CustomForm;
 
 class CustomForm
 {
-	const THANKYOU = 'thankyou';
-	const VIEWFORM = 'viewform';
-
 	private string $scripturl;
 	private string $sourcedir;
 	private array $smcFunc;
@@ -33,8 +30,8 @@ class CustomForm
 
 		$call = match ($sa)
 		{
-			self::THANKYOU => 'ThankYou',
-			self::VIEWFORM => 'ViewForm',
+			'thankyou' => 'ThankYou',
+			'viewform' => 'ViewForm',
 			default => 'ListForms',
 		};
 
@@ -70,6 +67,7 @@ class CustomForm
 
 		loadLanguage('CustomForm');
 		loadTemplate('CustomForm');
+		loadCSSFile('customform.css', array('minimize' => true));
 
 		$request = $this->smcFunc['db_query']('', '
 			SELECT id_form, title
@@ -305,12 +303,15 @@ class CustomForm
 			$context['post_errors'] = $post_errors;
 			$context['template_layers'][] = 'errors';
 		}
+
+		loadTemplate('CustomFormUserland', null, false);
+		loadTemplate('CustomForm');
+		loadCSSFile('customform.css', array('minimize' => true));
 		$template_function = 'template_' . $form_data['template_function'];
 		$template = function_exists($template_function)
 			? $form_data['template_function']
 			: 'form';
 		$context['sub_template'] = $template;
-		loadTemplate('CustomForm');
 		$context['template_layers'][] = function_exists($template_function . '_above') && function_exists(
 			$template_function . '_below'
 		) ? $template : 'form';

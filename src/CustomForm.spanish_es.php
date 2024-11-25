@@ -144,11 +144,11 @@ $helptxt['customform_submit_exit'] = '
 	<p>You can also enter a URL like <code>https://www.eample.com/</code> and the user will be directed to that URL. This can be useful to redirect users to a custom thank you page, another specific form, a specific forum post, or anyplace else on the internet.</p>
 	';
 $helptxt['customform_template_function'] = '
-	<p>Las funciones de plantillas personalizadas se pueden agregar a <code>./themes/default/CustomForm.template.php</code>. Tenga en cuenta que la función de plantilla que se utilizará debe nombrarse con el formato <code>template_{value for this setting}</code>, de lo contrario, la función de plantilla predeterminada <code>template_form()</code> será usada.</p>
+	<p>Las funciones de plantillas personalizadas se pueden agregar a <code>./themes/default/CustomFormUserland.template.php</code>. Tenga en cuenta que la función de plantilla que se utilizará debe nombrarse con el formato <code>template_{value for this setting}</code>, de lo contrario, la función de plantilla predeterminada <code>template_form_my_custom_template()</code> será usada.</p>
 	<p>Luego puede usar la documentación de esa función para ver cómo el Mod le pasa la información, lo que le permite cambiarla para sus propósitos.</p>
 	<p>Para obtener un breve ejemplo de lo que puede cambiar en una plantilla, ingrese "ejemplo" en la Función de plantilla personalizada de un formulario y luego vea ese formulario. Verá varios lugares con el texto <span style="color:red">"Ejemplo de algo"</span>, estos son buenos lugares para agregar información a su plantilla de formulario sin afectar las funciones del formulario en sí.</p>
-	<p><b><span style="color:red">Importante</span></b>: Debe tener conocimientos básicos de trabajo de HTML y PHP antes de hacer algo demasiado drástico.</p>
-	<p class="strong alert">¡La codificación incorrecta hará que el Mod de formulario personalizado y posiblemente su foro se rompa! Por lo tanto, haga una copia de seguridad de su formulario o al menos <code>./themes/default/CustomForm.template.php</code> antes de realizar cualquier cambio.</p>
+	<p class="infobox"><b><span style="color:red">Importante</span></b>: Debe tener conocimientos básicos de trabajo de HTML y PHP antes de hacer algo demasiado drástico.</p>
+	<p class="noticebox">¡La codificación incorrecta hará que el Mod de formulario personalizado y posiblemente su foro se rompa! Por lo tanto, haga una copia de seguridad de su formulario o al menos <code>./themes/default/CustomFormUserland.template.php</code> antes de realizar cualquier cambio.</p>
 	';
 
 //	Help text for the edit field page.

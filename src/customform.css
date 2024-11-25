@@ -1,31 +1,44 @@
-optgroup:not(:first-child)
+ul.reset, ul.reset li
 {
-	padding-top: 8px;
+	padding: 0;
+	margin: 0;
+	list-style: none;
 }
-#post_header
+.reset li:not(:last-child)
 {
-	padding: 12px 12%;
+	padding-bottom: 0.5em;
 }
-#post_header p
+.reset a
 {
-	font-weight: initial;
-	padding-top: 0.5em;
+	font-size: 1.1em;
 }
-.popup_content h3,
-.popup_content li,
-.popup_content p:not(:first-child)
+li.padding div.d
 {
-	padding-top: 0.3em;
+	font-style: italic;
+	opacity: 0.4;
+	padding: 0.4em 0.7em;
 }
-.popup_content p:not(:last-child)
+.roundframe
 {
-	padding-bottom: 0.3em;
+	display: grid;
+	gap: 0.5em;
 }
-.sceditor-button-customformFields::after {
-	content: '';
-	margin: 0 0.5em;
-	border: 0.3em solid transparent;
-	border-top: 0.5em solid currentColor;
-	border-bottom: 0 none;
-	vertical-align: middle;
+@media (min-width: 480px)
+{
+	.roundframe
+	{
+		grid-template-columns: 1fr 2fr;
+	}
+	.roundframe .breaker
+	{
+		grid-column: span 2;
+	}
+}
+.roundframe label
+{
+	font-weight: bold;
+}
+.roundframe input[type=checkbox]
+{
+	justify-self: flex-start;
 }

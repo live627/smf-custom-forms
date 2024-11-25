@@ -144,11 +144,11 @@ $helptxt['customform_submit_exit'] = '
 	<p>You can also enter a URL like <code>https://www.eample.com/</code> and the user will be directed to that URL. This can be useful to redirect users to a custom thank you page, another specific form, a specific forum post, or anyplace else on the internet.</p>
 	';
 $helptxt['customform_template_function'] = '
-	<p>Custom template functions can be added to <code>./themes/default/CustomForm.template.php</code>. Please note that the template function which will be used has to be named with the format, <code>template_{value for this setting}</code>, otherwise the default <code>template_form()</code> template function will be used.</p>
+	<p>Custom template functions can be added to <code>./themes/default/CustomFormUserland.template.php</code>. Please note that the template function which will be used has to be named with the format, <code>template_{value for this setting}</code>, otherwise the default <code>template_form_my_custom_template()</code> template function will be used.</p>
 	<p>You can then use the documentation from that function to see how information is passed to it by the Mod, allowing you to change it for your purposes.</p>
 	<p>For a brief example of what you can change in a template enter "example" in the Custom Template Function of a form then view that form. You will see several places with the text <span style="color:red">"Example of something"</span>, these are good places for you to add information to your form template without affecting the functions of the form itself.</p>
-	<p><b><span style="color:red">Important</span></b>: You should have basic working knowledge of HTML and PHP before you do anything too drastic.</p>
-	<p class="strong alert">Improper coding will cause the Custom Form Mod and possibly your forum to break! Therefore, backup your form or at least <code>./themes/default/CustomForm.template.php</code> before making any changes.</p>
+	<p class="infobox"><b><span style="color:red">Important</span></b>: You should have basic working knowledge of HTML and PHP before you do anything too drastic.</p>
+	<p class="noticebox">Improper coding will cause the Custom Form Mod and possibly your forum to break! Therefore, backup your form or at least <code>./themes/default/CustomFormUserland.template.php</code> before making any changes.</p>
 	';
 
 //	Help text for the edit field page.

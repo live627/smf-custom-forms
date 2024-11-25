@@ -325,7 +325,7 @@ class ManageCustomForm
 				'width' => '100%',
 			]
 		);
-		loadCSSFile('customform.css', array('minimize' => true));
+		loadCSSFile('customformadmin.css', array('minimize' => true));
 		loadJavaScriptFile('sceditor.plugins.customform.js', array('minimize' => true));
 		loadJavaScriptFile('customform.js', array('minimize' => true));
 
@@ -600,7 +600,7 @@ class ManageCustomForm
 				'width' => '100%',
 			]
 		);
-		loadCSSFile('customform.css', array('minimize' => true));
+		loadCSSFile('customformadmin.css', array('minimize' => true));
 		loadJavaScriptFile('sceditor.plugins.customform.js', array('minimize' => true));
 		addInlineJavaScript('
 		textareaLengthCheck(document.getElementById("field_text"), 4096);', true);

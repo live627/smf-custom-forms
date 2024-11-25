@@ -144,11 +144,11 @@ $helptxt['customform_submit_exit'] = '
 	<p>Sie können auch eine URL wie <code>https://www.example.com/</code> eingeben, an die der Benutzer weitergeleitet wird. Dies kann nützlich sein, um Benutzer zu einer benutzerdefinierten Dankesseite, einem anderen spezifischen Formular, einem bestimmtem Forumsbeitrag oder irgendeinem anderen Ort im Internet weiterzuleiten.</p>
 	';
 $helptxt['customform_template_function'] = '
-	<p>Benutzerdefinierte Vorlagen-Funktionen können zu <code>./themes/default/CustomForm.template.php</code> hinzugefügt werden. Bitte beachten Sie, dass die Template-Funktion, die verwendet werden wird, nach dem Format <code>template_{Wert für diese Einstellung}</code> benannt sein muss, andernfalls wird die Standard-Template-Funktion <code>template_form()</code> verwendet werden.</p>
+	<p>Benutzerdefinierte Vorlagen-Funktionen können zu <code>./themes/default/CustomFormUserland.template.php</code> hinzugefügt werden. Bitte beachten Sie, dass die Template-Funktion, die verwendet werden wird, nach dem Format <code>template_{Wert für diese Einstellung}</code> benannt sein muss, andernfalls wird die Standard-Template-Funktion <code>template_form_my_custom_template()</code> verwendet werden.</p>
 	<p>Sie können dann die Dokumentation dieser Funktion nutzen, um zu sehen wie Informationen von der Mod an sie übergeben werden, um sie für Ihre Zwecke anzupassen.</p>
 	<p>Für ein kurzes Beispiel, was innerhalb einer Vorlage angepasst werden kann, geben Sie "example" in die benutzerdefinierte Vorlagenfunktion eines Formulars ein und schauen sich das Formular anschließend an. Sie werden diverse Stellen mit dem Text <span style="color:red">"Example of something"</span>sehen. Diese sind ein guter Ort um Informationen zu Ihrer Formularvorlage hinzuzufügen, ohne die Funktionen des Formulars selbst zu beeinträchtigen.</p>
-	<p><b><span style="color:red">Wichtig</span></b>: Sie sollten grundlegende Kenntnisse von HTML und PHP besitzen, bevor Sie zu drastische Änderungen vornehmen.</p>
-	<p class="strong alert">Fehlerhafter Code führt dazu, dass die Custom-Form-Mod und möglicherweise Ihr Forum nicht mehr funktionieren! Daher sollten Sie ein Backup Ihres Formulars oder zumindest von <code>./themes/default/CustomForm.template.php</code> erstellen, bevor Sie Änderungen vornehmen.</p>
+	<p class="infobox"><b><span style="color:red">Wichtig</span></b>: Sie sollten grundlegende Kenntnisse von HTML und PHP besitzen, bevor Sie zu drastische Änderungen vornehmen.</p>
+	<p class="noticebox">Fehlerhafter Code führt dazu, dass die Custom-Form-Mod und möglicherweise Ihr Forum nicht mehr funktionieren! Daher sollten Sie ein Backup Ihres Formulars oder zumindest von <code>./themes/default/CustomFormUserland.template.php</code> erstellen, bevor Sie Änderungen vornehmen.</p>
 	';
 
 //	Help text for the edit field page.
