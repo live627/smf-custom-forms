@@ -7,7 +7,7 @@
 
 Package name | SMF version | Minimmum PHP version
 --- | --- | ---
-[Custom Form Mod 4.0.6](https://github.com/live627/smf-custom-forms/releases/download/v4.0.6/custom-forms_4-0-6.tgz) | SMF 2.1.x | PHP 8
+[Custom Form Mod 4.1.0](https://github.com/live627/smf-custom-forms/releases/download/v4.1.0/custom-forms_4-1-0.tgz) | SMF 2.1.x | PHP 8
 [Custom Form Mod 2.2.4](https://github.com/live627/smf-custom-forms/releases/download/v2.2.4/custom-forms_2-2-4.tgz) | SMF 2.0.x, SMF 2.1.x | PHP 7.4
 Custom Form Mod 1.7 | SMF 1.1.x, 2.0.x | PHP 4.3 – PHP 7.4
 
