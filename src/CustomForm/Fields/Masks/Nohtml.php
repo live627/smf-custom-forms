@@ -21,8 +21,9 @@ class Nohtml implements MaskInterface
 
 	public function validate(): bool
 	{
-		if (strip_tags($this->value) != $this->value)
+		if (strip_tags($this->value) != $this->value) {
 			$this->err = ['customform_invalid_value', $this->field['text']];
+		}
 
 		return $this->err == false;
 	}

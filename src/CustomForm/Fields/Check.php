@@ -30,15 +30,16 @@ class Check implements FieldInterface
 			'<input type="checkbox" name="%s[%d]"%s>',
 			'CustomFormField',
 			$this->field['id_field'],
-			$true ? ' checked' : ''
+			$true ? ' checked' : '',
 		);
 		$this->output_html = $txt[$this->getValue()];
 	}
 
 	public function validate(): bool
 	{
-		if (!$this->exists && $this->required)
+		if (!$this->exists && $this->required) {
 			$this->err = ['customform_invalid_value', $this->field['text']];
+		}
 
 		return $this->err == [];
 	}

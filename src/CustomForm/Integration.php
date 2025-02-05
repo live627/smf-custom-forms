@@ -12,16 +12,26 @@ declare(strict_types=1);
 
 namespace CustomForm;
 
+use SMF\Forum;
+use SMF\QueryString;
+use SMF\Slug;
+
 class Integration
 {
 	public static function autoload(&$classMap): void
 	{
+		//~ \SMF\IntegrationHook::add('integrate_pre_load',self::class.'::pre_load',);
 		$classMap['CustomForm\\'] = 'CustomForm/';
 	}
 
-	public static function actions(array &$action_array): void
+	public static function pre_load(): void
 	{
-		$action_array['form'] = [false, 'CustomForm\CustomForm::create'];
+		Forum::addAction('form', '', CustomForm::class);
+		QueryString::$route_parsers['form'] = CustomForm::class;
+		Slug::$redirect_patterns['form'] = [
+			'action' => 'form',
+			'n' => '{id}',
+		];
 	}
 
 	public static function admin_areas(array &$admin_areas): void
@@ -47,7 +57,9 @@ class Integration
 		global $scripturl, $smcFunc, $txt;
 
 		$forms = [];
-		$request = $smcFunc['db_query']('', '
+		$request = $smcFunc['db_query'](
+			'',
+			'
 			SELECT id_form, title
 			FROM {db_prefix}cf_forms AS f
 			WHERE title != \'\'
@@ -58,33 +70,36 @@ class Integration
 						AND title != \'\'
 						AND text != \'\'
 						AND type != \'\'
-				)'
+				)',
 		);
 
-		while ([$id_form, $title] = $smcFunc['db_fetch_row']($request))
-			if (allowedTo('custom_forms_' . $id_form))
+		while ([$id_form, $title] = $smcFunc['db_fetch_row']($request)) {
+			if (allowedTo('custom_forms_' . $id_form)) {
 				$forms[$id_form] = $title;
+			}
+		}
 		$smcFunc['db_free_result']($request);
 
 		loadLanguage('CustomForm');
 
 		// Fix the anomaly where $urls is a string when
 		// coming from the profile section.
-		foreach (!is_array($urls) ? [[$urls, 0]] : $urls as $k => $url)
-		{
+		foreach (!is_array($urls) ? [[$urls, 0]] : $urls as $k => $url) {
 			// Get the request parameters..
 			$actions = $smcFunc['json_decode']($url[0], true);
 
-			if ($actions === [])
+			if ($actions === []) {
 				continue;
+			}
 
-			if (isset($actions['n'], $actions['action'], $forms[$actions['n']]) && $actions['action'] == 'form')
+			if (isset($actions['n'], $actions['action'], $forms[$actions['n']]) && $actions['action'] == 'form') {
 				$data[$k] = sprintf(
 					$txt['customform_who'],
 					$scripturl,
 					$actions['n'],
 					$forms[$actions['n']],
 				);
+			}
 		}
 	}
 
@@ -93,14 +108,14 @@ class Integration
 		loadLanguage('CustomForm');
 	}
 
-	public static function sce_options(&$sce_options)
+	public static function sce_options(&$sce_options): void
 	{
 		$sce_options['plugins'] = ($sce_options['plugins'] != '' ? $sce_options['plugins'] . ',' : '') . 'customform';
 		$sce_options['toolbar'] .= '|customformFields';
 		$sce_options['toolbarExclude'] = (!empty($sce_options['toolbarExclude']) ? $sce_options['toolbarExclude'] . ',' : '') . 'table,sup,sub,floatright,floatleft,hr,email,img,size,pre,code,youtube';
 	}
 
-	public static function sce_options2(&$sce_options)
+	public static function sce_options2(&$sce_options): void
 	{
 		$sce_options['plugins'] = ($sce_options['plugins'] != '' ? $sce_options['plugins'] . ',' : '') . 'customform2';
 		$sce_options['customformel'] = 'field_text';

@@ -17,17 +17,17 @@ use GlobIterator;
 
 class ManageCustomForm
 {
-	const ADDFORM = 'addform';
-	const DELETEFORM = 'deleteform';
-	const EDITFORM = 'editform';
-	const SAVEFORM = 'saveform';
-	const ADDFIELD = 'addfield';
-	const EDITFIELD = 'editfield';
-	const DELETEFIELD = 'deletefield';
-	const MOVEFIELDDOWN = 'movefielddown';
-	const MOVEFIELDUP = 'movefieldup';
-	const SAVEFIELD = 'savefield';
-	const VERSION = '4.0.7';
+	public const ADDFORM = 'addform';
+	public const DELETEFORM = 'deleteform';
+	public const EDITFORM = 'editform';
+	public const SAVEFORM = 'saveform';
+	public const ADDFIELD = 'addfield';
+	public const EDITFIELD = 'editfield';
+	public const DELETEFIELD = 'deletefield';
+	public const MOVEFIELDDOWN = 'movefielddown';
+	public const MOVEFIELDUP = 'movefieldup';
+	public const SAVEFIELD = 'savefield';
+	public const VERSION = '4.0.7';
 
 	private string $scripturl;
 	private string $sourcedir;
@@ -47,8 +47,7 @@ class ManageCustomForm
 		$form_id = (int) ($_GET['form_id'] ?? 0);
 		$field_id = (int) ($_GET['field_id'] ?? 0);
 
-		$call = match ($act)
-		{
+		$call = match ($act) {
 			'delay' => ['Delay', null],
 			self::ADDFORM => ['AddForm', null],
 			self::DELETEFORM => ['DeleteForm', $form_id],
@@ -62,7 +61,7 @@ class ManageCustomForm
 			self::SAVEFIELD => ['SaveField', $field_id],
 			default => ['ModifySettings', false],
 		};
-		$this->util = new Util;
+		$this->util = new Util();
 		call_user_func([$this, $call[0]], $call[1]);
 	}
 
@@ -91,8 +90,7 @@ class ManageCustomForm
 
 		$config_vars = self::getConfigVars();
 
-		if (isset($_GET['update']))
-		{
+		if (isset($_GET['update'])) {
 			checkSession();
 			saveDBSettings($config_vars);
 			redirectexit('action=admin;area=modsettings;sa=customform');
@@ -142,7 +140,7 @@ class ManageCustomForm
 					'value' => sprintf(
 						'<a class="button" href="%s?action=admin;area=modsettings;sa=customform;act=addform">%s</a>',
 						$this->scripturl,
-						$txt['customform_add_form']
+						$txt['customform_add_form'],
 					),
 					'class' => 'righttext',
 				],
@@ -158,7 +156,7 @@ class ManageCustomForm
 		$context['default_list'] = 'customform_list';
 		$context['post_url'] = $this->scripturl . '?action=admin;area=modsettings;sa=customform;update';
 		loadTemplate('CustomForm');
-		loadJavaScriptFile('customform.js', array('minimize' => true));
+		loadJavaScriptFile('customform.js', ['minimize' => true]);
 		addInlineJavaScript('
 		textareaLengthCheck(document.getElementById("customform_view_text"), 320);', true);
 		$context['sub_template'] = 'customform_GeneralSettings';
@@ -168,26 +166,28 @@ class ManageCustomForm
 		createToken('admin-mp');
 		createToken('admin-dbsc');
 
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT data
 			FROM {db_prefix}admin_info_files
-			WHERE filename = \'customform/versions.json\''
+			WHERE filename = \'customform/versions.json\'',
 		);
 
 		[$data] = $this->smcFunc['db_fetch_row']($request);
 		$this->smcFunc['db_free_result']($request);
 
-		if ($data !== null)
-		{
+		if ($data !== null) {
 			$data = json_decode($data, true);
 			$v1 = Version::fromString(self::VERSION);
 			$v2 = Version::fromString($data[0]['version']['string']);
 
-			if ($data !== null && $v1->getMajor() === $v2->getMajor() && $v1->compareTo($v2) === -1)
-			{
+			if ($data !== null && $v1->getMajor() === $v2->getMajor() && $v1->compareTo($v2) === -1) {
 				$changes = '';
-				foreach ($data[1]['changes'] as $type => $change)
-					$changes .= '<h4>'.$type.'</h4><ul><li>&emsp;'.implode('</li><li>&emsp;', $change).'</li></ul>';
+
+				foreach ($data[1]['changes'] as $type => $change) {
+					$changes .= '<h4>' . $type . '</h4><ul><li>&emsp;' . implode('</li><li>&emsp;', $change) . '</li></ul>';
+				}
 
 				$context['settings_insert_above'] = sprintf(
 					'<div class="noticebox" style="overflow:auto; max-height: 11em;"><h3 id="update_title">%s</h3><div class="padding"><a class="button floatnone" href="%s?action=admin;area=packages;pgdownload;auto;package=%s;%s=%s">%s</a>&emsp;<a class="button floatnone" href="%2$s?action=admin;area=modsettings;sa=customform;act=delay">%s</a></div>%s</div>',
@@ -212,10 +212,12 @@ class ManageCustomForm
 
 	public function Delay(): void
 	{
-		$this->smcFunc['db_query']('', '
+		$this->smcFunc['db_query'](
+			'',
+			'
 			UPDATE {db_prefix}admin_info_files
 			SET data = \'\'
-			WHERE filename = \'customform/versions.json\''
+			WHERE filename = \'customform/versions.json\'',
 		);
 
 		redirectexit('action=admin;area=modsettings;sa=customform');
@@ -225,21 +227,24 @@ class ManageCustomForm
 	{
 		global $context, $settings, $txt;
 
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT title, id_board, icon, output, subject, form_exit, template_function, output_type
 			FROM {db_prefix}cf_forms
 			WHERE id_form = {int:id_form}',
 			[
 				'id_form' => $form_id,
-			]
+			],
 		);
 
 		$data = $this->smcFunc['db_fetch_assoc']($request);
 		$this->smcFunc['db_free_result']($request);
 
 		//	No data? Well, show the default settings page then.
-		if ($data == [])
+		if ($data == []) {
 			redirectexit('action=admin;area=modsettings;sa=customform');
+		}
 
 		$context['custom_form_settings'] = [
 			'permissions' => 'custom_forms_' . $form_id,
@@ -299,7 +304,7 @@ class ManageCustomForm
 						'<a class="button" href="%s?action=admin;area=modsettings;sa=customform;form_id=%d;act=addfield">%s</a>',
 						$this->scripturl,
 						$form_id,
-						$txt['customform_add_field']
+						$txt['customform_add_field'],
 					),
 					'class' => 'righttext',
 				],
@@ -316,6 +321,7 @@ class ManageCustomForm
 		createToken('admin-mp');
 
 		add_integration_function('integrate_sceditor_options', __NAMESPACE__ . '\Integration::sce_options', false);
+
 		require_once $this->sourcedir . '/Subs-Editor.php';
 		create_control_richedit(
 			[
@@ -323,11 +329,11 @@ class ManageCustomForm
 				'id' => 'output',
 				'value' => $data['output'] ?? '',
 				'width' => '100%',
-			]
+			],
 		);
-		loadCSSFile('customformadmin.css', array('minimize' => true));
-		loadJavaScriptFile('sceditor.plugins.customform.js', array('minimize' => true));
-		loadJavaScriptFile('customform.js', array('minimize' => true));
+		loadCSSFile('customformadmin.css', ['minimize' => true]);
+		loadJavaScriptFile('sceditor.plugins.customform.js', ['minimize' => true]);
+		loadJavaScriptFile('customform.js', ['minimize' => true]);
 
 		//	Set up the variables needed by the template.
 		$context['settings_title'] = sprintf(
@@ -335,7 +341,7 @@ class ManageCustomForm
 			$this->scripturl,
 			$txt['customform_generalsettings_heading'],
 			$data['title'],
-			$txt['customform_form']
+			$txt['customform_form'],
 		);
 		$context['post_url'] = $this->scripturl . '?action=admin;area=modsettings;sa=customform;act=saveform;form_id=' . $form_id;
 		$context['page_title'] = $txt['customform_tabheader'];
@@ -355,7 +361,7 @@ class ManageCustomForm
 				'value' => $data['icon'],
 				'name' => $txt['current_icon'],
 				'url' => $context['icon_url'],
-			]
+			],
 		);
 
 		$config_vars = [
@@ -401,12 +407,12 @@ class ManageCustomForm
 						$this->util->find_classes(
 							new GlobIterator(
 								__DIR__ . '/Output/*.php',
-								FilesystemIterator::SKIP_DOTS
+								FilesystemIterator::SKIP_DOTS,
 							),
 							'CustomForm\Output\\',
-							'CustomForm\OutputInterface'
-						)
-					)
+							'CustomForm\OutputInterface',
+						),
+					),
 				),
 			],
 			[
@@ -427,7 +433,9 @@ class ManageCustomForm
 
 	public function SaveForm(int $form_id): void
 	{
-		$this->smcFunc['db_query']('', '
+		$this->smcFunc['db_query'](
+			'',
+			'
 			UPDATE {db_prefix}cf_forms
 			SET id_board = {int:id_board},
 			icon = {string:icon},
@@ -447,7 +455,7 @@ class ManageCustomForm
 				'form_exit' => $_REQUEST['exit'],
 				'template_function' => $_REQUEST['template_function'],
 				'output_type' => $_REQUEST['output_type'],
-			]
+			],
 		);
 
 		//	Update the permissions.
@@ -459,29 +467,35 @@ class ManageCustomForm
 
 	public function deleteForm(int $form_id): void
 	{
-		$this->smcFunc['db_query']('', '
+		$this->smcFunc['db_query'](
+			'',
+			'
 			DELETE
 			FROM {db_prefix}cf_forms
 			WHERE id_form = {int:id_form}',
 			[
 				'id_form' => $form_id,
-			]
+			],
 		);
-		$this->smcFunc['db_query']('', '
+		$this->smcFunc['db_query'](
+			'',
+			'
 			DELETE
 			FROM {db_prefix}permissions
 			WHERE permission = {string:permission}',
 			[
 				'permission' => 'custom_forms_' . $form_id,
-			]
+			],
 		);
-		$this->smcFunc['db_query']('', '
+		$this->smcFunc['db_query'](
+			'',
+			'
 			DELETE
 			FROM {db_prefix}cf_fields
 			WHERE id_form = {int:id_form}',
 			[
 				'id_form' => $form_id,
-			]
+			],
 		);
 		redirectexit('action=admin;area=modsettings;sa=customform');
 	}
@@ -490,30 +504,35 @@ class ManageCustomForm
 	{
 		global $context, $txt;
 
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT title, type, id_form, text, type_vars
 			FROM {db_prefix}cf_fields
 			WHERE id_field = {int:id_field}',
 			[
 				'id_field' => $field_id,
-			]
+			],
 		);
 
 		$data = $this->smcFunc['db_fetch_assoc']($request);
 		$this->smcFunc['db_free_result']($request);
 
 		//	No data? Well, show the default settings page then.
-		if ($data == [])
+		if ($data == []) {
 			redirectexit('action=admin;area=modsettings;sa=customform');
+		}
 
 		//	Get some information about the parent form.
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT title, id_board
 			FROM {db_prefix}cf_forms
 			WHERE id_form = {int:id_form}',
 			[
 				'id_form' => $data['id_form'],
-			]
+			],
 		);
 
 		$parent_data = $this->smcFunc['db_fetch_assoc']($request);
@@ -521,19 +540,20 @@ class ManageCustomForm
 
 		$invalid = preg_match('/[^a-zA-Z0-9\-_.]/', $data['title']);
 
-		if ($invalid)
+		if ($invalid) {
 			$context['settings_insert_above'] = sprintf(
 				'<div class="errorbox">%s<ul><li>%s</li><li>%s</li></ul></div>',
 				$txt['customform_character_warning'],
 				sprintf(
 					$txt['customform_current_identifier'],
-					'<code>' . $this->smcFunc['htmlspecialchars']($data['title']) . '</code>'
+					'<code>' . $this->smcFunc['htmlspecialchars']($data['title']) . '</code>',
 				),
 				sprintf(
 					$txt['customform_suggested_identifier'],
-					'<code>' . trim(preg_replace('/[^a-zA-Z0-9\-_.]/', '-', $data['title']), '-') . '</code>'
-				)
+					'<code>' . trim(preg_replace('/[^a-zA-Z0-9\-_.]/', '-', $data['title']), '-') . '</code>',
+				),
 			);
+		}
 
 		$config_vars = [
 			[
@@ -556,8 +576,8 @@ class ManageCustomForm
 						'float' => 'text',
 						'int' => 'text',
 						'radiobox' => 'radio',
-						'infobox' => 'info'
-					]
+						'infobox' => 'info',
+					],
 				),
 				'text_label' => $txt['customform_type'],
 				'help' => 'customform_type',
@@ -570,13 +590,13 @@ class ManageCustomForm
 						$this->util->find_classes(
 							new GlobIterator(
 								__DIR__ . '/Fields/*.php',
-								FilesystemIterator::SKIP_DOTS
+								FilesystemIterator::SKIP_DOTS,
 							),
 							'CustomForm\Fields\\',
-							'CustomForm\FieldInterface'
-						)
-					)
-				)
+							'CustomForm\FieldInterface',
+						),
+					),
+				),
 			],
 			[
 				'large_text',
@@ -591,6 +611,7 @@ class ManageCustomForm
 			],
 		];
 		add_integration_function('integrate_sceditor_options', __NAMESPACE__ . '\Integration::sce_options2', false);
+
 		require_once $this->sourcedir . '/Subs-Editor.php';
 		create_control_richedit(
 			[
@@ -598,10 +619,10 @@ class ManageCustomForm
 				'id' => 'field_text',
 				'value' => $data['text'] ?? '',
 				'width' => '100%',
-			]
+			],
 		);
-		loadCSSFile('customformadmin.css', array('minimize' => true));
-		loadJavaScriptFile('sceditor.plugins.customform.js', array('minimize' => true));
+		loadCSSFile('customformadmin.css', ['minimize' => true]);
+		loadJavaScriptFile('sceditor.plugins.customform.js', ['minimize' => true]);
 		addInlineJavaScript('
 		textareaLengthCheck(document.getElementById("field_text"), 4096);', true);
 
@@ -615,7 +636,7 @@ class ManageCustomForm
 			$parent_data['title'],
 			$txt['customform_form'],
 			$data['title'],
-			$txt['customform_field']
+			$txt['customform_field'],
 		);
 		$context['post_url'] = sprintf('%s?action=admin;area=modsettings;sa=customform;field_id=%d;act=savefield', $this->scripturl, $field_id);
 		$context['page_title'] = $txt['customform_tabheader'];
@@ -642,14 +663,16 @@ class ManageCustomForm
 	{
 		$id_form = $this->getFormFromField($id_field);
 
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT id_field
 			FROM {db_prefix}cf_fields
 			WHERE id_form = {int:id_field}
 			ORDER BY id_field',
 			[
 				'id_field' => $id_field,
-			]
+			],
 		);
 
 		$siblings = [];
@@ -657,11 +680,11 @@ class ManageCustomForm
 		$field_pos = 0;
 
 		//	Make a list of the siblings
-		while ([$db_id_field] = $this->smcFunc['db_fetch_row']($request))
-		{
+		while ([$db_id_field] = $this->smcFunc['db_fetch_row']($request)) {
 			//	Get the spot of the current field;
-			if ($db_id_field == $id_field)
+			if ($db_id_field == $id_field) {
 				$field_pos = $count;
+			}
 			//	Store the necessary information.
 			$siblings[] = $db_id_field;
 			$count++;
@@ -676,34 +699,39 @@ class ManageCustomForm
 			&& $siblings != []
 			&& $field_pos != 0 && $factor == -1
 			&& $field_pos != $count - 1 && $factor == 1
-		)
-		{
+		) {
 			$replace_id = $siblings[$field_pos + $factor];
 			//	Perform the rather hacky updating queries. - They do work, just hackily! ;D
-			$this->smcFunc['db_query']('', '
+			$this->smcFunc['db_query'](
+				'',
+				'
 				UPDATE {db_prefix}cf_fields
 				SET id_field = \'0\'
 				WHERE id_field = {int:field_id}',
 				[
 					'field_id' => $id_field,
-				]
+				],
 			);
-			$this->smcFunc['db_query']('', '
+			$this->smcFunc['db_query'](
+				'',
+				'
 				UPDATE {db_prefix}cf_fields
 				SET id_field = {int:field_id}
 				WHERE id_field = {int:replace_id}',
 				[
 					'field_id' => $id_field,
 					'replace_id' => $replace_id,
-				]
+				],
 			);
-			$this->smcFunc['db_query']('', '
+			$this->smcFunc['db_query'](
+				'',
+				'
 				UPDATE {db_prefix}cf_fields
 				SET id_field = {int:replace_id}
 				WHERE id_field = \'0\'',
 				[
 					'replace_id' => $replace_id,
-				]
+				],
 			);
 		}
 
@@ -718,7 +746,7 @@ class ManageCustomForm
 			'{db_prefix}cf_forms',
 			['id_board' => 'int', 'title' => 'string', 'icon' => 'string', 'output' => 'string', 'subject' => 'string', 'form_exit' => 'string', 'template_function' => 'string', 'output_type' => 'string'],
 			['0', '', '', '', '', '', '', ''],
-			['id_form']
+			['id_form'],
 		);
 		$form_id = $this->smcFunc['db_insert_id']('{db_prefix}cf_forms', 'id_form');
 
@@ -732,19 +760,22 @@ class ManageCustomForm
 		$permissions = $this->getPermissions();
 		$membergroups = $this->getMembergroups();
 		$list = [];
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT id_form, title, id_board, name
 			FROM {db_prefix}cf_forms
-				JOIN {db_prefix}boards USING (Id_board)'
+				JOIN {db_prefix}boards USING (Id_board)',
 		);
 
-		while ($row = $this->smcFunc['db_fetch_assoc']($request))
-		{
+		while ($row = $this->smcFunc['db_fetch_assoc']($request)) {
 			$permissions_string = $txt['admin'];
 
-			if (isset($permissions['custom_forms_' . $row['id_form']]))
-				foreach ($permissions['custom_forms_' . $row['id_form']] as $membergroup_id)
+			if (isset($permissions['custom_forms_' . $row['id_form']])) {
+				foreach ($permissions['custom_forms_' . $row['id_form']] as $membergroup_id) {
 					$permissions_string .= ', ' . $membergroups[$membergroup_id];
+				}
+			}
 
 			$list[] = [
 				'title' => $row['title'],
@@ -770,7 +801,7 @@ class ManageCustomForm
 					$row['id_form'],
 					$txt['customform_edit'],
 					$txt['customform_delete_warning'],
-					$txt['delete']
+					$txt['delete'],
 				),
 			];
 		}
@@ -784,20 +815,23 @@ class ManageCustomForm
 	{
 		global $txt;
 
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT id_field, title, type, text
 			FROM {db_prefix}cf_fields
 			WHERE id_form = {int:id_form}
 			ORDER BY id_field',
 			[
 				'id_form' => $id,
-			]
+			],
 		);
 
 		$data = [];
 
-		while ($row = $this->smcFunc['db_fetch_assoc']($request))
+		while ($row = $this->smcFunc['db_fetch_assoc']($request)) {
 			$data[] = $row;
+		}
 
 		$list = [];
 		$i = 1;
@@ -805,7 +839,7 @@ class ManageCustomForm
 		addJavaScriptVar(
 			'customformFields',
 			array_column($data, 'title'),
-			true
+			true,
 		);
 
 		$result = iterator_to_array(
@@ -817,16 +851,15 @@ class ManageCustomForm
 				$this->util->find_classes(
 					new GlobIterator(
 						__DIR__ . '/Fields/*.php',
-						FilesystemIterator::SKIP_DOTS
+						FilesystemIterator::SKIP_DOTS,
 					),
 					'CustomForm\Fields\\',
-					'CustomForm\FieldInterface'
-				)
-			)
+					'CustomForm\FieldInterface',
+				),
+			),
 		);
 
-		foreach ($data as $field)
-		{
+		foreach ($data as $field) {
 			$type = strtr(
 				$field['type'],
 				[
@@ -837,8 +870,8 @@ class ManageCustomForm
 					'float' => 'text',
 					'int' => 'text',
 					'radiobox' => 'radio',
-					'infobox' => 'info'
-				]
+					'infobox' => 'info',
+				],
 			);
 			$list[] = [
 				'title' => $field['title'],
@@ -876,7 +909,7 @@ class ManageCustomForm
 					($i != $end) ? '(' . $txt['customform_movedown'] . ')' : '',
 					$txt['customform_edit'],
 					$txt['customform_delete_warning'],
-					$txt['delete']
+					$txt['delete'],
 				),
 			];
 			$i++;
@@ -889,15 +922,18 @@ class ManageCustomForm
 	public function getPermissions()
 	{
 		$permissions = [];
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT permission, id_group
 			FROM {db_prefix}permissions
 			WHERE permission
-			LIKE \'custom_forms_%\''
+			LIKE \'custom_forms_%\'',
 		);
 
-		while ($row = $this->smcFunc['db_fetch_assoc']($request))
+		while ($row = $this->smcFunc['db_fetch_assoc']($request)) {
 			$permissions[$row['permission']][] = $row['id_group'];
+		}
 		$this->smcFunc['db_free_result']($request);
 
 		return $permissions;
@@ -908,14 +944,17 @@ class ManageCustomForm
 		global $modSettings, $txt;
 
 		$membergroups = [-1 => $txt['guests'], 0 => $txt['users']];
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT id_group, group_name
 			FROM {db_prefix}membergroups' . (!empty($modSettings['permission_enable_postgroups']) ? '' : '
-			WHERE min_posts = -1')
+			WHERE min_posts = -1'),
 		);
 
-		while ($row = $this->smcFunc['db_fetch_assoc']($request))
+		while ($row = $this->smcFunc['db_fetch_assoc']($request)) {
 			$membergroups[$row['id_group']] = $row['group_name'];
+		}
 		$this->smcFunc['db_free_result']($request);
 
 		return $membergroups;
@@ -928,7 +967,7 @@ class ManageCustomForm
 			'{db_prefix}cf_fields',
 			['id_form' => 'int', 'title' => 'string', 'type' => 'string', 'text' => 'string', 'type_vars' => 'string'],
 			[$form_id, '', '', '', ''],
-			['id_field']
+			['id_field'],
 		);
 		$field_id = $this->smcFunc['db_insert_id']('{db_prefix}cf_fields', 'id_field');
 
@@ -939,13 +978,15 @@ class ManageCustomForm
 	{
 		$id_form = $this->getFormFromField($id_field);
 
-		$this->smcFunc['db_query']('', '
+		$this->smcFunc['db_query'](
+			'',
+			'
 			DELETE
 			FROM {db_prefix}cf_fields
 			WHERE id_field = {int:id_field}',
 			[
 				'id_field' => $id_field,
-			]
+			],
 		);
 		redirectexit('action=admin;area=modsettings;sa=customform;act=editform;form_id=' . $id_form);
 	}
@@ -954,7 +995,9 @@ class ManageCustomForm
 	{
 		$id_form = $this->getFormFromField($id_field);
 
-		$this->smcFunc['db_query']('', '
+		$this->smcFunc['db_query'](
+			'',
+			'
 			UPDATE {db_prefix}cf_fields
 			SET title = {string:title}, text = {string:text},
 			type = {string:type}, type_vars = {string:type_vars}
@@ -965,33 +1008,35 @@ class ManageCustomForm
 				'text' => $_REQUEST['field_text'],
 				'type' => $_REQUEST['field_type'],
 				'type_vars' => $_REQUEST['field_type_vars'],
-			]
+			],
 		);
 		redirectexit('action=admin;area=modsettings;sa=customform;act=editform;form_id=' . $id_form);
 	}
 
 	public function listBoards(int $id_board): array
 	{
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT id_board, b.name, child_level, c.name AS cat_name, id_cat
 			FROM {db_prefix}boards AS b
 				LEFT JOIN {db_prefix}categories AS c USING (id_cat)
-			ORDER BY board_order'
+			ORDER BY board_order',
 		);
 		$boards = [];
 
-		while ($row = $this->smcFunc['db_fetch_assoc']($request))
-		{
-			if (!isset($boards[$row['id_cat']]))
+		while ($row = $this->smcFunc['db_fetch_assoc']($request)) {
+			if (!isset($boards[$row['id_cat']])) {
 				$boards[$row['id_cat']] = [
 					'name' => strip_tags($row['cat_name']),
 					'boards' => [],
 				];
+			}
 
 			$boards[$row['id_cat']]['boards'][$row['id_board']] = [
 				'name' => strip_tags($row['name']),
 				'child_level' => $row['child_level'],
-				'selected' => $row['id_board'] == $id_board
+				'selected' => $row['id_board'] == $id_board,
 			];
 		}
 		$this->smcFunc['db_free_result']($request);
@@ -1001,13 +1046,15 @@ class ManageCustomForm
 
 	public function getFormFromField(int $field_id): int
 	{
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT id_form
 			FROM {db_prefix}cf_fields
 			WHERE id_field = {int:id_field}',
 			[
 				'id_field' => $field_id,
-			]
+			],
 		);
 
 		[$id_form] = $this->smcFunc['db_fetch_row']($request);

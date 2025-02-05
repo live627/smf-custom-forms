@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * Edit this file instead of `CustomForm.template.php` to implement your custom templates.
  *
- * For more details, see: 
+ * For more details, see:
  * https://github.com/live627/smf-custom-forms/blob/master/docs/custom-template-function.md
  *
  * @package   Custom Form mod
@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 /**
  * Renders the opening section of a form.
- * 
+ *
  * This function generates the `<form>` opening tag and includes the form title wrapped in a styled container.
  * It dynamically sets attributes like `action`, `accept-charset`, and `enctype` based on the global context.
  *
@@ -42,7 +42,7 @@ function template_form_my_custom_template_above(): void
 
 /**
  * Renders the closing section of a form.
- * 
+ *
  * This function outputs hidden input fields for session validation and form identification,
  * along with a submit button to finalize the form submission.
  *
@@ -68,10 +68,10 @@ function template_form_my_custom_template_below(): void
 
 /**
  * Dynamically generates form fields based on the configuration provided in `$context['fields']`.
- * 
+ *
  * This function iterates over the `$context['fields']` array, rendering each field based on its `type`.
  * For required fields, a `*` is displayed. Optionally, a visual verification section is included.
- * 
+ *
  * Field Configuration Format:
  * - `text`: The label for the field.
  * - `type`: The input type (e.g., `text`, `checkbox`, `info`).
@@ -91,22 +91,19 @@ function template_form_my_custom_template(): void
 	global $context, $txt;
 
 	// Loop through and render each field
-	foreach ($context['fields'] as $field_name => $field_data)
-	{
-		if ($field_data['type'] === 'info')
-		{
+	foreach ($context['fields'] as $field_name => $field_data) {
+		if ($field_data['type'] === 'info') {
 			// Render informational text without input
 			echo '
 				<span class="breaker">', $field_data['text'], '</span>';
-		}
-		else
-		{
+		} else {
 			// Render input fields with labels
 			echo '
 				<label for="', $field_name, '"', $field_data['failed'] ? ' class="error"' : '', '>';
 
-			if ($field_data['required'])
-				echo '* '; // Mark as required
+			if ($field_data['required']) {
+				echo '* ';
+			} // Mark as required
 
 			echo $field_data['text'], '</label>
 				', $field_data['html'];
@@ -118,8 +115,7 @@ function template_form_my_custom_template(): void
 				<span class="breaker centertext', $context['failed_form_submit'] ? ' error' : '', '">', $txt['customform_required'], '</span>';
 
 	// Include visual verification if required
-	if ($context['require_verification'])
-	{
+	if ($context['require_verification']) {
 		echo '
 				<fieldset class="breaker">
 					<legend>', $txt['verification'], '</legend>

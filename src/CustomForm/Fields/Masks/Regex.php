@@ -21,11 +21,13 @@ class Regex implements MaskInterface
 
 	public function validate(): bool
 	{
-		if (!preg_match($this->field['regex'], $this->value))
-			if (!empty($this->field['err']))
+		if (!preg_match($this->field['regex'], $this->value)) {
+			if (!empty($this->field['err'])) {
 				$this->err = $this->field['err'];
-			else
+			} else {
 				$this->err = ['customform_invalid_value', $this->field['text']];
+			}
+		}
 
 		return $this->err == false;
 	}

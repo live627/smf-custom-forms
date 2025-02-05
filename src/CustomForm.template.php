@@ -23,11 +23,12 @@ function template_forms_above(): void
 				</h3>
 			</div>';
 
-	if (!empty($context['page_message']))
+	if (!empty($context['page_message'])) {
 		echo '
 			<div class="information noup">'
 				, $context['page_message'], '
 			</div>';
+	}
 
 		echo '
 			<div class="windowbg noup">
@@ -38,15 +39,15 @@ function template_forms(): void
 {
 	global $context, $scripturl;
 
-	foreach ($context['forms'] as [$id_form, $title, $description])
-	{
+	foreach ($context['forms'] as [$id_form, $title, $description]) {
 		echo '
 			<li>
 				<a href="' . $scripturl . '?action=form;n=' . $id_form . '">' . $title . '</a>';
 
-		if ($description != '')
+		if ($description != '') {
 			echo '
 				<div class="d">', $description, '</div>';
+		}
 
 		echo '
 			</li>';
@@ -78,16 +79,16 @@ function template_errors_above(): void
 {
 	global $context, $txt;
 
-	if ($context['post_errors'] != [])
-	{
+	if ($context['post_errors'] != []) {
 		echo '
 					<div class="errorbox" id="errors">
 						<strong>', $txt['customform_error_title'], '</strong>
 						<ul>';
 
-		foreach ($context['post_errors'] as $error)
+		foreach ($context['post_errors'] as $error) {
 			echo '
 							<li>', sprintf($txt[$error[0]], $error[1]), '</li>';
+		}
 
 		echo '
 						</ul>
@@ -95,9 +96,7 @@ function template_errors_above(): void
 	}
 }
 
-function template_errors_below(): void
-{
-}
+function template_errors_below(): void {}
 
 function template_form_below(): void
 {
@@ -131,18 +130,17 @@ function template_form(): void
 	*/
 
 	// Now actually loop through all the fields.
-	foreach ($context['fields'] as $field_name => $field_data)
-	{
-		if ($field_data['type'] == 'info')
+	foreach ($context['fields'] as $field_name => $field_data) {
+		if ($field_data['type'] == 'info') {
 			echo '
 				<span class="breaker">', $field_data['text'], '</span>';
-		else
-		{
+		} else {
 			echo '
 				<label for="', $field_name, '"', $field_data['failed'] ? ' class="error"' : '', '>';
 
-		if ($field_data['required'])
+		if ($field_data['required']) {
 			echo '* ';
+		}
 
 		echo $field_data['text'], '</label>
 				', $field_data['html'];
@@ -154,12 +152,13 @@ function template_form(): void
 				<span class="breaker centertext', $context['failed_form_submit'] ? ' error' : '', '">', $txt['customform_required'], '</span>';
 
 	// Display visual verification on the form
-	if ($context['require_verification'])
+	if ($context['require_verification']) {
 		echo '
 				<fieldset class="breaker">
 					<legend>', $txt['verification'], '</legend>
 					<span class="centertext">', template_control_verification('customform', 'all'), '</span>
 				</fieldset>';
+	}
 }
 
 function template_callback_boards(): void
@@ -174,22 +173,22 @@ function template_callback_boards(): void
 						<dd>
 							<select name="board_id" size="10" style="width: 75%;">';
 
-	foreach ($context['categories'] as $category)
-	{
+	foreach ($context['categories'] as $category) {
 		printf(
 			'
 								<optgroup label="%s">',
-			$category['name']
+			$category['name'],
 		);
 
-		foreach ($category['boards'] as $idx => $board)
+		foreach ($category['boards'] as $idx => $board) {
 			printf(
 				'
 									<option value="%s"%s>%s</option>',
 				$idx,
 				$board['selected'] ? ' selected' : '',
-				str_repeat('&emsp;', $board['child_level'] * 2) . $board['name']
+				str_repeat('&emsp;', $board['child_level'] * 2) . $board['name'],
 			);
+		}
 
 	echo '
 								</optgroup>';
@@ -208,9 +207,10 @@ function template_callback_output(): void
 									<script type="text/javascript">;
 										var icon_urls = {';
 
-	foreach ($context['icons'] as $icon)
+	foreach ($context['icons'] as $icon) {
 		echo '
 											\'', $icon['value'], '\': \'', $icon['url'], '\',';
+	}
 
 	echo '
 										};
@@ -234,9 +234,10 @@ function template_callback_output(): void
 										<dd>
 											<select name="icon" id="icon" onchange="showimage(this.form)">';
 
-	foreach ($context['icons'] as $icon)
+	foreach ($context['icons'] as $icon) {
 		echo '
 												<option value="', $icon['value'], '"', $icon['value'] == $context['custom_form_settings']['icon'] ? ' selected' : '', '>', $icon['name'], '</option>';
+	}
 
 	echo '
 											</select>

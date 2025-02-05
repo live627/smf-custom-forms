@@ -22,8 +22,7 @@ class Radio extends Select
 	{
 		$this->input_html = '<fieldset>';
 
-		foreach ($this->type_vars as $v)
-		{
+		foreach ($this->type_vars as $v) {
 			$this->input_html .= sprintf(
 				'<label><input type="radio" name="%s[%d]" value="%4$s"%s> %s</label><br>',
 				'CustomFormField',
@@ -31,11 +30,12 @@ class Radio extends Select
 				(!$this->exists && $this->default == $v) || $this->value == $v
 					? ' checked="checked"'
 					: '',
-				$v
+				$v,
 			);
 
-			if ((!$this->exists && $this->default == $v) || $this->value == $v)
+			if ((!$this->exists && $this->default == $v) || $this->value == $v) {
 				$this->output_html = $v;
+			}
 		}
 
 		$this->input_html .= '</fieldset>';

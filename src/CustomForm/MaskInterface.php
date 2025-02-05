@@ -15,6 +15,8 @@ namespace CustomForm;
 interface MaskInterface
 {
 	public function __construct(string $value, array $field);
+
 	public function validate(): bool;
+
 	public function getError(): bool|array;
 }

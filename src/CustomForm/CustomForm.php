@@ -26,19 +26,19 @@ class CustomForm
 		$this->scripturl = $scripturl;
 		$this->sourcedir = $sourcedir;
 		$this->smcFunc = $smcFunc;
-		$this->util = new Util;
+		$this->util = new Util();
 
-		$call = match ($sa)
-		{
+		$call = match ($sa) {
 			'thankyou' => 'ThankYou',
 			'viewform' => 'ViewForm',
 			default => 'ListForms',
 		};
 
-		if (isset($_REQUEST['thankyou']))
+		if (isset($_REQUEST['thankyou'])) {
 			$call = 'ThankYou';
-		elseif (isset($_REQUEST['n']))
+		} elseif (isset($_REQUEST['n'])) {
 			$call = 'ViewForm';
+		}
 
 		call_user_func([$this, $call]);
 	}
@@ -62,14 +62,17 @@ class CustomForm
 	{
 		global $context, $modSettings, $txt;
 
-		if (!allowedTo('customform_view_perms'))
+		if (!allowedTo('customform_view_perms')) {
 			redirectexit();
+		}
 
 		loadLanguage('CustomForm');
 		loadTemplate('CustomForm');
-		loadCSSFile('customform.css', array('minimize' => true));
+		loadCSSFile('customform.css', ['minimize' => true]);
 
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT id_form, title
 			FROM {db_prefix}cf_forms AS f
 			WHERE title != \'\'
@@ -80,13 +83,15 @@ class CustomForm
 						AND title != \'\'
 						AND text != \'\'
 						AND type != \'\'
-				)'
+				)',
 		);
 		$context['forms'] = [];
 
-		while ([$id_form, $title] = $this->smcFunc['db_fetch_row']($request))
-			if (allowedTo('custom_forms_' . $id_form))
+		while ([$id_form, $title] = $this->smcFunc['db_fetch_row']($request)) {
+			if (allowedTo('custom_forms_' . $id_form)) {
 				$context['forms'][] = [$id_form, $title, ''];
+			}
+		}
 		$this->smcFunc['db_free_result']($request);
 
 		$context['template_layers'][] = 'forms';
@@ -124,19 +129,21 @@ class CustomForm
 	{
 		$post_errors = [];
 
-		if (($sc_error = checkSession('post', '', false)) != '')
+		if (($sc_error = checkSession('post', '', false)) != '') {
 			$post_errors[] = [['error_' . $sc_error, '']];
+		}
 
-		if ($this->require_verification())
-		{
+		if ($this->require_verification()) {
 			require_once $this->sourcedir . '/Subs-Editor.php';
 			$verificationOptions = [
 				'id' => 'customform',
 			];
 
-			if (($verification_errors = create_control_verification($verificationOptions, true)) !== true)
-				foreach ($verification_errors as $verification_error)
+			if (($verification_errors = create_control_verification($verificationOptions, true)) !== true) {
+				foreach ($verification_errors as $verification_error) {
 					$post_errors[] = ['error_' . $verification_error, ''];
+				}
+			}
 		}
 
 		return $post_errors;
@@ -146,16 +153,20 @@ class CustomForm
 	{
 		global $user_info;
 
-		if (isset($_REQUEST['form_id']) && !ctype_digit($_REQUEST['form_id']))
+		if (isset($_REQUEST['form_id']) && !ctype_digit($_REQUEST['form_id'])) {
 			fatal_lang_error('no_access', false);
+		}
 
 		$form_id = (int) ($_REQUEST['n'] ?? 0);
 
-		if (!allowedTo('custom_forms_' . $form_id))
+		if (!allowedTo('custom_forms_' . $form_id)) {
 			redirectexit('action=form');
+		}
 
 		//	Get the data about the current form.
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT
 				id_form, title, output, subject, id_board,
 				icon, form_exit, template_function, output_type
@@ -173,16 +184,19 @@ class CustomForm
 				AND id_form = {int:id}',
 			[
 				'id' => $form_id,
-			]
+			],
 		);
 
 		//	Did we get some form data? If not then redirect the user to the form view page.
-		if (!($form_data = $this->smcFunc['db_fetch_assoc']($request)))
+		if (!($form_data = $this->smcFunc['db_fetch_assoc']($request))) {
 			redirectexit('action=form;');
+		}
 
 		$this->smcFunc['db_free_result']($request);
 
-		$request = $this->smcFunc['db_query']('', '
+		$request = $this->smcFunc['db_query'](
+			'',
+			'
 			SELECT id_field, title, text, type, type_vars
 			FROM {db_prefix}cf_fields
 			WHERE id_form = {int:id}
@@ -192,15 +206,14 @@ class CustomForm
 			ORDER BY id_field',
 			[
 				'id' => $form_id,
-			]
+			],
 		);
 
 		$vars = [];
 		$fields = [];
 		$post_errors = [];
 
-		while ($row = $this->smcFunc['db_fetch_assoc']($request))
-		{
+		while ($row = $this->smcFunc['db_fetch_assoc']($request)) {
 			$row['type'] = strtr(
 				$row['type'],
 				[
@@ -211,21 +224,22 @@ class CustomForm
 					'float' => 'text',
 					'int' => 'text',
 					'radiobox' => 'radio',
-					'infobox' => 'info'
-				]
+					'infobox' => 'info',
+				],
 			);
 			$class_name = 'CustomForm\Fields\\' . ucfirst($row['type']);
 
-			if (!class_exists($class_name))
+			if (!class_exists($class_name)) {
 				fatal_error(
 					sprintf(
 						'Param "%s" not found for field "%s" at ID #%s.',
 						$row['type'],
 						$this->smcFunc['htmlspecialchars']($row['text']),
-						$row['id_field']
+						$row['id_field'],
 					),
-					false
+					false,
 				);
+			}
 
 			$row['obj'] = new $class_name($row, $_POST['CustomFormField'][$row['id_field']] ?? '');
 			$fields[] = $row;
@@ -233,14 +247,11 @@ class CustomForm
 
 		$this->smcFunc['db_free_result']($request);
 
-		if (isset($_POST['n']))
-		{
+		if (isset($_POST['n'])) {
 			$post_errors = $this->validateInput();
 
-			foreach ($fields as $field)
-			{
-				if (!$field['obj']->validate())
-				{
+			foreach ($fields as $field) {
+				if (!$field['obj']->validate()) {
 					$post_errors['id_field_' . $field['id_field']] = $field['obj']->getError();
 
 					continue;
@@ -250,8 +261,7 @@ class CustomForm
 				$vars[$field['title']] = $field['obj']->getValue();
 			}
 
-			if ($post_errors === [])
-			{
+			if ($post_errors === []) {
 				$subject = $this->util->replaceVars($form_data['subject'], $vars);
 				$output = $this->util->replaceVars($form_data['output'], $vars);
 
@@ -259,22 +269,22 @@ class CustomForm
 					? $form_data['output_type']
 					: 'CustomForm\Output\\' . $form_data['output_type'];
 
-				if (!class_exists($class_name))
+				if (!class_exists($class_name)) {
 					fatal_error(
 						sprintf(
 							'Output type "%s" not found for form "%s" at ID #%s.',
 							$this->smcFunc['htmlspecialchars']($form_data['output_type']),
 							$this->smcFunc['htmlspecialchars']($form_data['title']),
-							$form_data['id_form']
+							$form_data['id_form'],
 						),
-						false
+						false,
 					);
+				}
 
-				$output_type = new $class_name;
+				$output_type = new $class_name();
 				$output_type->send($subject, $output, $form_data);
 
-				$exit = match ($form_data['form_exit'])
-				{
+				$exit = match ($form_data['form_exit']) {
 					'board', '' => 'board=' . $form_data['id_board'],
 					'forum' => '',
 					'form' => 'action=form',
@@ -298,22 +308,21 @@ class CustomForm
 		$context['form_id'] = $form_data['id_form'];
 		$context['failed_form_submit'] = $post_errors != [];
 
-		if ($post_errors != [])
-		{
+		if ($post_errors != []) {
 			$context['post_errors'] = $post_errors;
 			$context['template_layers'][] = 'errors';
 		}
 
 		loadTemplate('CustomFormUserland', null, false);
 		loadTemplate('CustomForm');
-		loadCSSFile('customform.css', array('minimize' => true));
+		loadCSSFile('customform.css', ['minimize' => true]);
 		$template_function = 'template_' . $form_data['template_function'];
 		$template = function_exists($template_function)
 			? $form_data['template_function']
 			: 'form';
 		$context['sub_template'] = $template;
 		$context['template_layers'][] = function_exists($template_function . '_above') && function_exists(
-			$template_function . '_below'
+			$template_function . '_below',
 		) ? $template : 'form';
 		$context['linktree'][] = [
 			'url' => $this->scripturl . '?action=form',
@@ -328,8 +337,7 @@ class CustomForm
 		$context['meta_description'] = $this->smcFunc['htmlspecialchars']($form_data['title']);
 		$this->util->setMetaProperty('type', 'website');
 
-		foreach ($fields as $field)
-		{
+		foreach ($fields as $field) {
 			$field['obj']->setHtml();
 
 			$context['fields'][$field['title']] = [
@@ -343,8 +351,7 @@ class CustomForm
 
 		$context['require_verification'] = $this->require_verification();
 
-		if ($context['require_verification'])
-		{
+		if ($context['require_verification']) {
 			require_once $this->sourcedir . '/Subs-Editor.php';
 			$verificationOptions = [
 				'id' => 'customform',

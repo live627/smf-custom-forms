@@ -26,7 +26,7 @@ class Text implements FieldInterface
 			'<input type="text" name="%s[%d]" value="%s">',
 			'CustomFormField',
 			$this->field['id_field'],
-			$this->value
+			$this->value,
 		);
 	}
 
@@ -34,8 +34,9 @@ class Text implements FieldInterface
 	{
 		global $smcFunc;
 
-		if (!empty($this->size))
+		if (!empty($this->size)) {
 			$this->value = $smcFunc['substr']($this->value, 0, $this->size);
+		}
 
 		//if (!in_array('parse_bbc', $this->type_vars))
 		//	$this->value = '[nobbc]' . $this->value . '[/nobbc]';
@@ -45,12 +46,13 @@ class Text implements FieldInterface
 
 	public function validate(): bool
 	{
-		if (!$this->exists && $this->required)
+		if (!$this->exists && $this->required) {
 			$this->err = ['customform_invalid_value', $this->field['text']];
+		}
 
 		//~ $class_name = 'CustomFormFieldMask_' . $this->field['mask'];
 		//~ if (!class_exists($class_name))
-		//~ fatal_error('Mask "' . $this->field['mask'] . '" not found for field "' . $this->field['name'] . '" at ID #' . $this->field['id_field'] . '.', false);
+		//~ fatal_error('Mask "' . $this->field['mask'] . '" not found for field "' . $this->field['name'] . '" at ID #' . $this->field['id'] . '.', false);
 
 		//~ $mask = new $class_name($this->value, $this->field);
 		//~ $mask->validate(): bool;

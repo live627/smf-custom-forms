@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
 class CustomFormTest extends TestCase
 {
-	public function testCustomFormBaseConstructor()
+	public function testCustomFormBaseConstructor(): void
 	{
 		$field = [
 			'id_field' => 1,
@@ -19,7 +21,7 @@ class CustomFormTest extends TestCase
 		$this->assertTrue($form->isRequired());
 	}
 
-	public function testCustomFormInfoSetHtml()
+	public function testCustomFormInfoSetHtml(): void
 	{
 		$field = [
 			'id_field' => 1,
@@ -34,7 +36,7 @@ class CustomFormTest extends TestCase
 		$this->assertEquals('Information', $form->getInputHtml());
 	}
 
-	public function testCustomFormCheckValidation()
+	public function testCustomFormCheckValidation(): void
 	{
 		$field = [
 			'id_field' => 2,
@@ -65,9 +67,9 @@ class CustomFormTest extends TestCase
 				'title' => '',
 				'text' => '',
 				'type' => '',
-				'type_vars' => $type_vars
+				'type_vars' => $type_vars,
 			],
-			$value
+			$value,
 		);
 		$this->assertTrue($type->validate());
 		$this->assertEmpty($type->getError());
@@ -79,7 +81,7 @@ class CustomFormTest extends TestCase
 		return [
 			['default=on', '', 'yes'],
 			['default=on', 'boop', 'yes'],
-			['default=', '', 'no']
+			['default=', '', 'no'],
 		];
 	}
 
@@ -94,9 +96,9 @@ class CustomFormTest extends TestCase
 				'title' => '',
 				'text' => '',
 				'type' => '',
-				'type_vars' => $type_vars
+				'type_vars' => $type_vars,
 			],
-			$value
+			$value,
 		);
 		$this->assertTrue($type->validate());
 		$this->assertEmpty($type->getError());
@@ -111,11 +113,11 @@ class CustomFormTest extends TestCase
 		return [
 			['gold,silver,bronze,default=silver', '', 'silver'],
 			['gold,silver,bronze,default=', 'silver', 'silver'],
-			['gold,silver,bronze,default=silver', 'titanium', 'silver']
+			['gold,silver,bronze,default=silver', 'titanium', 'silver'],
 		];
 	}
 
-	public function testCustomFormSelectSetHtml()
+	public function testCustomFormSelectSetHtml(): void
 	{
 		$field = [
 			'id_field' => 3,
@@ -131,7 +133,7 @@ class CustomFormTest extends TestCase
 		$this->assertEquals('Option2', $form->getOutputHtml());
 	}
 
-	public function testCustomFormRadioSetHtml()
+	public function testCustomFormRadioSetHtml(): void
 	{
 		$field = [
 			'id_field' => 4,
@@ -147,7 +149,7 @@ class CustomFormTest extends TestCase
 		$this->assertEquals('Yes', $form->getOutputHtml());
 	}
 
-	public function testCustomFormTextSetHtml()
+	public function testCustomFormTextSetHtml(): void
 	{
 		$field = [
 			'id_field' => 5,
@@ -163,7 +165,7 @@ class CustomFormTest extends TestCase
 		$this->assertEquals('', $form->getOutputHtml());
 	}
 
-	public function testCustomFormFieldMaskEmail()
+	public function testCustomFormFieldMaskEmail(): void
 	{
 		$field = [
 			'id_field' => 6,
@@ -177,7 +179,7 @@ class CustomFormTest extends TestCase
 		$this->assertNotEmpty($mask->getError());
 	}
 
-	public function testCustomFormFieldMaskRegex()
+	public function testCustomFormFieldMaskRegex(): void
 	{
 		$field = [
 			'id_field' => 7,
@@ -192,7 +194,7 @@ class CustomFormTest extends TestCase
 		$this->assertNotEmpty($mask->getError());
 	}
 
-	public function testCustomFormFieldMaskNumber()
+	public function testCustomFormFieldMaskNumber(): void
 	{
 		$field = [
 			'id_field' => 8,

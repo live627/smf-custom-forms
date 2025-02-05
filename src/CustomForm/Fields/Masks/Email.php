@@ -21,8 +21,9 @@ class Email implements MaskInterface
 
 	public function validate(): bool
 	{
-		if (!preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $this->value))
+		if (!preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $this->value)) {
 			$this->err = ['customform_invalid_value', $this->field['text']];
+		}
 
 		return $this->err == false;
 	}

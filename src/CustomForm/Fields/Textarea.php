@@ -24,7 +24,7 @@ class Textarea extends Text
 			$this->field['id_field'],
 			!empty($rows) ? 'rows="' . $rows . '"' : '',
 			!empty($cols) ? 'cols="' . $cols . '"' : '',
-			$this->value
+			$this->value,
 		);
 	}
 }

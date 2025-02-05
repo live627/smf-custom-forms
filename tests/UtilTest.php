@@ -17,13 +17,13 @@ class UtilTest extends PHPUnit\Framework\TestCase
 			'meta_tags' => [],
 		];
 
-		$this->util = new Util;
+		$this->util = new Util();
 	}
 
 	/**
 	 * @dataProvider decamelizeProvider
 	 */
-	public function testDecamelize(string $input, string $expected)
+	public function testDecamelize(string $input, string $expected): void
 	{
 		$this->assertEquals($expected, $this->util->decamelize($input));
 	}
@@ -63,7 +63,7 @@ class UtilTest extends PHPUnit\Framework\TestCase
 			['abc{ def}ghi', 'abcdefghi'],
 			['abc{  def}ghi', 'abcdefghi'],
 			['abc{ def }ghi', 'abcdefghi'],
-			['abc{  def  }ghi', 'abcdefghi']
+			['abc{  def  }ghi', 'abcdefghi'],
 		];
 	}
 
@@ -73,15 +73,15 @@ class UtilTest extends PHPUnit\Framework\TestCase
 			'Hello world',
 			$this->util->replaceVars(
 				'Hello {{ term }}',
-				['term' => 'world']
-			)
+				['term' => 'world'],
+			),
 		);
 	}
 
 	/**
 	 * @dataProvider replaceVarsProvider
 	 */
-	public function testReplaceVars(string $template, array $variables, string $expected)
+	public function testReplaceVars(string $template, array $variables, string $expected): void
 	{
 		$this->assertEquals($expected, $this->util->replaceVars($template, $variables));
 	}
@@ -96,16 +96,18 @@ class UtilTest extends PHPUnit\Framework\TestCase
 		];
 	}
 
-	/** @test */
-	public function find_classes_finds_classes_implementing_interface()
+	/**
+	 * @test
+	 */
+	public function findClassesFindsClassesImplementingInterface(): void
 	{
 		$result = $this->util->find_classes(
 			new \GlobIterator(
 				__DIR__ . '/EnvisionPortal/Modules/*.php',
-				\FilesystemIterator::SKIP_DOTS
+				\FilesystemIterator::SKIP_DOTS,
 			),
 			'CustomForm\Fields\\',
-			CustomForm\FieldInterface::class
+			CustomForm\FieldInterface::class,
 		);
 
 		$this->assertIsIterable($result);

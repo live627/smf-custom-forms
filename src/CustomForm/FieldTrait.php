@@ -81,17 +81,18 @@ trait FieldTrait
 			? array_map('trim', explode(',', $this->field['type_vars']))
 			: [];
 
-		if ($temp != [])
-			foreach ($temp as $var)
-			{
-				if (str_starts_with($var, 'size='))
+		if ($temp != []) {
+			foreach ($temp as $var) {
+				if (str_starts_with($var, 'size=')) {
 					$this->size = (int) (substr($var, 5));
-				elseif (str_starts_with($var, 'default='))
+				} elseif (str_starts_with($var, 'default=')) {
 					$this->default = substr($var, 8);
-				elseif ($var == 'required')
+				} elseif ($var == 'required') {
 					$this->required = true;
-				elseif ($var != '')
+				} elseif ($var != '') {
 					$this->type_vars[] = $var;
+				}
 			}
+		}
 	}
 }

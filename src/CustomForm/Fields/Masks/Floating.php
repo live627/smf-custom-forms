@@ -21,8 +21,9 @@ class Floating implements MaskInterface
 
 	public function validate(): bool
 	{
-		if (!preg_match('/^\s*([0-9]+(\.[0-9]+)?)\s*$/', $this->value))
+		if (!preg_match('/^\s*([0-9]+(\.[0-9]+)?)\s*$/', $this->value)) {
 			$this->err = ['customform_invalid_value', $this->field['text']];
+		}
 
 		return $this->err == false;
 	}
