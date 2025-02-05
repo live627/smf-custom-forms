@@ -10,31 +10,36 @@ declare(strict_types=1);
  * @license   http://opensource.org/licenses/MIT MIT
  */
 
-if (!array_key_exists('db_add_column', $smcFunc))
+if (!array_key_exists('db_add_column', $smcFunc)) {
 	db_extend('packages');
+}
 
-$column = array(
+$column = [
 	'name' => 'output_type',
 	'type' => 'varchar',
 	'size' => 150,
-	'default' => 'ForumPost'
-);
+	'default' => 'ForumPost',
+];
 
 $smcFunc['db_add_column']('{db_prefix}cf_forms', $column);
 
-$request = $smcFunc['db_query']('', '
+$request = $smcFunc['db_query'](
+	'',
+	'
 	SELECT id_file
 	FROM {db_prefix}admin_info_files
-	WHERE filename = \'customform/versions.json\''
+	WHERE filename = \'customform/versions.json\'',
 );
 
-if ($smcFunc['db_num_rows']($request) == 0)
-	$smcFunc['db_insert']('',
+if ($smcFunc['db_num_rows']($request) == 0) {
+	$smcFunc['db_insert'](
+		'',
 		'{db_prefix}admin_info_files',
-		array('filename' => 'string', 'path' => 'string', 'parameters' => 'string', 'data' => 'string', 'filetype' => 'string'),
-		array('customform/versions.json', 'https://mods.live627.com//api/', '', '', 'application/json'),
-		array('id_file')
+		['filename' => 'string', 'path' => 'string', 'parameters' => 'string', 'data' => 'string', 'filetype' => 'string'],
+		['customform/versions.json', 'https://mods.live627.com//api/', '', '', 'application/json'],
+		['id_file'],
 	);
+}
 
 $smcFunc['db_free_result']($request);
 

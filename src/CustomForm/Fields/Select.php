@@ -24,21 +24,18 @@ class Select implements FieldInterface
 		$this->input_html = sprintf(
 			'<select name="%s[%d]">',
 			'CustomFormField',
-			$this->field['id_field']
+			$this->field->id,
 		);
+		$this->output_html = $this->getValue();
 
-		foreach ($this->type_vars as $v)
-		{
+		foreach ($this->type_vars as $v) {
 			$this->input_html .= sprintf(
 				'<option%s> %s</option>',
 				(!$this->exists && $this->default == $v) || $this->value == $v
-					? ' checked="checked"'
+					? ' selected'
 					: '',
-				$v
+				$v,
 			);
-
-			if ((!$this->exists && $this->default == $v) || $this->value == $v)
-				$this->output_html = $v;
 		}
 
 		$this->input_html .= '</select>';
@@ -48,8 +45,9 @@ class Select implements FieldInterface
 	{
 		$found = isset(array_flip($this->type_vars)[$this->value]) || !empty($this->default);
 
-		if (!$found && $this->required)
-			$this->err = ['customform_invalid_value', $this->field['text']];
+		if (!$found && $this->required) {
+			$this->err = ['customform_invalid_value', $this->field->text];
+		}
 
 		return $this->err == [];
 	}

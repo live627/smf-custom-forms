@@ -21,21 +21,18 @@ class Radio extends Select
 	public function setHtml(): void
 	{
 		$this->input_html = '<fieldset>';
+		$this->output_html = $this->getValue();
 
-		foreach ($this->type_vars as $v)
-		{
+		foreach ($this->type_vars as $v) {
 			$this->input_html .= sprintf(
 				'<label><input type="radio" name="%s[%d]" value="%4$s"%s> %s</label><br>',
 				'CustomFormField',
-				$this->field['id_field'],
+				$this->field->id,
 				(!$this->exists && $this->default == $v) || $this->value == $v
-					? ' checked="checked"'
+					? ' checked'
 					: '',
-				$v
+				$v,
 			);
-
-			if ((!$this->exists && $this->default == $v) || $this->value == $v)
-				$this->output_html = $v;
 		}
 
 		$this->input_html .= '</fieldset>';

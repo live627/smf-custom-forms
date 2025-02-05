@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CustomForm;
 
 use FilesystemIterator;
@@ -14,11 +16,15 @@ class Util
 
 	public function find_integrated_classes(string $interface): Generator
 	{
-		if (count($results = call_integration_hook('integrate_customform_classlist')) > 0)
-			foreach ($results as $classlist)
-				foreach ($classlist as $fqcn)
-					if (class_exists($fqcn) && is_subclass_of($fqcn, $interface, true))
+		if (count($results = call_integration_hook('integrate_customform_classlist')) > 0) {
+			foreach ($results as $classlist) {
+				foreach ($classlist as $fqcn) {
+					if (class_exists($fqcn) && is_subclass_of($fqcn, $interface, true)) {
 						yield null => $fqcn;
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -32,12 +38,10 @@ class Util
 	 *                           and the second one becomes the value.
 	 * @param iterable $iterator An iterable to run through $callback.
 	 *
-	 * @return Generator
 	 */
 	public function map(callable $callback, iterable $iterator): Generator
 	{
-		foreach ($iterator as $k => $v)
-		{
+		foreach ($iterator as $k => $v) {
 			[$key, $val] = call_user_func($callback, $v, $k);
 
 			yield $key => $val;
@@ -46,9 +50,11 @@ class Util
 
 	public function find_classes(FilesystemIterator $iterator, string $ns, string $interface): Generator
 	{
-		foreach ($iterator as $file_info)
-			if (class_exists($fqcn = $ns . $file_info->getBasename('.php')) && is_subclass_of($fqcn, $interface, true))
+		foreach ($iterator as $file_info) {
+			if (class_exists($fqcn = $ns . $file_info->getBasename('.php')) && is_subclass_of($fqcn, $interface, true)) {
 				yield $file_info->getBasename('.php') => $fqcn;
+			}
+		}
 
 		yield from $this->find_integrated_classes($interface);
 	}
@@ -70,7 +76,7 @@ class Util
 		return preg_replace_callback(
 			'~{{1,2}\s*?([a-zA-Z0-9\-_.]+)\s*?}{1,2}~',
 			fn($matches) => $array[$matches[1]] ?? $matches[1],
-			$text
+			$text,
 		);
 	}
 
@@ -90,15 +96,16 @@ class Util
 
 		$found = false;
 
-		foreach ($context['meta_tags'] as $i => $m)
-			if (isset($m['name']) && $m['name'] == $key)
-			{
+		foreach ($context['meta_tags'] as $i => $m) {
+			if (isset($m['name']) && $m['name'] == $key) {
 				$context['meta_tags'][$i]['content'] = $value;
 				$found = true;
 			}
+		}
 
-		if (!$found)
+		if (!$found) {
 			$context['meta_tags'][] = ['name' => $key, 'content' => $value];
+		}
 	}
 
 	/**
@@ -117,14 +124,15 @@ class Util
 
 		$found = false;
 
-		foreach ($context['meta_tags'] as $i => $m)
-			if (isset($m['property']) && $m['property'] == 'og:' . $key)
-			{
+		foreach ($context['meta_tags'] as $i => $m) {
+			if (isset($m['property']) && $m['property'] == 'og:' . $key) {
 				$context['meta_tags'][$i]['content'] = $value;
 				$found = true;
 			}
+		}
 
-		if (!$found)
+		if (!$found) {
 			$context['meta_tags'][] = ['property' => 'og:' . $key, 'content' => $value];
+		}
 	}
 }

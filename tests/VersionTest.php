@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use CustomForm\Version;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +15,7 @@ class VersionTest extends TestCase
 			patch: 4,
 			preReleaseType: 'alpha',
 			preReleaseMajor: 1,
-			preReleaseMinor: 2
+			preReleaseMinor: 2,
 		);
 
 		$this->assertSame(2, $version->getMajor());
@@ -44,7 +46,7 @@ class VersionTest extends TestCase
 			patch: 4,
 			preReleaseType: 'alpha',
 			preReleaseMajor: 1,
-			preReleaseMinor: 2
+			preReleaseMinor: 2,
 		);
 		$this->assertInstanceOf(JsonSerializable::class, $version);
 
@@ -94,7 +96,7 @@ class VersionTest extends TestCase
 	 *
 	 * @dataProvider compareToDataProvider
 	 */
-	public function testCompareTo(string $version1, string $version2)
+	public function testCompareTo(string $version1, string $version2): void
 	{
 		$v1 = Version::fromString($version1);
 		$v2 = Version::fromString($version2);
@@ -156,7 +158,7 @@ class VersionTest extends TestCase
 	 *
 	 * @dataProvider isCompatibleWithDataProvider
 	 */
-	public function testIsCompatibleWith(string $version, string $range)
+	public function testIsCompatibleWith(string $version, string $range): void
 	{
 		$v = Version::fromString($version);
 
@@ -204,7 +206,7 @@ class VersionTest extends TestCase
 	 *
 	 * @dataProvider isNotCompatibleWithDataProvider
 	 */
-	public function testIsNotCompatibleWith(string $version, string $range)
+	public function testIsNotCompatibleWith(string $version, string $range): void
 	{
 		$v = Version::fromString($version);
 
@@ -229,7 +231,7 @@ class VersionTest extends TestCase
 	 *
 	 * @dataProvider findHighestCompatibleDataProvider
 	 */
-	public function testFindHighestCompatible(string $currentVersion, string $versions, string|bool $expected)
+	public function testFindHighestCompatible(string $currentVersion, string $versions, string|bool $expected): void
 	{
 		$this->assertSame($expected, Version::findHighestCompatible($versions, $currentVersion));
 	}

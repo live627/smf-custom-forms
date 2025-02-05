@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CustomForm;
 
 /**
@@ -18,42 +20,36 @@ class Version implements \JsonSerializable
 	/**
 	 * Major version number.
 	 *
-	 * @var int
 	 */
 	private int $major;
 
 	/**
 	 * Minor version number.
 	 *
-	 * @var int
 	 */
 	private int $minor;
 
 	/**
 	 * Patch version number.
 	 *
-	 * @var int
 	 */
 	private int $patch;
 
 	/**
 	 * Pre-release type (e.g., 'alpha', 'beta', 'rc').
 	 *
-	 * @var string
 	 */
 	private string $preReleaseType;
 
 	/**
 	 * Major version number for the pre-release type.
 	 *
-	 * @var int
 	 */
 	private int $preReleaseMajor;
 
 	/**
 	 * Minor version number for the pre-release type.
 	 *
-	 * @var int
 	 */
 	private int $preReleaseMinor;
 
@@ -155,7 +151,7 @@ class Version implements \JsonSerializable
 			'/^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:-?(alpha|beta|rc|dev)?\.?(\d*)\.?(\d*)?)?$/i',
 			$versionString,
 			$matches,
-			PREG_UNMATCHED_AS_NULL
+			PREG_UNMATCHED_AS_NULL,
 		);
 
 		return new self(
@@ -164,7 +160,7 @@ class Version implements \JsonSerializable
 			(int) ($matches[3] ?? 0),
 			$matches[4] ?? 'stable',
 			(int) ($matches[5] ?? 0),
-			(int) ($matches[6] ?? 0)
+			(int) ($matches[6] ?? 0),
 		);
 	}
 
@@ -176,15 +172,19 @@ class Version implements \JsonSerializable
 	public function __toString(): string
 	{
 		$version = $this->major . '.' . $this->minor . '.' . $this->patch;
+
 		if ($this->preReleaseType !== 'stable') {
 			$version .= '-' . $this->preReleaseType;
+
 			if ($this->preReleaseMajor > 0) {
 				$version .= '.' . $this->preReleaseMajor;
+
 				if ($this->preReleaseMinor > 0) {
 					$version .= '.' . $this->preReleaseMinor;
 				}
 			}
 		}
+
 		return $version;
 	}
 
@@ -217,6 +217,7 @@ class Version implements \JsonSerializable
 	public function compareTo(Version $other): int
 	{
 		$fields = ['major', 'minor', 'patch'];
+
 		foreach ($fields as $field) {
 			if ($this->$field !== $other->$field) {
 				return $this->$field <=> $other->$field;
@@ -225,6 +226,7 @@ class Version implements \JsonSerializable
 
 		$typeOrder = ['dev' => -1, 'alpha' => 0, 'beta' => 1, 'rc' => 2, 'stable' => 3];
 		$typeComparison = $typeOrder[$this->preReleaseType] <=> $typeOrder[$other->preReleaseType];
+
 		if ($typeComparison !== 0) {
 			return $typeComparison;
 		}
@@ -232,6 +234,7 @@ class Version implements \JsonSerializable
 		if ($this->preReleaseMajor !== $other->preReleaseMajor) {
 			return $this->preReleaseMajor <=> $other->preReleaseMajor;
 		}
+
 		return $this->preReleaseMinor <=> $other->preReleaseMinor;
 	}
 
@@ -259,11 +262,13 @@ class Version implements \JsonSerializable
 				[$min, $max] = explode('-', $range);
 				$minVersion = self::fromString($min);
 				$maxVersion = self::fromString($max);
+
 				if ($this->compareTo($minVersion) >= 0 && $this->compareTo($maxVersion) <= 0) {
 					return true;
 				}
 			} else {
 				$specificVersion = self::fromString($range);
+
 				if ($this->compareTo($specificVersion) === 0) {
 					return true;
 				}
@@ -294,11 +299,13 @@ class Version implements \JsonSerializable
 			if (str_contains($range, '-')) {
 				[$min, $max] = explode('-', $range);
 				$maxVersion = self::fromString($max);
+
 				if ($current->compareTo(self::fromString($min)) >= 0 && $current->compareTo($maxVersion) <= 0) {
 					$highest = $highest && $highest->compareTo($maxVersion) >= 0 ? $highest : $maxVersion;
 				}
 			} else {
 				$specificVersion = self::fromString($range);
+
 				if ($current->compareTo($specificVersion) >= 0) {
 					$highest = $highest && $highest->compareTo($specificVersion) >= 0 ? $highest : $specificVersion;
 				}

@@ -10,8 +10,10 @@ declare(strict_types=1);
  * @license   http://opensource.org/licenses/MIT MIT
  */
 
-$smcFunc['db_query']('', '
+$smcFunc['db_query'](
+	'',
+	'
 	DELETE
 	FROM {db_prefix}admin_info_files
-	WHERE filename = \'customform/versions.json\''
+	WHERE filename = \'customform/versions.json\'',
 );

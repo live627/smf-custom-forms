@@ -20,7 +20,7 @@ interface FieldInterface
 	 * @param array $field The field as returned by {@link total_getCustomForm()}.
 	 * @param string $value Field value.
 	 */
-	public function __construct(array $field, string $value);
+	public function __construct(Field $field, string $value);
 
 	/*
 	 * Sets the input so the user can enter a value.
