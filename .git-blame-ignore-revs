@@ -1,8 +1,5 @@
 # You can configure git to automatically use this file with the following config:
 # git config --global blame.ignoreRevsFile .git-blame-ignore-revs
 
-# Refactor
 3289cd80e925a338b33fb3313d141a672a6b0f59
-
-# Autoomated code formatting
 10c7c7600f32250bd1e82b1e7a6b254df78ee996
