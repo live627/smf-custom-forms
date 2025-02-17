@@ -1,8 +1,11 @@
-name: Build
+name: Tests
 on:
   push:
     branches:
       - master
+    paths:
+      - '**.php'
+      - composer.lock
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,3 +26,5 @@ jobs:
       run: composer install --prefer-dist --no-progress
     - name: Run test suite
       run: php vendor/bin/phpunit --colors
+    - name: Uploading code coverage
+      run: php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover.xml
