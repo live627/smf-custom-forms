@@ -74,6 +74,7 @@ tools:
     external_code_coverage:
         timeout: 300
 build:
+    image: default-bionic
     nodes:
         analysis:
             tests:
