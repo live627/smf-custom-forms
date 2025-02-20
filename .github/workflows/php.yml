@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - 3.0/test
     paths:
       - '**.php'
       - composer.lock
@@ -13,6 +14,10 @@ jobs:
       XDEBUG_MODE: coverage
     steps:
     - uses: actions/checkout@v4
+      with:
+        # Fetch 10 commits or Scrutinizer will throw ("Failed to retrieve commit parents. If you use a shallow git checkout, please checkout at least a depth of one."), see: RepositoryIntrospector at scrutinizer-ci/ocular GitHub repository
+        # 10 commits is an arbitrary value that is more than 1 commit
+        fetch-depth: 10
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v4

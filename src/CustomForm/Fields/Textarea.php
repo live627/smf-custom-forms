@@ -21,7 +21,7 @@ class Textarea extends Text
 		$this->input_html = sprintf(
 			'<textarea name="%s[%d]" %s%s>%s</textarea>',
 			'CustomFormField',
-			$this->field['id_field'],
+			$this->field->id,
 			!empty($rows) ? 'rows="' . $rows . '"' : '',
 			!empty($cols) ? 'cols="' . $cols . '"' : '',
 			$this->value,

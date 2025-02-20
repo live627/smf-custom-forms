@@ -1,0 +1,147 @@
+<?php
+
+use CustomForm\DatabaseHelper;
+use PHPUnit\Framework\TestCase;
+use SMF\Db\DatabaseApi as DB;
+
+class DatabaseHelperTest extends TestCase
+{
+	private $db;
+
+	protected function setUp(): void
+	{
+		$this->db = $this->createMock(DB::class);
+		Db::$db = $this->db;
+	}
+
+	public function testFetchBy()
+	{
+		// Arrange
+		$selects = ['column1', 'column2'];
+		$from = 'table_name';
+		$params = [];
+		$joins = [];
+		$where = ['column1 = value1'];
+		$order = [];
+		$group = [];
+		$limit = 10;
+		$offset = 0;
+
+		$expectedResult = [
+			['column1' => 'value1', 'column2' => 'value2'],
+		];
+
+		$this->db->expects($this->once())
+			->method('query')
+			->with('', $this->stringContains('SELECT'), $this->arrayHasKey('column1'))
+			->willReturn($expectedResult);
+
+		$this->db->expects($this->exactly(count($expectedResult)))
+			->method('fetch_assoc')
+			->willReturnOnConsecutiveCalls(...$expectedResult + [false]);
+
+		$this->db->expects($this->once())
+			->method('free_result');
+
+		// Act
+		$result = iterator_to_array(DatabaseHelper::fetchBy($selects, $from, $params, $joins, $where, $order, $group, $limit, $offset));
+
+		// Assert
+		$this->assertEquals($expectedResult, $result);
+	}
+
+	public function testInsert()
+	{
+		// Arrange
+		$table_name = 'table_name';
+		$columns = [
+			'column1' => ['string', 'value1'],
+			'column2' => ['int', 123],
+		];
+
+		$this->db->expects($this->once())
+			->method('insert')
+			->with('insert', $table_name, $this->arrayHasKey('column1'), $this->arrayHasKey('column2'), []);
+
+		// Act
+		DatabaseHelper::insert($table_name, $columns);
+	}
+
+	public function testUpdate()
+	{
+		// Arrange
+		$table_name = 'table_name';
+		$columns = [
+			'column1' => ['string', 'value1'],
+			'column2' => ['int', 123],
+		];
+		$col = 'id_col';
+		$id = 1;
+
+		$this->db->expects($this->once())
+			->method('query')
+			->with('', $this->stringContains('UPDATE'), $this->arrayHasKey('id'));
+
+		// Act
+		DatabaseHelper::update($table_name, $columns, $col, $id);
+	}
+
+	public function testDelete()
+	{
+		// Arrange
+		$table_name = 'table_name';
+		$col = 'id_col';
+		$id = 1;
+
+		$this->db->expects($this->once())
+			->method('query')
+			->with('', $this->stringContains('DELETE'), $this->arrayHasKey('id'));
+
+		// Act
+		DatabaseHelper::delete($table_name, $col, $id);
+	}
+
+	public function testDeleteMany()
+	{
+		// Arrange
+		$table_name = 'table_name';
+		$col = 'id_col';
+		$ids = [1, 2, 3];
+
+		$this->db->expects($this->once())
+			->method('query')
+			->with('', $this->stringContains('DELETE'), $this->arrayHasKey('ids'));
+
+		// Act
+		DatabaseHelper::deleteMany($table_name, $col, $ids);
+	}
+
+	public function testDeleteAll()
+	{
+		// Arrange
+		$table_name = 'table_name';
+
+		$this->db->expects($this->once())
+			->method('query')
+			->with('', $this->stringContains('TRUNCATE'));
+
+		// Act
+		DatabaseHelper::deleteAll($table_name);
+	}
+
+	public function testIncrement()
+	{
+		// Arrange
+		$table_name = 'table_name';
+		$increment_col = 'column1';
+		$where_col = 'id_col';
+		$id = 1;
+
+		$this->db->expects($this->once())
+			->method('query')
+			->with('', $this->stringContains('UPDATE'), $this->arrayHasKey('id'));
+
+		// Act
+		DatabaseHelper::increment($table_name, $increment_col, $where_col, $id);
+	}
+}

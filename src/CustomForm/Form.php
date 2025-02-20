@@ -53,7 +53,7 @@ class Form
 		bool $load_fields = true,
 	) {
 		if ($load_fields) {
-		$this->fields = Field::loadForForm($id);
+			$this->fields = Field::loadForForm($id);
 		}
 	}
 
@@ -61,6 +61,7 @@ class Form
 	 * Loads a form from the database by its ID.
 	 *
 	 * @param int $form_id The ID of the form to load
+	 *
 	 * @return self|null The loaded form instance or null if not found
 	 */
 	public static function load(int $form_id, bool $load_fields = true): ?self
@@ -69,64 +70,103 @@ class Form
 	}
 
 	/**
-	 * Loads a form from the database by its ID.
+	 * Loads multiple forms from the database.
 	 *
-	 * @return \Generator The loaded form instance or null if not found
+	 * @return \Generator<Form> The loaded form instance or null if not found
 	 */
-	public static function fetchMany(array $ids, bool $load_fields = true): \Generator
+	public static function fetchManyForAdmin(?array $ids, bool $load_fields = true): \Generator
 	{
 		$entries = DatabaseHelper::fetchBy(
-			['id_form', 'title', 'output', 'subject', 'id_board, icon', 'form_exit', 'template_function', 'output_type'],
+			[
+				'id_form',
+				'title',
+				'output',
+				'subject',
+				'id_board',
+				'icon',
+				'form_exit',
+				'template_function',
+				'output_type',
+			],
 			'{db_prefix}cf_forms AS f',
-			[ 'ids' => $ids],
+			$ids === null ? [] : ['ids' => $ids],
 			[],
-			['title != \'\' ', 'EXISTS ( SELECT 1 FROM {db_prefix}cf_fields AS d WHERE d.id_form = f.id_form AND title != \'\' AND text != \'\' AND type != \'\' ) ', 'id_form IN ({array_int:ids})'],
+			[
+				$ids === null ? '' : 'id_form IN ({array_int:ids})',
+			],
 		);
 
 		foreach ($entries as $form_data) {
-		yield new self(
-			(int) $form_data['id_form'],
-			$form_data['title'],
-			$form_data['output'],
-			$form_data['subject'],
-			(int) $form_data['id_board'],
-			$form_data['icon'],
-			$form_data['form_exit'],
-			$form_data['template_function'],
-			$form_data['output_type'],
-			$load_fields,
-		);
+			yield new self(
+				(int) $form_data['id_form'],
+				$form_data['title'],
+				$form_data['output'],
+				$form_data['subject'],
+				(int) $form_data['id_board'],
+				$form_data['icon'],
+				$form_data['form_exit'],
+				$form_data['template_function'],
+				$form_data['output_type'],
+				$load_fields,
+			);
 		}
 	}
 
 	/**
-	 * Loads a form from the database by its ID.
+	 * Loads multiple forms from the database.
 	 *
 	 * @return \Generator The loaded form instance or null if not found
 	 */
-	public static function fetchAll(bool $load_fields = true): \Generator
+	public static function fetchMany(?array $ids, bool $load_fields = true): \Generator
 	{
 		$entries = DatabaseHelper::fetchBy(
-			['id_form', 'title', 'output', 'subject', 'id_board, icon', 'form_exit', 'template_function', 'output_type'],
+			[
+				'id_form',
+				'title',
+				'output',
+				'subject',
+				'id_board, icon',
+				'form_exit',
+				'template_function',
+				'output_type',
+			],
 			'{db_prefix}cf_forms AS f',
+			$ids === null ? [] : ['ids' => $ids],
 			[],
-			[],
-			['title != \'\' ', 'EXISTS ( SELECT 1 FROM {db_prefix}cf_fields AS d WHERE d.id_form = f.id_form AND title != \'\' AND text != \'\' AND type != \'\' )'],
+			[
+				'title != \'\' ',
+				'EXISTS (SELECT 1 FROM {db_prefix}cf_fields AS d WHERE d.id_form = f.id_form AND title != \'\' AND text != \'\' AND type != \'\') ',
+				$ids === null ? '' : 'id_form IN ({array_int:ids})',
+			],
 		);
 
 		foreach ($entries as $form_data) {
-		yield new self(
-			(int) $form_data['id_form'],
-			$form_data['title'],
-			$form_data['output'],
-			$form_data['subject'],
-			(int) $form_data['id_board'],
-			$form_data['icon'],
-			$form_data['form_exit'],
-			$form_data['template_function'],
-			$form_data['output_type'],
-			$load_fields,
-		);
+			yield new self(
+				(int) $form_data['id_form'],
+				$form_data['title'],
+				$form_data['output'],
+				$form_data['subject'],
+				(int) $form_data['id_board'],
+				$form_data['icon'],
+				$form_data['form_exit'],
+				$form_data['template_function'],
+				$form_data['output_type'],
+				$load_fields,
+			);
 		}
+	}
+
+	/**
+	 * Creates an instance of the output type.
+	 *
+	 * @return OutputInterface|null The output type instance
+	 */
+	public function getOutputInstance(): ?OutputInterface
+	{
+		$class_name = str_contains($this->output_type, '\\')
+			? $this->output_type
+			: 'CustomForm\\Output\\' . $this->output_type;
+
+		return class_exists($class_name) ? new $class_name() : null;
 	}
 }

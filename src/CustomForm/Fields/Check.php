@@ -21,24 +21,22 @@ class Check implements FieldInterface
 
 	public function setHtml(): void
 	{
-		global $txt;
-
 		$true = $this->exists
 			? $this->value
 			: $this->default;
 		$this->input_html = sprintf(
 			'<input type="checkbox" name="%s[%d]"%s>',
 			'CustomFormField',
-			$this->field['id_field'],
+			$this->field->id,
 			$true ? ' checked' : '',
 		);
-		$this->output_html = $txt[$this->getValue()];
+		$this->output_html = '{{ ' . $this->getValue() . ' }}';
 	}
 
 	public function validate(): bool
 	{
 		if (!$this->exists && $this->required) {
-			$this->err = ['customform_invalid_value', $this->field['text']];
+			$this->err = ['customform_invalid_value', $this->field->text];
 		}
 
 		return $this->err == [];

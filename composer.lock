@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "83b402891cf396c2659a50c4c3cc1e73",
+    "content-hash": "0c7c2e2cfd5c9a3cdfff6c3cdcbb3242",
     "packages": [],
     "packages-dev": [
         {
@@ -3815,27 +3815,37 @@
         },
         {
             "name": "simplemachines/smf",
-            "version": "v2.1.4",
+            "version": "dev-release-3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SimpleMachines/SMF.git",
-                "reference": "19a9de63d8b895c6f931137bba09c3d5a79caf52"
+                "reference": "c04d2169376a7882d9db2bf7e09372f9bd045dcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SimpleMachines/SMF/zipball/19a9de63d8b895c6f931137bba09c3d5a79caf52",
-                "reference": "19a9de63d8b895c6f931137bba09c3d5a79caf52",
+                "url": "https://api.github.com/repos/SimpleMachines/SMF/zipball/c04d2169376a7882d9db2bf7e09372f9bd045dcf",
+                "reference": "c04d2169376a7882d9db2bf7e09372f9bd045dcf",
                 "shasum": ""
             },
             "require-dev": {
-                "simplemachines/build-tools": "dev-master"
+                "friendsofphp/php-cs-fixer": "^3.40",
+                "simplemachines/build-tools": "dev-release-3.0"
             },
+            "default-branch": true,
             "type": "library",
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer --quiet check --config .php-cs-fixer.dist.php --path-mode=intersection $(git diff --name-only \"*.php\") || php-cs-fixer check --diff --config .php-cs-fixer.dist.php --path-mode=intersection $(git diff --name-only \"*.php\")"
+                ],
+                "lint-fix": [
+                    "php-cs-fixer fix -v --config .php-cs-fixer.dist.php --path-mode=intersection $(git diff --name-only \"*.php\")"
+                ]
+            },
             "support": {
-                "source": "https://github.com/SimpleMachines/SMF/tree/v2.1.4",
+                "source": "https://github.com/SimpleMachines/SMF/tree/release-3.0",
                 "issues": "https://github.com/SimpleMachines/SMF/issues"
             },
-            "time": "2023-05-07T16:00:07+00:00"
+            "time": "2025-02-18T19:56:15+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -5253,12 +5263,14 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "simplemachines/smf": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.0"
+        "php": ">=8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"

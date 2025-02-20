@@ -14,19 +14,15 @@ namespace CustomForm;
 
 trait FieldTrait
 {
-	public string $input_html;
+	public string $input_html = '';
 
-	public string $output_html;
-
-	protected array $field;
+	public string $output_html = '';
 
 	protected array $err = [];
 
-	protected bool $exists = false;
+	protected bool $exists;
 
 	protected array $type_vars = [];
-
-	protected string $value = '';
 
 	protected int $size = 0;
 
@@ -34,12 +30,27 @@ trait FieldTrait
 
 	protected bool $required = false;
 
-	public function __construct(array $field, string $value)
+	public function __construct(protected Field $field, protected string $value)
 	{
-		$this->field = $field;
-		$this->value = $value;
 		$this->exists = $value != '';
-		$this->setOptions();
+
+		$temp = $this->field->type_vars != ''
+			? array_map('trim', explode(',', $this->field->type_vars))
+			: [];
+
+		if ($temp != []) {
+			foreach ($temp as $var) {
+				if (str_starts_with($var, 'size=')) {
+					$this->size = (int) (substr($var, 5));
+				} elseif (str_starts_with($var, 'default=')) {
+					$this->default = substr($var, 8);
+				} elseif ($var == 'required') {
+					$this->required = true;
+				} elseif ($var != '') {
+					$this->type_vars[] = $var;
+				}
+			}
+		}
 	}
 
 	public function isRequired(): bool
@@ -73,26 +84,5 @@ trait FieldTrait
 	public function getOutputHtml(): string
 	{
 		return $this->output_html;
-	}
-
-	private function setOptions(): void
-	{
-		$temp = $this->field['type_vars'] != ''
-			? array_map('trim', explode(',', $this->field['type_vars']))
-			: [];
-
-		if ($temp != []) {
-			foreach ($temp as $var) {
-				if (str_starts_with($var, 'size=')) {
-					$this->size = (int) (substr($var, 5));
-				} elseif (str_starts_with($var, 'default=')) {
-					$this->default = substr($var, 8);
-				} elseif ($var == 'required') {
-					$this->required = true;
-				} elseif ($var != '') {
-					$this->type_vars[] = $var;
-				}
-			}
-		}
 	}
 }

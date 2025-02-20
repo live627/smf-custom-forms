@@ -12,15 +12,12 @@ declare(strict_types=1);
 
 namespace CustomForm;
 
-use SMF\Forum;
-use SMF\QueryString;
-use SMF\Slug;
+use SMF\{Config, Forum, Lang, QueryString, Slug, User};
 
 class Integration
 {
 	public static function autoload(&$classMap): void
 	{
-		//~ \SMF\IntegrationHook::add('integrate_pre_load',self::class.'::pre_load',);
 		$classMap['CustomForm\\'] = 'CustomForm/';
 	}
 
@@ -36,10 +33,8 @@ class Integration
 
 	public static function admin_areas(array &$admin_areas): void
 	{
-		global $txt;
-
-		loadLanguage('CustomForm');
-		$admin_areas['config']['areas']['modsettings']['subsections']['customform'] = [$txt['customform_tabheader']];
+		Lang::load('CustomForm');
+		$admin_areas['config']['areas']['modsettings']['subsections']['customform'] = [Lang::$txt['customform_tabheader']];
 	}
 
 	public static function modify_modifications(array &$sub_actions): void
@@ -52,50 +47,38 @@ class Integration
 		$allowedActions['form'] = ['customform_view_perms'];
 	}
 
-	public static function whos_online_after(/*string|array*/ &$urls, array &$data): void
+	public static function whos_online_after(string|array &$urls, array &$data): void
 	{
-		global $scripturl, $smcFunc, $txt;
-
 		$forms = [];
-		$request = $smcFunc['db_query'](
-			'',
-			'
-			SELECT id_form, title
-			FROM {db_prefix}cf_forms AS f
-			WHERE title != \'\'
-				AND EXISTS
-				(
-					SELECT * FROM {db_prefix}cf_fields AS d
-					WHERE d.id_form = f.id_form
-						AND title != \'\'
-						AND text != \'\'
-						AND type != \'\'
-				)',
-		);
+		$entries = Form::fetchMany(null, false);
 
-		while ([$id_form, $title] = $smcFunc['db_fetch_row']($request)) {
-			if (allowedTo('custom_forms_' . $id_form)) {
-				$forms[$id_form] = $title;
+		foreach ($entries as $form) {
+			if (User::$me->allowedTo('custom_forms_' . $form->id)) {
+				$forms[$form->id] = $form->title;
 			}
-		}
-		$smcFunc['db_free_result']($request);
 
-		loadLanguage('CustomForm');
+			// Create the slug for this form.  Do this here to prevent
+			// extra queries when building the route.
+			Slug::create($form->title, 'form', $form->id);
+		}
+
+		Lang::load('CustomForm');
 
 		// Fix the anomaly where $urls is a string when
 		// coming from the profile section.
 		foreach (!is_array($urls) ? [[$urls, 0]] : $urls as $k => $url) {
 			// Get the request parameters..
-			$actions = $smcFunc['json_decode']($url[0], true);
+			$actions = json_decode($url[0], true);
 
-			if ($actions === []) {
+			// Error...
+			if ($actions === null) {
 				continue;
 			}
 
 			if (isset($actions['n'], $actions['action'], $forms[$actions['n']]) && $actions['action'] == 'form') {
 				$data[$k] = sprintf(
-					$txt['customform_who'],
-					$scripturl,
+					Lang::$txt['customform_who'],
+					Config::$scripturl,
 					$actions['n'],
 					$forms[$actions['n']],
 				);
@@ -105,7 +88,7 @@ class Integration
 
 	public static function helpadmin(): void
 	{
-		loadLanguage('CustomForm');
+		Lang::load('CustomForm');
 	}
 
 	public static function sce_options(&$sce_options): void

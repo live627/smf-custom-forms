@@ -26,7 +26,7 @@ class Radio extends Select
 			$this->input_html .= sprintf(
 				'<label><input type="radio" name="%s[%d]" value="%4$s"%s> %s</label><br>',
 				'CustomFormField',
-				$this->field['id_field'],
+				$this->field->id,
 				(!$this->exists && $this->default == $v) || $this->value == $v
 					? ' checked="checked"'
 					: '',

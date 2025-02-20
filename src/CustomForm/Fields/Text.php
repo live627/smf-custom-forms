@@ -25,7 +25,7 @@ class Text implements FieldInterface
 		$this->input_html = sprintf(
 			'<input type="text" name="%s[%d]" value="%s">',
 			'CustomFormField',
-			$this->field['id_field'],
+			$this->field->id,
 			$this->value,
 		);
 	}
@@ -47,12 +47,12 @@ class Text implements FieldInterface
 	public function validate(): bool
 	{
 		if (!$this->exists && $this->required) {
-			$this->err = ['customform_invalid_value', $this->field['text']];
+			$this->err = ['customform_invalid_value', $this->field->text];
 		}
 
-		//~ $class_name = 'CustomFormFieldMask_' . $this->field['mask'];
+		//~ $class_name = 'CustomFormFieldMask_' . $this->field->mask;
 		//~ if (!class_exists($class_name))
-		//~ fatal_error('Mask "' . $this->field['mask'] . '" not found for field "' . $this->field['name'] . '" at ID #' . $this->field['id'] . '.', false);
+		//~ fatal_error('Mask "' . $this->field->mask . '" not found for field "' . $this->field->name . '" at ID #' . $this->field->id . '.', false);
 
 		//~ $mask = new $class_name($this->value, $this->field);
 		//~ $mask->validate(): bool;

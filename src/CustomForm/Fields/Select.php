@@ -24,7 +24,7 @@ class Select implements FieldInterface
 		$this->input_html = sprintf(
 			'<select name="%s[%d]">',
 			'CustomFormField',
-			$this->field['id_field'],
+			$this->field->id,
 		);
 
 		foreach ($this->type_vars as $v) {
@@ -49,7 +49,7 @@ class Select implements FieldInterface
 		$found = isset(array_flip($this->type_vars)[$this->value]) || !empty($this->default);
 
 		if (!$found && $this->required) {
-			$this->err = ['customform_invalid_value', $this->field['text']];
+			$this->err = ['customform_invalid_value', $this->field->text];
 		}
 
 		return $this->err == [];

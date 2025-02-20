@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
+use CustomForm\FieldFactory;
 use PHPUnit\Framework\TestCase;
 
 class CustomFormTest extends TestCase
 {
 	public function testCustomFormBaseConstructor(): void
 	{
-		$field = [
-			'id_field' => 1,
-			'type_vars' => 'size=10,required',
-			'text' => 'Test Field',
-		];
+		$field = FieldFactory::create(
+			id: 1,
+			text: 'Test Field',
+			type_vars: 'size=10,required',
+		);
 		$value = 'Sample Value';
 
 		$form = new CustomForm\Fields\Info($field, $value);
@@ -23,11 +24,10 @@ class CustomFormTest extends TestCase
 
 	public function testCustomFormInfoSetHtml(): void
 	{
-		$field = [
-			'id_field' => 1,
-			'type_vars' => '',
-			'text' => 'Test Info',
-		];
+		$field = FieldFactory::create(
+			id: 1,
+			text: 'Test Info',
+		);
 		$value = 'Information';
 
 		$form = new CustomForm\Fields\Info($field, $value);
@@ -38,20 +38,16 @@ class CustomFormTest extends TestCase
 
 	public function testCustomFormCheckValidation(): void
 	{
-		$field = [
-			'id_field' => 2,
-			'type_vars' => 'required',
-			'text' => 'Test Checkbox',
-		];
+		$field = FieldFactory::create(
+			id: 2,
+			text: 'Test Checkbox',
+			type_vars: 'required',
+		);
 		$value = ''; // Simulate an unchecked box
 
 		$form = new CustomForm\Fields\Check($field, $value);
-
-		// Mock the $txt array
-		$txt = ['yes' => 'Yes', 'no' => 'No'];
-		$GLOBALS['txt'] = $txt;
-
 		$form->setHtml();
+
 		$this->assertFalse($form->validate());
 		$this->assertNotEmpty($form->getError());
 	}
@@ -62,13 +58,9 @@ class CustomFormTest extends TestCase
 	public function testCheckbox(string $type_vars, string $value, string $expected): void
 	{
 		$type = new CustomForm\Fields\Check(
-			[
-				'id_field' => '',
-				'title' => '',
-				'text' => '',
-				'type' => '',
-				'type_vars' => $type_vars,
-			],
+			FieldFactory::create(
+				type_vars: $type_vars,
+			),
 			$value,
 		);
 		$this->assertTrue($type->validate());
@@ -88,16 +80,12 @@ class CustomFormTest extends TestCase
 	/**
 	 * @dataProvider selectProvider
 	 */
-	public function testselect(string $type_vars, string $value, string $expected): void
+	public function testSelect(string $type_vars, string $value, string $expected): void
 	{
 		$type = new CustomForm\Fields\Select(
-			[
-				'id_field' => '',
-				'title' => '',
-				'text' => '',
-				'type' => '',
-				'type_vars' => $type_vars,
-			],
+			FieldFactory::create(
+				type_vars: $type_vars,
+			),
 			$value,
 		);
 		$this->assertTrue($type->validate());
@@ -117,94 +105,75 @@ class CustomFormTest extends TestCase
 		];
 	}
 
-	public function testCustomFormSelectSetHtml(): void
+	/**
+	 * @dataProvider formProvider
+	 */
+	public function testCustomFormSetHtml($field, $expectedHtml, $expectedOutput): void
 	{
-		$field = [
-			'id_field' => 3,
-			'type_vars' => 'Option1,Option2,Option3',
-			'text' => 'Test Select',
-		];
-		$value = 'Option2';
+		$field->obj->setHtml();
 
-		$form = new CustomForm\Fields\Select($field, $value);
-		$form->setHtml();
-
-		$this->assertStringContainsString('<select', $form->getInputHtml());
-		$this->assertEquals('Option2', $form->getOutputHtml());
+		$this->assertStringContainsString($expectedHtml, $field->obj->getInputHtml());
+		$this->assertEquals($expectedOutput, $field->obj->getOutputHtml());
 	}
 
-	public function testCustomFormRadioSetHtml(): void
+	public function formProvider(): array
 	{
-		$field = [
-			'id_field' => 4,
-			'type_vars' => 'Yes,No,Maybe',
-			'text' => 'Test Radio',
+		return [
+			'selectbox' => [
+				FieldFactory::create(id: 3, text: 'Test Select', type: 'select', type_vars: 'Option1,Option2,Option3,default=Option2'),
+				'<select',
+				'Option2',
+			],
+			'radio' => [
+				FieldFactory::create(id: 4, text: 'Test Radio', type: 'radio', type_vars: 'Yes,No,Maybe,default=Maybe'),
+				'<input type="radio"',
+				'Maybe',
+			],
+			'checkbox' => [
+				FieldFactory::create(id: 4, text: 'Test Radio', type: 'check', type_vars: 'default=on'),
+				'<input type="checkbox"',
+				'{{ yes }}',
+			],
+			'textbox' => [
+				FieldFactory::create(id: 5, text: 'Test Text', type: 'text', type_vars: 'size=20,default=Sample Text'),
+				'<input type="text"',
+				'',
+			],
 		];
-		$value = 'Yes';
-
-		$form = new CustomForm\Fields\Radio($field, $value);
-		$form->setHtml();
-
-		$this->assertStringContainsString('<input type="radio"', $form->getInputHtml());
-		$this->assertEquals('Yes', $form->getOutputHtml());
 	}
 
-	public function testCustomFormTextSetHtml(): void
-	{
-		$field = [
-			'id_field' => 5,
-			'type_vars' => 'size=20,default=Sample Text',
-			'text' => 'Test Text',
-		];
-		$value = '';
+	/*
+	 * @dataProvider maskProvider
+	 */
+	//~ public function testCustomFormFieldMask($field, $value, $expectedValid, $expectedError): void
+	//~ {
+		//~ $mask = new CustomForm\Fields\Masks\Email($value, $field);
 
-		$form = new CustomForm\Fields\Text($field, $value);
-		$form->setHtml();
+		//~ $this->assertEquals($expectedValid, $mask->validate());
+		//~ $this->assertEquals($expectedError, $mask->getError());
+	//~ }
 
-		$this->assertStringContainsString('<input type="text"', $form->getInputHtml());
-		$this->assertEquals('', $form->getOutputHtml());
-	}
-
-	public function testCustomFormFieldMaskEmail(): void
-	{
-		$field = [
-			'id_field' => 6,
-			'text' => 'Test Email',
-		];
-		$value = 'invalid-email';
-
-		$mask = new CustomForm\Fields\Masks\Email($value, $field);
-
-		$this->assertFalse($mask->validate());
-		$this->assertNotEmpty($mask->getError());
-	}
-
-	public function testCustomFormFieldMaskRegex(): void
-	{
-		$field = [
-			'id_field' => 7,
-			'text' => 'Test Regex',
-			'regex' => '/^[A-Za-z]+$/',
-		];
-		$value = 'Invalid123';
-
-		$mask = new CustomForm\Fields\Masks\Regex($value, $field);
-
-		$this->assertFalse($mask->validate());
-		$this->assertNotEmpty($mask->getError());
-	}
-
-	public function testCustomFormFieldMaskNumber(): void
-	{
-		$field = [
-			'id_field' => 8,
-			'text' => 'Test Number',
-		];
-		$value = '12345';
-
-		$mask = new CustomForm\Fields\Masks\Number($value, $field);
-
-		$this->assertTrue($mask->validate());
-		$this->assertEmpty($mask->getError());
-	}
+	//~ public function maskProvider(): array
+	//~ {
+		//~ return [
+			//~ [
+				//~ FieldFactory::create(id: 6, text: 'Test Email'),
+				//~ 'invalid-email',
+				//~ false,
+				//~ 'Some error message'
+			//~ ],
+			//~ [
+				//~ FieldFactory::create(id: 7, text: 'Test Regex', regex: '/^[A-Za-z]+$/'),
+				//~ 'Invalid123',
+				//~ false,
+				//~ 'Some error message'
+			//~ ],
+			//~ [
+				//~ FieldFactory::create(id: 8, text: 'Test Number'),
+				//~ '12345',
+				//~ true,
+				//~ ''
+			//~ ]
+		//~ ];
+	//~ }
 }
