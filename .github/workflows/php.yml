@@ -27,7 +27,7 @@ jobs:
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress
     - name: Run test suite
-      run: php vendor/bin/phpunit:^1.9
-    - run: composer require --dev scrutinizer/ocular
+      run: php vendor/bin/phpunit
+    - run: composer require --dev scrutinizer/ocular:^1.9
     - name: Uploading code coverage
       run: php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover.xml
