@@ -37,7 +37,6 @@ class Util
 	 *                           elements; the first one becomes the key
 	 *                           and the second one becomes the value.
 	 * @param iterable $iterator An iterable to run through $callback.
-	 *
 	 */
 	public function map(callable $callback, iterable $iterator): Generator
 	{
@@ -66,8 +65,8 @@ class Util
 	 * It replaces each placeholder with the corresponding value from the provided array.
 	 * If a key is not found in the array, the placeholder key itself is retained in the text.
 	 *
-	 * @param string $text  The input text containing placeholders to be replaced.
-	 * @param array $array  An associative array where keys are placeholder names and values are their replacements.
+	 * @param string $text The input text containing placeholders to be replaced.
+	 * @param array $array An associative array where keys are placeholder names and values are their replacements.
 	 *
 	 * @return string The text with placeholders replaced by their corresponding values.
 	 */
@@ -87,7 +86,7 @@ class Util
 	 * `$context['meta_tags']` array. If found, it updates the content. If not found,
 	 * it adds a new meta tag with the specified key and value.
 	 *
-	 * @param string $key   The name of the meta tag to set (e.g., "description").
+	 * @param string $key The name of the meta tag to set (e.g., "description").
 	 * @param string $value The content of the meta tag.
 	 */
 	public function setMetaTag(string $key, string $value): void
@@ -115,7 +114,7 @@ class Util
 	 * in the global `$context['meta_tags']` array. If found, it updates the content.
 	 * If not found, it adds a new meta property with the specified key and value.
 	 *
-	 * @param string $key   The Open Graph property key (without the "og:" prefix).
+	 * @param string $key The Open Graph property key (without the "og:" prefix).
 	 * @param string $value The content of the Open Graph property.
 	 */
 	public function setMetaProperty(string $key, string $value): void

@@ -79,7 +79,7 @@ return $config->setRules(
 		'phpdoc_indent' => true,
 		'phpdoc_line_span' => [
 			'const' => 'multi',
-			'property' => 'multi',
+			'property' => 'single',
 			'method' => 'multi',
 		],
 		'phpdoc_no_access' => true,
@@ -106,6 +106,7 @@ return $config->setRules(
 		'phpdoc_to_comment' => [
 			'ignored_tags' => ['todo'],
 		],
+		'phpdoc_trim' => true,
 		'phpdoc_trim_consecutive_blank_line_separation' => true,
 		'phpdoc_types' => [
 			'groups' => ['alias', 'meta', 'simple'],
