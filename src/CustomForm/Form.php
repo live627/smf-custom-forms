@@ -18,9 +18,7 @@ class Form
 	 * Public properties
 	 *******************/
 
-	/**
-	 * @var array The fields associated with the form
-	 */
+	/** @var array The fields associated with the form */
 	public array $fields = [];
 
 	/****************

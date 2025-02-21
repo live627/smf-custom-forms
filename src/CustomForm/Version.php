@@ -17,40 +17,22 @@ namespace CustomForm;
  */
 class Version implements \JsonSerializable
 {
-	/**
-	 * Major version number.
-	 *
-	 */
+	/** Major version number. */
 	private int $major;
 
-	/**
-	 * Minor version number.
-	 *
-	 */
+	/** Minor version number. */
 	private int $minor;
 
-	/**
-	 * Patch version number.
-	 *
-	 */
+	/** Patch version number. */
 	private int $patch;
 
-	/**
-	 * Pre-release type (e.g., 'alpha', 'beta', 'rc').
-	 *
-	 */
+	/** Pre-release type (e.g., 'alpha', 'beta', 'rc'). */
 	private string $preReleaseType;
 
-	/**
-	 * Major version number for the pre-release type.
-	 *
-	 */
+	/** Major version number for the pre-release type. */
 	private int $preReleaseMajor;
 
-	/**
-	 * Minor version number for the pre-release type.
-	 *
-	 */
+	/** Minor version number for the pre-release type. */
 	private int $preReleaseMinor;
 
 	/**

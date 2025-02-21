@@ -20,9 +20,7 @@ class Field
 	 * Public properties
 	 *******************/
 
-	/**
-	 * @var FieldInterface|null The field object based on its type.
-	 */
+	/** @var FieldInterface|null The field object based on its type. */
 	public ?FieldInterface $obj = null;
 
 	/****************

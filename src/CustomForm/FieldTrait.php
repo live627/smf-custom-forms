@@ -70,7 +70,6 @@ trait FieldTrait
 
 	/**
 	 * Returns the input so the user can enter a value.
-	 *
 	 */
 	public function getInputHtml(): string
 	{
@@ -79,7 +78,6 @@ trait FieldTrait
 
 	/**
 	 * Returns the output. It's the field's value formatted acccording to its criteria.
-	 *
 	 */
 	public function getOutputHtml(): string
 	{

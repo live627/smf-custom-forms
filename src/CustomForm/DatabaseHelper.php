@@ -53,9 +53,8 @@ class DatabaseHelper
 		array $order = [],
 		array $group = [],
 		?int $limit = null,
-		?int $offset = null
-	): \Generator
-	{
+		?int $offset = null,
+	): \Generator {
 		$request = Db::$db->query(
 			'',
 			'SELECT ' . implode(', ', $selects) . '
@@ -65,7 +64,7 @@ class DatabaseHelper
 			ORDER BY ' . implode(', ', $order)) . ($limit !== null ? '
 			LIMIT ' . $limit : '') . ($offset !== null ? '
 			OFFSET ' . $offset : ''),
-			$params
+			$params,
 		);
 
 		while ($row = Db::$db->fetch_assoc($request)) {
@@ -122,7 +121,7 @@ class DatabaseHelper
 			UPDATE ' . $table_name . '
 			SET ' . $sql . '
 			WHERE {identifier:col} = {int:id}',
-			$where_params
+			$where_params,
 		);
 	}
 
@@ -135,13 +134,15 @@ class DatabaseHelper
 	 */
 	public static function delete(string $table_name, string $col, int $id): void
 	{
-		Db::$db->query('', '
+		Db::$db->query(
+			'',
+			'
 			DELETE FROM ' . $table_name . '
 			WHERE {identifier:col} = {int:id}',
 			[
 				'id' => $id,
 				'col' => $col,
-			]
+			],
 		);
 	}
 
@@ -154,13 +155,15 @@ class DatabaseHelper
 	 */
 	public static function deleteMany(string $table_name, string $col, array $ids): void
 	{
-		Db::$db->query('', '
+		Db::$db->query(
+			'',
+			'
 			DELETE FROM ' . $table_name . '
 			WHERE {identifier:col} IN ({array_int:ids})',
 			[
 				'ids' => $ids,
 				'col' => $col,
-			]
+			],
 		);
 	}
 
@@ -184,7 +187,9 @@ class DatabaseHelper
 	 */
 	public static function increment(string $table_name, string $increment_col, string $where_col, int $id): void
 	{
-		Db::$db->query('', '
+		Db::$db->query(
+			'',
+			'
 			UPDATE ' . $table_name . '
 			SET {identifier:col} = {identifier:col} + 1
 			WHERE {identifier:where_col} = {int:id}',
@@ -192,7 +197,7 @@ class DatabaseHelper
 				'id' => $id,
 				'where_col' => $where_col,
 				'col' => $increment_col,
-			]
+			],
 		);
 	}
 }
