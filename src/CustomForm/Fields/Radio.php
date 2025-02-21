@@ -21,6 +21,7 @@ class Radio extends Select
 	public function setHtml(): void
 	{
 		$this->input_html = '<fieldset>';
+		$this->output_html = $this->getValue();
 
 		foreach ($this->type_vars as $v) {
 			$this->input_html .= sprintf(
@@ -28,14 +29,10 @@ class Radio extends Select
 				'CustomFormField',
 				$this->field->id,
 				(!$this->exists && $this->default == $v) || $this->value == $v
-					? ' checked="checked"'
+					? ' checked'
 					: '',
 				$v,
 			);
-
-			if ((!$this->exists && $this->default == $v) || $this->value == $v) {
-				$this->output_html = $v;
-			}
 		}
 
 		$this->input_html .= '</fieldset>';

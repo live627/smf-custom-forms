@@ -26,19 +26,16 @@ class Select implements FieldInterface
 			'CustomFormField',
 			$this->field->id,
 		);
+		$this->output_html = $this->getValue();
 
 		foreach ($this->type_vars as $v) {
 			$this->input_html .= sprintf(
 				'<option%s> %s</option>',
 				(!$this->exists && $this->default == $v) || $this->value == $v
-					? ' checked="checked"'
+					? ' selected'
 					: '',
 				$v,
 			);
-
-			if ((!$this->exists && $this->default == $v) || $this->value == $v) {
-				$this->output_html = $v;
-			}
 		}
 
 		$this->input_html .= '</select>';

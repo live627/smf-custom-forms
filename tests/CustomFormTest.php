@@ -135,9 +135,9 @@ class CustomFormTest extends TestCase
 				'{{ yes }}',
 			],
 			'textbox' => [
-				FieldFactory::create(id: 5, text: 'Test Text', type: 'text', type_vars: 'size=20,default=Sample Text'),
+				FieldFactory::create(id: 5, text: 'Test Text', type: 'text', type_vars: 'size=4,nobbc,default=Sample Text'),
 				'<input type="text"',
-				'',
+				'[nobbc]Samp[/nobbc]',
 			],
 		];
 	}
