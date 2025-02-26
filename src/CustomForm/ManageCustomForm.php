@@ -30,16 +30,6 @@ use SMF\
 
 class ManageCustomForm
 {
-	public const ADDFORM = 'addform';
-	public const DELETEFORM = 'deleteform';
-	public const EDITFORM = 'editform';
-	public const SAVEFORM = 'saveform';
-	public const ADDFIELD = 'addfield';
-	public const EDITFIELD = 'editfield';
-	public const DELETEFIELD = 'deletefield';
-	public const MOVEFIELDDOWN = 'movefielddown';
-	public const MOVEFIELDUP = 'movefieldup';
-	public const SAVEFIELD = 'savefield';
 	public const VERSION = '4.1.0';
 
 	private Util $util;
@@ -52,18 +42,18 @@ class ManageCustomForm
 		$field_id = (int) ($_GET['field_id'] ?? 0);
 
 		$call = match ($act) {
-			'delay' => ['Delay', null],
-			self::ADDFORM => ['AddForm', null],
-			self::DELETEFORM => ['DeleteForm', $form_id],
-			self::EDITFORM => ['EditForm', $form_id],
-			self::SAVEFORM => ['SaveForm', $form_id],
-			self::ADDFIELD => ['AddField', $form_id],
-			self::EDITFIELD => ['EditField', $field_id],
-			self::DELETEFIELD => ['DeleteField', $field_id],
-			self::MOVEFIELDDOWN => ['MoveFieldDown', $field_id],
-			self::MOVEFIELDUP => ['MoveFieldUp', $field_id],
-			self::SAVEFIELD => ['SaveField', $field_id],
-			default => ['ModifySettings', false],
+			'delay' => ['delayUpdateNotice', null],
+			'addform' => ['addForm', null],
+			'deleteform' => ['deleteForm', $form_id],
+			'editform' => ['editForm', $form_id],
+			'updateform' => ['updateForm', $form_id],
+			'addfield' => ['addField', $form_id],
+			'editfield' => ['editField', $field_id],
+			'deletefield' => ['deleteField', $field_id],
+			'down' => ['down', $field_id],
+			'up' => ['up', $field_id],
+			'updatefield' => ['updateField', $field_id],
+			default => ['modifySettings', false],
 		};
 		$this->util = new Util();
 		call_user_func([$this, $call[0]], $call[1]);
@@ -86,7 +76,7 @@ class ManageCustomForm
 		];
 	}
 
-	public function ModifySettings(): void
+	public function modifySettings(): void
 	{
 		$config_vars = self::getConfigVars();
 
@@ -97,11 +87,11 @@ class ManageCustomForm
 		}
 
 		$list = [
-			'id' => 'customform_list',
+			'id' => 'list_forms',
 			'title' => Lang::$txt['customform_tabheader'],
 			'no_items_label' => Lang::$txt['customform_list_noelements'],
 			'get_items' => [
-				'function' => [$this, 'list_CustomForms'],
+				'function' => [$this, 'listForms'],
 			],
 			'columns' => [
 				'title' => [
@@ -149,8 +139,11 @@ class ManageCustomForm
 
 		ItemList::load($list);
 
-		//	Set up the variables needed by the template.
-		Utils::$context['settings_title'] = Lang::$txt['customform_generalsettings_heading'];
+		Utils::$context['settings_title'] = Lang::$txt['customform_settings_title'];
+		Utils::$context['settings_message'] = Lang::getTxt(
+			'customform_current_version',
+			['version' => self::VERSION],
+		);
 		Utils::$context['page_title'] = Lang::$txt['customform_tabheader'];
 		Utils::$context['default_list'] = 'customform_list';
 		Utils::$context['post_url'] = Config::$scripturl . '?action=admin;area=modsettings;sa=customform;update';
@@ -209,7 +202,7 @@ class ManageCustomForm
 		}
 	}
 
-	public function Delay(): void
+	public function delayUpdateNotice(): void
 	{
 		Db::$db->query(
 			'',
@@ -222,7 +215,7 @@ class ManageCustomForm
 		Utils::redirectexit('action=admin;area=modsettings;sa=customform');
 	}
 
-	public function EditForm(int $form_id): void
+	public function editForm(int $form_id): void
 	{
 		/* @var Form $form */
 		$form = iterator_to_array(Form::fetchManyForAdmin([$form_id], false))[0];
@@ -242,13 +235,12 @@ class ManageCustomForm
 			'template_function' => $form->template_function,
 		];
 
-		//	Create the list of fields.
 		$list = [
-			'id' => 'customform_list_fields',
+			'id' => 'list_fields',
 			'title' => Lang::$txt['customform_listheading_fields'],
 			'no_items_label' => Lang::$txt['customform_list_noelements'],
 			'get_items' => [
-				'function' => [$this, 'list_customform_fields'],
+				'function' => [$this, 'listfields'],
 				'params' => [$form_id],
 			],
 			'columns' => [
@@ -311,15 +303,19 @@ class ManageCustomForm
 		Theme::loadJavaScriptFile('sceditor.plugins.customform.js', ['minimize' => true]);
 		Theme::loadJavaScriptFile('customform.js', ['minimize' => true]);
 
-		//	Set up the variables needed by the template.
-		Utils::$context['settings_title'] = sprintf(
-			'<a href="%s?action=admin;area=modsettings;sa=customform;">%s</a> -> %s" %s',
-			Config::$scripturl,
-			Lang::$txt['customform_generalsettings_heading'],
-			$form->title,
-			Lang::$txt['customform_form'],
+		Utils::$context['settings_title'] = Lang::$txt['customform_settings_title'];
+		Utils::$context['settings_message'] = Lang::getTxt(
+			'customform_settings_message',
+			[
+				'form_link' => sprintf(
+					'<a href="%s?action=form;n=%s">%s</a>.',
+					Config::$scripturl,
+					$form->id,
+					$form->title,
+				),
+			],
 		);
-		Utils::$context['post_url'] = Config::$scripturl . '?action=admin;area=modsettings;sa=customform;act=saveform;form_id=' . $form_id;
+		Utils::$context['post_url'] = Config::$scripturl . '?action=admin;area=modsettings;sa=customform;act=updateform;form_id=' . $form_id;
 		Utils::$context['page_title'] = Lang::$txt['customform_tabheader'];
 		Utils::$context['default_list'] = 'customform_list_fields';
 		Utils::$context['sub_template'] = 'customform_GeneralSettings';
@@ -401,7 +397,7 @@ class ManageCustomForm
 		ACP::prepareDBSettingContext($config_vars);
 	}
 
-	public function SaveForm(int $form_id): void
+	public function updateForm(int $form_id): void
 	{
 		Db::$db->query(
 			'',
@@ -565,19 +561,33 @@ class ManageCustomForm
 		Theme::addInlineJavaScript('
 		textareaLengthCheck(document.getElementById("field_text"), 4096);', true);
 
-		//	Set up the variables needed by the template.
-		Utils::$context['settings_title'] = sprintf(
-			'<a href="%s?action=admin;area=modsettings;sa=customform;">%s</a> -> <a href="%s?action=admin;area=modsettings;sa=customform;form_id=%s;act=editform">"%s" %s</a> -> "%s" %s',
-			Config::$scripturl,
-			Lang::$txt['customform_generalsettings_heading'],
-			Config::$scripturl,
-			$field->id,
-			$form->title,
-			Lang::$txt['customform_form'],
-			$field->title,
-			Lang::$txt['customform_field'],
+		Utils::$context['settings_title'] = Lang::$txt['customform_settings_title'];
+		Utils::$context['settings_message'] = sprintf(
+			'%s - %s',
+			Lang::getTxt(
+				'customform_settings_message2',
+				[
+					'form_link' => sprintf(
+						'<a href="%s?action=admin;area=modsettings;sa=customform;form_id=%s;act=editform">%s</a>',
+						Config::$scripturl,
+						$form->id,
+						$form->title,
+					),
+				],
+			),
+			Utils::$context['settings_message'] = Lang::getTxt(
+				'customform_settings_message',
+				[
+					'form_link' => sprintf(
+						'<a href="%s?action=form;n=%s">%s</a>',
+						Config::$scripturl,
+						$form->id,
+						$form->title,
+					),
+				],
+			),
 		);
-		Utils::$context['post_url'] = sprintf('%s?action=admin;area=modsettings;sa=customform;field_id=%d;act=savefield', Config::$scripturl, $field_id);
+		Utils::$context['post_url'] = sprintf('%s?action=admin;area=modsettings;sa=customform;field_id=%d;act=updatefield', Config::$scripturl, $field_id);
 		Utils::$context['page_title'] = Lang::$txt['customform_tabheader'];
 		Utils::$context['sub_template'] = 'show_settings';
 
@@ -586,12 +596,12 @@ class ManageCustomForm
 		Theme::loadTemplate('GenericControls');
 	}
 
-	public function MoveFieldDown(int $field_id): void
+	public function down(int $field_id): void
 	{
 		$this->moveField($field_id, 1);
 	}
 
-	public function MoveFieldUp(int $field_id): void
+	public function up(int $field_id): void
 	{
 		$this->moveField($field_id, -1);
 	}
@@ -676,7 +686,7 @@ class ManageCustomForm
 		Utils::redirectexit('action=admin;area=modsettings;sa=customform;act=editform;form_id=' . $id_form);
 	}
 
-	public function AddForm(): void
+	public function addForm(): void
 	{
 		Db::$db->insert(
 			'',
@@ -690,7 +700,7 @@ class ManageCustomForm
 		Utils::redirectexit('action=admin;area=modsettings;sa=customform;act=editform;form_id=' . $form_id);
 	}
 
-	public function list_CustomForms(): array
+	public function listForms(): array
 	{
 		Group::loadSimple(
 			Group::LOAD_NORMAL | (int) !empty(Config::$modSettings['permission_enable_postgroups']),
@@ -748,7 +758,7 @@ class ManageCustomForm
 		return $list;
 	}
 
-	public function list_customform_fields($nul0, $nul1, $nul2, $id): array
+	public function listFields($nul0, $nul1, $nul2, $id): array
 	{
 		$request = Db::$db->query(
 			'',
@@ -854,7 +864,7 @@ class ManageCustomForm
 		return $list;
 	}
 
-	public function AddField(int $form_id): void
+	public function addField(int $form_id): void
 	{
 		Db::$db->insert(
 			'',
@@ -868,7 +878,7 @@ class ManageCustomForm
 		Utils::redirectexit('action=admin;area=modsettings;sa=customform;act=editfield;field_id=' . $field_id);
 	}
 
-	public function DeleteField(int $id_field): void
+	public function deleteField(int $id_field): void
 	{
 		$id_form = $this->getFormFromField($id_field);
 
@@ -885,7 +895,7 @@ class ManageCustomForm
 		Utils::redirectexit('action=admin;area=modsettings;sa=customform;act=editform;form_id=' . $id_form);
 	}
 
-	public function SaveField(int $id_field): void
+	public function updateField(int $id_field): void
 	{
 		$id_form = $this->getFormFromField($id_field);
 

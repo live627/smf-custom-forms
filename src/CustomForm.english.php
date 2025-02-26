@@ -13,13 +13,12 @@ declare(strict_types=1);
 global $helptxt;
 
 //	Header and General text for the Custom Form Mod settings area.
-$txt['customform_generalsettings_heading'] = 'Custom Form Mod Settings';
 $txt['customform_tabheader'] = 'Custom Forms';
 $txt['customform_update_available'] = 'Update available!';
-$txt['customform_update_action'] = 'Update to %s';
+$txt['customform_update_action'] = 'Update to {version}';
 $txt['customform_update_later'] = 'Remind me later';
-$txt['customform_form'] = 'Form';
-$txt['customform_field'] = 'Field';
+$txt['customform_settings_title'] = 'Custom Form Mod Settings';
+$txt['customform_current_version'] = 'Current version: {version}';
 $txt['customform_view_title'] = 'View Forms Title';
 $txt['customform_view_title_desc'] = 'Choose the title for the action/page that shows the list of forms to a user (at "index.php?action=form"). Defaults to <b>Custom Forms</b>.';
 $txt['customform_view_text'] = 'View Forms Text';
@@ -42,6 +41,8 @@ $txt['customform_moveup'] = 'Move Up';
 $txt['customform_movedown'] = 'Move Down';
 
 //	Text for the settings pages.
+$txt['customform_settings_message'] = 'View {form_link}.';
+$txt['customform_settings_message2'] = 'Back to editing {form_link}.';
 $txt['customform_subject'] = 'Form Subject';
 $txt['customform_subject_desc'] = 'Subject of final message. Supports macros for field names.';
 $txt['customform_output_type'] = 'Form Output Method';
@@ -69,8 +70,8 @@ $txt['customform_thankyou'] = '
 
 //	Options for the field edit page.
 $txt['customform_character_warning'] = 'This field\'s identifier contains some illegal characters.';
-$txt['customform_current_identifier'] = 'Your identifier is %s';
-$txt['customform_suggested_identifier'] = 'Suggested identifier is %s';
+$txt['customform_current_identifier'] = 'Your identifier is {identifier}';
+$txt['customform_suggested_identifier'] = 'Suggested identifier is {identifier}';
 
 $txt['customform_identifier'] = 'Identifier';
 $txt['customform_text'] = 'Description';

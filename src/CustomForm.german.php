@@ -13,13 +13,12 @@ declare(strict_types=1);
 global $helptxt;
 
 //	Header and General text for the Custom Form Mod settings area.
-$txt['customform_generalsettings_heading'] = 'Custom-Form-Mod-Einstellungen';
 $txt['customform_tabheader'] = 'Benutzerdefinierte Formulare';
 $txt['customform_update_available'] = 'Aktualisierung verfügbar!';
-$txt['customform_update_action'] = 'Auf %s aktualisieren';
+$txt['customform_update_action'] = 'Auf {version} aktualisieren';
 $txt['customform_update_later'] = 'Später erinnern';
-$txt['customform_form'] = 'Formular';
-$txt['customform_field'] = 'Feld';
+$txt['customform_settings_title'] = 'Custom-Form-Mod-Einstellungen';
+$txt['customform_current_version'] = 'Current version: {version}';
 $txt['customform_view_title'] = 'Formulartitel anzeigen';
 $txt['customform_view_title_desc'] = 'Wählen Sie den Titel für die Aktion/Seite, die einem Benutzer die Formularliste anzeigt (unter "index.php?action=form"). Standard ist <b>Benutzerdefinierte Formulare</b>.';
 $txt['customform_view_text'] = 'Formulartext anzeigen';
@@ -69,8 +68,8 @@ $txt['customform_thankyou'] = '
 
 //	Options for the field edit page.
 $txt['customform_character_warning'] = 'Der Identifikator dieses Feldes enthält ungültige Zeichen.';
-$txt['customform_current_identifier'] = 'Ihr Identifikator ist %s';
-$txt['customform_suggested_identifier'] = 'Vorgeschlagener Identifikator ist %s';
+$txt['customform_current_identifier'] = 'Ihr Identifikator ist {identifier}';
+$txt['customform_suggested_identifier'] = 'Vorgeschlagener Identifikator ist {identifier}';
 
 $txt['customform_identifier'] = 'Identifikator';
 $txt['customform_text'] = 'Beschreibung';

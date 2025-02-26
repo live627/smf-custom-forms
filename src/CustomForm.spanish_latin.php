@@ -13,13 +13,12 @@ declare(strict_types=1);
 global $helptxt;
 
 //	Header and General text for the Custom Form Mod settings area.
-$txt['customform_generalsettings_heading'] = 'Configuración del mod formulario personalizado';
 $txt['customform_tabheader'] = 'Formulario Personalizado';
 $txt['customform_update_available'] = '¡Actualización disponible!';
-$txt['customform_update_action'] = 'Actualizar a %s';
+$txt['customform_update_action'] = 'Actualizar a {version}';
 $txt['customform_update_later'] = 'Recuérdamelo más tarde';
-$txt['customform_form'] = 'Formulario';
-$txt['customform_field'] = 'Campo';
+$txt['customform_settings_title'] = 'Configuración del mod formulario personalizado';
+$txt['customform_current_version'] = 'Current version: {version}';
 $txt['customform_view_title'] = 'Ver título del formulario';
 $txt['customform_view_title_desc'] = 'Elija el título de la acción/página que muestra la lista de formularios a un usuario (en "index.php?action=form"). Valores predeterminados para <b>Formularios Personalizados</b>.';
 $txt['customform_view_text'] = 'Ver texto de formulario';
@@ -69,8 +68,8 @@ $txt['customform_thankyou'] = '
 
 //	Options for the field edit page.
 $txt['customform_character_warning'] = 'El identificador de este campo contiene algunos caracteres no permitidos.';
-$txt['customform_current_identifier'] = 'Tu identificador es %s';
-$txt['customform_suggested_identifier'] = 'El identificador sugerido es %s';
+$txt['customform_current_identifier'] = 'Tu identificador es {identifier}';
+$txt['customform_suggested_identifier'] = 'El identificador sugerido es {identifier}';
 
 $txt['customform_identifier'] = 'Identificador';
 $txt['customform_text'] = 'Descripción';
