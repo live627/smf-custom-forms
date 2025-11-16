@@ -15,9 +15,8 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          release-type: php
-          draft: true
-          package-name: ${{ env.MOD_NAME }}
+          config-file: .github/release-please-config.json
+          manifest-file: .github/.release-please-manifest.json
       - uses: actions/checkout@v5
         with:
           ref: ${{ fromJson(steps.release.outputs.pr).headBranchName }}
