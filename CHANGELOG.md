@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 This project adheres to [Semantic Versioning](http://semver.org/) as of v1.8.0.
 
+## [4.1.0](https://github.com/live627/smf-custom-forms/compare/v4.0.7...v4.1.0) (2025-11-16)
+
+
+### Features
+
+* Add both Spanish and German translations ([e6518aa](https://github.com/live627/smf-custom-forms/commit/e6518aa68e6c5386e1b6a5f95f7c572c7936cc9e))
+* Show current version in admin page ([68f58d3](https://github.com/live627/smf-custom-forms/commit/68f58d3ecc506090474b6bd07861efbabb630a4e))
+
+
+### Bug Fixes
+
+* Ensure that custom template functions actually load ([93fe3e2](https://github.com/live627/smf-custom-forms/commit/93fe3e2ea0f3fb2ebc8f2f27f61ecb64353947a0))
+
 ## [4.0.7](https://github.com/live627/smf-custom-forms/compare/v4.0.6...v4.0.7) (2024-11-24)
 
 
