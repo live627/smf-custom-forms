@@ -46,27 +46,9 @@ class Integration
 	{
 		global $scripturl, $smcFunc, $txt;
 
-		$forms = [];
-		$request = $smcFunc['db_query']('', '
-			SELECT id_form, title
-			FROM {db_prefix}cf_forms AS f
-			WHERE title != \'\'
-				AND EXISTS
-				(
-					SELECT * FROM {db_prefix}cf_fields AS d
-					WHERE d.id_form = f.id_form
-						AND title != \'\'
-						AND text != \'\'
-						AND type != \'\'
-				)'
-		);
-
-		while ([$id_form, $title] = $smcFunc['db_fetch_row']($request))
-			if (allowedTo('custom_forms_' . $id_form))
-				$forms[$id_form] = $title;
-		$smcFunc['db_free_result']($request);
-
 		loadLanguage('CustomForm');
+		$requested_data = [];
+		$requested_ids = [];
 
 		// Fix the anomaly where $urls is a string when
 		// coming from the profile section.
@@ -78,13 +60,57 @@ class Integration
 			if ($actions === [])
 				continue;
 
-			if (isset($actions['n'], $actions['action'], $forms[$actions['n']]) && $actions['action'] == 'form')
+			if (isset($actions['n'], $actions['action']) && $actions['action'] == 'form')
+			{
+				$requested_ids[] = (int) $actions['n'];
+				$requested_data[$k] = (int) $actions['n'];
+			}
+		}
+
+		if ($requested_ids === [])
+			return;
+
+		$requested_ids = array_unique($requested_ids);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT f.id_form, f.title
+			FROM {db_prefix}cf_forms AS f
+			WHERE f.id_form IN ({array_int:ids})
+				AND f.title != \'\'
+				AND EXISTS (
+					SELECT 1
+					FROM {db_prefix}cf_fields AS d
+					WHERE d.id_form = f.id_form
+						AND d.title != \'\'
+						AND d.text  != \'\'
+						AND d.type  != \'\'
+				)',
+			[
+				'ids' => $requested_ids,
+			]
+		);
+
+		$forms = [];
+
+		while ([$id_form, $title] = $smcFunc['db_fetch_row']($request))
+		{
+			if (allowedTo('custom_forms_' . $id_form))
+				$forms[$id_form] = $title;
+		}
+
+		$smcFunc['db_free_result']($request);
+
+		foreach ($requested_data as $k => $form_id)
+		{
+			if (isset($forms[$form_id]))
+			{
 				$data[$k] = sprintf(
 					$txt['customform_who'],
 					$scripturl,
-					$actions['n'],
-					$forms[$actions['n']],
+					$form_id,
+					$forms[$form_id]
 				);
+			}
 		}
 	}
 
