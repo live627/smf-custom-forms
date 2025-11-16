@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * @package   Custom Form mod
- * @version   3.1.0
+ * @version   4.1.0
  * @author    John Rayes <live627@gmail.com>
  * @copyright Copyright (c) 2014, John Rayes
  * @license   http://opensource.org/licenses/MIT MIT
@@ -27,7 +27,7 @@ class ManageCustomForm
 	const MOVEFIELDDOWN = 'movefielddown';
 	const MOVEFIELDUP = 'movefieldup';
 	const SAVEFIELD = 'savefield';
-	const VERSION = '4.0.7';
+	const VERSION = '4.1.0';
 
 	private string $scripturl;
 	private string $sourcedir;
