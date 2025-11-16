@@ -640,10 +640,10 @@ class ManageCustomForm
 		$request = $this->smcFunc['db_query']('', '
 			SELECT id_field
 			FROM {db_prefix}cf_fields
-			WHERE id_form = {int:id_field}
+			WHERE id_form = {int:id_form}
 			ORDER BY id_field',
 			[
-				'id_field' => $id_field,
+				'id_form' => $id_form,
 			]
 		);
 
@@ -651,38 +651,38 @@ class ManageCustomForm
 		$count = 0;
 		$field_pos = 0;
 
-		//	Make a list of the siblings
 		while ([$db_id_field] = $this->smcFunc['db_fetch_row']($request))
 		{
 			//	Get the spot of the current field;
 			if ($db_id_field == $id_field)
 				$field_pos = $count;
-			//	Store the necessary information.
+
 			$siblings[] = $db_id_field;
 			$count++;
 		}
 
-		//	Free the db result.
 		$this->smcFunc['db_free_result']($request);
 
 		//	Can we move the field?
 		if (
 			$count != 0
-			&& $siblings != []
-			&& $field_pos != 0 && $factor == -1
-			&& $field_pos != $count - 1 && $factor == 1
+			&& (
+				($factor === -1 && $field_pos > 0)
+				|| ($factor === 1 && $field_pos < $count - 1)
+			)
 		)
 		{
 			$replace_id = $siblings[$field_pos + $factor];
 			//	Perform the rather hacky updating queries. - They do work, just hackily! ;D
 			$this->smcFunc['db_query']('', '
 				UPDATE {db_prefix}cf_fields
-				SET id_field = \'0\'
+				SET id_field = 0
 				WHERE id_field = {int:field_id}',
 				[
 					'field_id' => $id_field,
 				]
 			);
+
 			$this->smcFunc['db_query']('', '
 				UPDATE {db_prefix}cf_fields
 				SET id_field = {int:field_id}
@@ -692,10 +692,11 @@ class ManageCustomForm
 					'replace_id' => $replace_id,
 				]
 			);
+
 			$this->smcFunc['db_query']('', '
 				UPDATE {db_prefix}cf_fields
 				SET id_field = {int:replace_id}
-				WHERE id_field = \'0\'',
+				WHERE id_field = 0',
 				[
 					'replace_id' => $replace_id,
 				]
