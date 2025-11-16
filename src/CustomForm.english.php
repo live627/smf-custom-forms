@@ -20,6 +20,7 @@ $txt['customform_update_action'] = 'Update to %s';
 $txt['customform_update_later'] = 'Remind me later';
 $txt['customform_form'] = 'Form';
 $txt['customform_field'] = 'Field';
+$txt['customform_current_version'] = 'Current version: {version}';
 $txt['customform_view_title'] = 'View Forms Title';
 $txt['customform_view_title_desc'] = 'Choose the title for the action/page that shows the list of forms to a user (at "index.php?action=form"). Defaults to <b>Custom Forms</b>.';
 $txt['customform_view_text'] = 'View Forms Text';

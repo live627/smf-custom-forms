@@ -20,6 +20,7 @@ $txt['customform_update_action'] = 'Actualizar a %s';
 $txt['customform_update_later'] = 'Recuérdamelo más tarde';
 $txt['customform_form'] = 'Formulario';
 $txt['customform_field'] = 'Campo';
+$txt['customform_current_version'] = 'Current version: {version}';
 $txt['customform_view_title'] = 'Ver título del formulario';
 $txt['customform_view_title_desc'] = 'Elija el título de la acción/página que muestra la lista de formularios a un usuario (en "index.php?action=form"). Valores predeterminados para <b>Formularios Personalizados</b>.';
 $txt['customform_view_text'] = 'Ver texto de formulario';

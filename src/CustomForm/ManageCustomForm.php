@@ -154,6 +154,10 @@ class ManageCustomForm
 
 		//	Set up the variables needed by the template.
 		$context['settings_title'] = $txt['customform_generalsettings_heading'];
+		$context['settings_message'] = strtr(
+			$txt['customform_current_version'],
+			['{version}' => self::VERSION],
+		);
 		$context['page_title'] = $txt['customform_tabheader'];
 		$context['default_list'] = 'customform_list';
 		$context['post_url'] = $this->scripturl . '?action=admin;area=modsettings;sa=customform;update';

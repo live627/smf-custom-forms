@@ -20,6 +20,7 @@ $txt['customform_update_action'] = 'Auf %s aktualisieren';
 $txt['customform_update_later'] = 'Später erinnern';
 $txt['customform_form'] = 'Formular';
 $txt['customform_field'] = 'Feld';
+$txt['customform_current_version'] = 'Current version: {version}';
 $txt['customform_view_title'] = 'Formulartitel anzeigen';
 $txt['customform_view_title_desc'] = 'Wählen Sie den Titel für die Aktion/Seite, die einem Benutzer die Formularliste anzeigt (unter "index.php?action=form"). Standard ist <b>Benutzerdefinierte Formulare</b>.';
 $txt['customform_view_text'] = 'Formulartext anzeigen';
