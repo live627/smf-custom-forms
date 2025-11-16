@@ -18,7 +18,7 @@ jobs:
           release-type: php
           draft: true
           package-name: ${{ env.MOD_NAME }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ fromJson(steps.release.outputs.pr).headBranchName }}
         if: ${{ steps.release.outputs.pr && !steps.release.outputs.release_created }}
@@ -42,7 +42,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git commit -am "build: Update versions in mod files"
           git push
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: ${{ steps.release.outputs.release_created }}
       - run: tar -czvf myfile.tgz LICENSE README.md -C src $(ls src)
         if: ${{ steps.release.outputs.release_created }}
