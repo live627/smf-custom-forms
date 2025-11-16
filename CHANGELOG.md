@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 This project adheres to [Semantic Versioning](http://semver.org/) as of v1.8.0.
 
+## [4.1.1](https://github.com/live627/smf-custom-forms/compare/v4.1.0...v4.1.1) (2025-11-16)
+
+
+### Bug Fixes
+
+* Make reordering fields work (again, perhaps? Not sure when it broke...) ([080c8a9](https://github.com/live627/smf-custom-forms/commit/080c8a9fecc249b6282dbf28d60652bded786f09))
+
 ## [4.1.0](https://github.com/live627/smf-custom-forms/compare/v4.0.7...v4.1.0) (2025-11-16)
 
 
