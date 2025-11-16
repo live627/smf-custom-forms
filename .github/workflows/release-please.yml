@@ -47,7 +47,7 @@ jobs:
       - run: tar -czvf myfile.tgz LICENSE README.md -C src $(ls src)
         if: ${{ steps.release.outputs.release_created }}
       - name: Upload release asset
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
