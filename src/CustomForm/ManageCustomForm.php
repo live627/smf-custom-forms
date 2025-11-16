@@ -17,16 +17,6 @@ use GlobIterator;
 
 class ManageCustomForm
 {
-	const ADDFORM = 'addform';
-	const DELETEFORM = 'deleteform';
-	const EDITFORM = 'editform';
-	const SAVEFORM = 'saveform';
-	const ADDFIELD = 'addfield';
-	const EDITFIELD = 'editfield';
-	const DELETEFIELD = 'deletefield';
-	const MOVEFIELDDOWN = 'movefielddown';
-	const MOVEFIELDUP = 'movefieldup';
-	const SAVEFIELD = 'savefield';
 	const VERSION = '4.1.0';
 
 	private string $scripturl;
@@ -50,18 +40,19 @@ class ManageCustomForm
 		$call = match ($act)
 		{
 			'delay' => ['Delay', null],
-			self::ADDFORM => ['AddForm', null],
-			self::DELETEFORM => ['DeleteForm', $form_id],
-			self::EDITFORM => ['EditForm', $form_id],
-			self::SAVEFORM => ['SaveForm', $form_id],
-			self::ADDFIELD => ['AddField', $form_id],
-			self::EDITFIELD => ['EditField', $field_id],
-			self::DELETEFIELD => ['DeleteField', $field_id],
-			self::MOVEFIELDDOWN => ['MoveFieldDown', $field_id],
-			self::MOVEFIELDUP => ['MoveFieldUp', $field_id],
-			self::SAVEFIELD => ['SaveField', $field_id],
+			'addform' => ['AddForm', null],
+			'deleteform' => ['DeleteForm', $form_id],
+			'editform' => ['EditForm', $form_id],
+			'saveform' => ['SaveForm', $form_id],
+			'addfield' => ['AddField', $form_id],
+			'editfield' => ['EditField', $field_id],
+			'deletefield' => ['DeleteField', $field_id],
+			'movefielddown' => ['MoveFieldDown', $field_id],
+			'movefieldup' => ['MoveFieldUp', $field_id],
+			'savefield' => ['SaveField', $field_id],
 			default => ['ModifySettings', false],
 		};
+
 		$this->util = new Util;
 		call_user_func([$this, $call[0]], $call[1]);
 	}
@@ -69,7 +60,7 @@ class ManageCustomForm
 	/**
 	 * Static constructor / factory
 	 */
-	public static function create(): ManageCustomForm
+	public static function create(): self
 	{
 		return new self($_GET['act'] ?? '');
 	}
