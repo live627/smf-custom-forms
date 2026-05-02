@@ -10,23 +10,9 @@ declare(strict_types=1);
  * @license   http://opensource.org/licenses/MIT MIT
  */
 
-// If SSI.php is in the same place as this file, and SMF isn't defined...
-if (file_exists(__DIR__ . '/SSI.php') && !defined('SMF')) {
-	require_once __DIR__ . '/SSI.php';
-}
+use SMF\Db\DatabaseApi as Db;
 
-// Hmm... no SSI.php and no SMF?
-elseif (!defined('SMF')) {
-	die('<b>Error:</b> Cannot uninstall - please verify you put this in the same place as SMF\'s index.php.');
-}
-
-$smcFunc['db_query'](
-	'',
-	'
+Db::$db->query('
 	DELETE FROM {db_prefix}permissions
 	WHERE permission
-	LIKE {string:fuzzy_permissions}',
-	[
-		'fuzzy_permissions' => 'custom_forms_%',
-	],
-);
+	LIKE \'custom_forms_%\'');

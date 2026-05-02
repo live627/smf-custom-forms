@@ -10,9 +10,7 @@ declare(strict_types=1);
  * @license   http://opensource.org/licenses/MIT MIT
  */
 
-if (!array_key_exists('db_add_column', $smcFunc)) {
-	db_extend('packages');
-}
+use SMF\Db\DatabaseApi as Db;
 
 $column = [
 	'name' => 'output_type',
@@ -21,29 +19,28 @@ $column = [
 	'default' => 'ForumPost',
 ];
 
-$smcFunc['db_add_column']('{db_prefix}cf_forms', $column);
+Db::$db->add_column('{db_prefix}cf_forms', $column);
 
-$request = $smcFunc['db_query'](
-	'',
+$request = Db::$db->query(
 	'
 	SELECT id_file
 	FROM {db_prefix}admin_info_files
 	WHERE filename = \'customform/versions.json\'',
 );
 
-if ($smcFunc['db_num_rows']($request) == 0) {
-	$smcFunc['db_insert'](
+if (Db::$db->num_rows($request) == 0) {
+	Db::$db->insert(
 		'',
 		'{db_prefix}admin_info_files',
 		['filename' => 'string', 'path' => 'string', 'parameters' => 'string', 'data' => 'string', 'filetype' => 'string'],
-		['customform/versions.json', 'https://mods.live627.com//api/', '', '', 'application/json'],
+		[['customform/versions.json', 'https://mods.live627.com//api/', '', '', 'application/json']],
 		['id_file'],
 	);
 }
 
-$smcFunc['db_free_result']($request);
+Db::$db->free_result($request);
 
-$smcFunc['db_query']('', '
+Db::$db->query('
 	UPDATE {db_prefix}cf_forms
 	SET icon = CASE WHEN icon IS NULL THEN \'\' ELSE icon END,
 	title = CASE WHEN title IS NULL THEN \'\' ELSE title END, output = CASE WHEN output IS NULL THEN \'\' ELSE output END,
@@ -52,7 +49,7 @@ $smcFunc['db_query']('', '
 	template_function = CASE WHEN template_function IS NULL THEN \'\' ELSE template_function END,
 	output_type = CASE WHEN output_type IS NULL THEN \'\' ELSE output_type END');
 
-$smcFunc['db_query']('', '
+Db::$db->query('
 	UPDATE {db_prefix}cf_fields
 	SET title = CASE WHEN title IS NULL THEN \'\' ELSE title END, text = CASE WHEN text IS NULL THEN \'\' ELSE text END,
 	type = CASE WHEN type IS NULL THEN \'\' ELSE type END, type_vars = CASE WHEN type_vars IS NULL THEN \'\' ELSE type_vars END');
