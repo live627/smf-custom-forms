@@ -7,7 +7,14 @@
     "require": {
         "php": ">=8.0"
     },
+    "repositories": [
+        {
+            "url": "https://github.com/SimpleMachines/SMF2.1.git",
+            "type": "vcs"
+        }
+    ],
     "require-dev": {
+        "simplemachines/smf": "dev-release-3.0",
         "phpunit/phpunit": "^9.5",
         "friendsofphp/php-cs-fixer": "^3.0",
         "squizlabs/php_codesniffer": "^3.6"
