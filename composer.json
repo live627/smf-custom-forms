@@ -19,6 +19,8 @@
         "friendsofphp/php-cs-fixer": "^3.0",
         "squizlabs/php_codesniffer": "^3.6"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
         "phpunit": "phpunit --testdox",
         "lint": "php-cs-fixer fix --dry-run --verbose --show-progress=dots",
